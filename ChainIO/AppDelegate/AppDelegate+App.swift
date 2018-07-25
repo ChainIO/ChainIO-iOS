@@ -23,7 +23,11 @@ extension AppDelegate {
         tabBarItem = UITabBarItem()
         tabBarItem.image = UIImage(named: "tab_news")
         tabBarItem.selectedImage = UIImage(named: "tab_news")
-        let newsViewController = NewsViewController()
+        
+        let newsViewControllerContentProvider = NewsViewControllerContentProvider()
+        let newsViewControllerActionHandler = NewsViewControllerActionHandler()
+        newsViewControllerActionHandler.delegate = self
+        let newsViewController = NewsViewController(contentProvider: newsViewControllerContentProvider, actionHandler: newsViewControllerActionHandler)
         newsViewController.tabBarItem = tabBarItem
         
         tabBarItem = UITabBarItem()
