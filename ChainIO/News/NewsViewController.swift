@@ -17,7 +17,7 @@ class NewsViewController: UIViewController {
     var contentProvider: NewsViewControllerContentProvider?
     var actionHandler: NewsViewControllerActionHandler?
     
-    var topTabBarView = NewsTopTabBarView()
+    let topTabBarView = NewsTopTabBarView()
     
     init(contentProvider: NewsViewControllerContentProvider, actionHandler: NewsViewControllerActionHandler) {
         self.contentProvider = contentProvider
@@ -29,10 +29,13 @@ class NewsViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
+        view.backgroundColor = .white
         
-        let topTabBarView = NewsTopTabBarView()
         view.addSubview(topTabBarView)
-        self.topTabBarView = topTabBarView
+        
+        
+        //Hard code now, will remove these later
+        topTabBarView.items = ["All", "Blockchain", "Bitcoin", "Ethereum", "Ripple", "Litecoin"]
     }
     
     
@@ -44,7 +47,7 @@ class NewsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.yellow
+        
     }
     
     

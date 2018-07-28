@@ -16,14 +16,23 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     }
     typealias constants = NewsTopTabBarViewConstant
     
-    var tabBarCollectionView:UICollectionView?
-    var bottomBorderLabel = UILabel()
+    var tabBarSelectedIndex = 0
     
-    let testTitles = ["All", "Blockchain", "Bitcoin", "Eth"]
+    var tabBarCollectionView:UICollectionView?
+    let tabBarSelectedIndexBottomIndicator = UILabel()
+    let bottomBorderLabel = UILabel()
+    
+    var items: [String] = [String]() {
+        didSet {
+            tabBarCollectionView?.reloadData()
+            tabBarCollectionView?.selectItem(at: IndexPath(row: tabBarSelectedIndex, section: 0), animated: false, scrollPosition: .init(rawValue: 0))
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
+        
+        backgroundColor = .white
         
         let tabBarCollectionViewFlowLayout = UICollectionViewFlowLayout()
         tabBarCollectionViewFlowLayout.minimumInteritemSpacing = constants.tabBarCollectionViewFlowLayoutSpace
@@ -38,16 +47,19 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
             tabBarCollectionView.showsVerticalScrollIndicator = false
             tabBarCollectionView.showsHorizontalScrollIndicator = false
             tabBarCollectionView.alwaysBounceHorizontal = true
-            tabBarCollectionView.backgroundColor = UIColor.white
+            tabBarCollectionView.backgroundColor = .white
             tabBarCollectionView.register(NewsTopTabBarViewCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: NewsTopTabBarViewCollectionViewCell.defaultReuseIdentifier())
             tabBarCollectionView.delegate = self
             tabBarCollectionView.dataSource = self
             addSubview(tabBarCollectionView)
+            
+            tabBarSelectedIndexBottomIndicator.backgroundColor = .black
+            tabBarSelectedIndexBottomIndicator.layer.cornerRadius = 0.5
+            tabBarCollectionView.addSubview(tabBarSelectedIndexBottomIndicator)
         }
         
-        bottomBorderLabel = UILabel()
         bottomBorderLabel.backgroundColor = UIColor(red: 229/255.0, green: 229/255.0, blue: 229/255.0, alpha: 1.0)
-        self.addSubview(bottomBorderLabel)
+        addSubview(bottomBorderLabel)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -61,10 +73,49 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         tabBarCollectionView?.frame = CGRect(x: 0, y: constants.tabBarCollectionViewTopSpace, width: bounds.width, height: bounds.height - constants.tabBarCollectionViewTopSpace)
         
         bottomBorderLabel.frame = CGRect(x: 0, y: bounds.height - 1, width: bounds.width, height: 1)
+        
+        layoutTabBarSelectedIndexBottomIndicator()
     }
     
     
-    // MARK:
+    private func layoutTabBarSelectedIndexBottomIndicator() {
+        guard let tabBarCollectionView = tabBarCollectionView else {
+            return
+        }
+        
+        let indexPathForSelectedTab = IndexPath(row: tabBarSelectedIndex, section: 0)
+        if tabBarCollectionView.cellForItem(at: indexPathForSelectedTab) != nil {
+            guard let selectedTabFrame = tabFrameInSuperView(indexPathForSelectedTab) else {
+                return
+            }
+            tabBarSelectedIndexBottomIndicator.frame = CGRect(x: selectedTabFrame.origin.x, y: tabBarCollectionView.bounds.height - 3, width: selectedTabFrame.width, height: 3)
+        }
+    }
+    
+    
+    private func tabFrameInSuperView(_ indexPath: IndexPath) -> CGRect? {
+        guard let tabBarCollectionView = tabBarCollectionView else {
+            return .zero
+        }
+        let attributes = tabBarCollectionView.layoutAttributesForItem(at: indexPath)
+        guard let tabRect = attributes?.frame else {
+            return .zero
+        }
+        let tabFrame = tabBarCollectionView.convert(tabRect, to: tabBarCollectionView)
+        return tabFrame
+    }
+    
+    
+    private func tabBarBottomIndexIndicatorScrollTo(_ indexPath: IndexPath, animate: Bool) {
+        if let selectedTabFrame = tabFrameInSuperView(indexPath) {
+            UIView.animate(withDuration: 0.15, animations: {
+                self.tabBarSelectedIndexBottomIndicator.frame = CGRect(x: selectedTabFrame.origin.x, y: (self.tabBarCollectionView?.bounds.height)! - 3, width: selectedTabFrame.width, height: 3)
+            }, completion: nil)
+        }
+    }
+    
+    
+    // MARK: UICollectionView
     
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -73,19 +124,26 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return testTitles.count
+        return items.count
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsTopTabBarViewCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsTopTabBarViewCollectionViewCell
-        cell.setTitleLabelText(testTitles[indexPath.row])
+        cell.setTitleLabelText(items[indexPath.row])
+        cell.isSelected = (indexPath.row == tabBarSelectedIndex)
         return cell
     }
     
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        tabBarSelectedIndex = indexPath.row
+        tabBarBottomIndexIndicatorScrollTo(indexPath, animate: true)
+    }
+    
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = self.testTitles[indexPath.row].size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13.0, weight: .semibold)])
+        var size = items[indexPath.row].size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13.0, weight: .semibold)])
         size.height = bounds.size.height - constants.tabBarCollectionViewTopSpace
         return size
     }
@@ -107,7 +165,7 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
         
         titleLabel.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         titleLabel.textColor = UIColor.darkGray
-        titleLabel.backgroundColor = UIColor.white
+        titleLabel.backgroundColor = .clear
         titleLabel.textAlignment = .center
         contentView.addSubview(titleLabel)
     }
@@ -126,12 +184,12 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
     
     
     class func defaultReuseIdentifier() -> String {
-        return NSStringFromClass(self.classForCoder())
+        return NSStringFromClass(classForCoder())
     }
     
     
     func setTitleLabelText(_ text: String) {
         titleLabel.text = text
-        self.setNeedsLayout()
+        setNeedsLayout()
     }
 }
