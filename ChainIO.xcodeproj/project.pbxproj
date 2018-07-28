@@ -24,6 +24,8 @@
 		D1541FBB210857AD00A9B2AB /* NewsViewControllerActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541FBA210857AD00A9B2AB /* NewsViewControllerActionHandler.swift */; };
 		D1541FBD21085A1A00A9B2AB /* AppDelegate+NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541FBC21085A1A00A9B2AB /* AppDelegate+NewsViewController.swift */; };
 		D171D5A3210C2659005F1FAA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D171D5A2210C2659005F1FAA /* GoogleService-Info.plist */; };
+		D171D5A7210C3095005F1FAA /* FireBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D171D5A6210C3095005F1FAA /* FireBaseManager.swift */; };
+		D171D5A9210C32F6005F1FAA /* NewsTopTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D171D5A8210C32F6005F1FAA /* NewsTopTabBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +75,8 @@
 		D1541FBA210857AD00A9B2AB /* NewsViewControllerActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewControllerActionHandler.swift; sourceTree = "<group>"; };
 		D1541FBC21085A1A00A9B2AB /* AppDelegate+NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+NewsViewController.swift"; sourceTree = "<group>"; };
 		D171D5A2210C2659005F1FAA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D171D5A6210C3095005F1FAA /* FireBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseManager.swift; sourceTree = "<group>"; };
+		D171D5A8210C32F6005F1FAA /* NewsTopTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTopTabBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +150,7 @@
 				D1541FB521084A6200A9B2AB /* Home */,
 				D1541FB621084A7000A9B2AB /* News */,
 				D1541FB721084A7C00A9B2AB /* Profile */,
+				D171D5A4210C3052005F1FAA /* Tools */,
 				D1541F8321083F6400A9B2AB /* Assets.xcassets */,
 				D1541F8521083F6400A9B2AB /* LaunchScreen.storyboard */,
 				D1541F8821083F6400A9B2AB /* Info.plist */,
@@ -192,6 +197,7 @@
 		D1541FB621084A7000A9B2AB /* News */ = {
 			isa = PBXGroup;
 			children = (
+				D171D5AA210C32FF005F1FAA /* Views */,
 				D1541FB02108441B00A9B2AB /* NewsViewController.swift */,
 				D1541FB8210853C400A9B2AB /* NewsViewControllerContentProvider.swift */,
 				D1541FBA210857AD00A9B2AB /* NewsViewControllerActionHandler.swift */,
@@ -206,6 +212,30 @@
 				D1541FB22108442800A9B2AB /* ProfileViewController.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		D171D5A4210C3052005F1FAA /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				D171D5A5210C3067005F1FAA /* Networking */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		D171D5A5210C3067005F1FAA /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				D171D5A6210C3095005F1FAA /* FireBaseManager.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		D171D5AA210C32FF005F1FAA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D171D5A8210C32F6005F1FAA /* NewsTopTabBarView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		D25280AED81EB960E6A8946E /* Frameworks */ = {
@@ -409,12 +439,28 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ChainIO/Pods-ChainIO-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-RxLibrary/RxLibrary.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxLibrary.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -513,7 +559,9 @@
 				D1541FBB210857AD00A9B2AB /* NewsViewControllerActionHandler.swift in Sources */,
 				D1541FB9210853C400A9B2AB /* NewsViewControllerContentProvider.swift in Sources */,
 				D1541FB32108442800A9B2AB /* ProfileViewController.swift in Sources */,
+				D171D5A9210C32F6005F1FAA /* NewsTopTabBarView.swift in Sources */,
 				D1541FAB21083FE700A9B2AB /* TabBarViewController.swift in Sources */,
+				D171D5A7210C3095005F1FAA /* FireBaseManager.swift in Sources */,
 				D1541F7D21083F6300A9B2AB /* AppDelegate.swift in Sources */,
 				D1541FAD2108408C00A9B2AB /* AppDelegate+App.swift in Sources */,
 				D1541FB12108441B00A9B2AB /* NewsViewController.swift in Sources */,
