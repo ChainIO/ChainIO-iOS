@@ -8,7 +8,8 @@
 
 import UIKit
 
-class NewsTopTabBarView: UIView {
+class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
     enum NewsTopTabBarViewConstant {
         static let tabBarCollectionViewFlowLayoutSpace:CGFloat = 14.0
         static let tabBarCollectionViewTopSpace:CGFloat = 20.0
@@ -17,6 +18,8 @@ class NewsTopTabBarView: UIView {
     
     var tabBarCollectionView:UICollectionView?
     var bottomBorderLabel = UILabel()
+    
+    let testTitles = ["All", "Blockchain", "Bitcoin", "Eth"]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,6 +40,8 @@ class NewsTopTabBarView: UIView {
             tabBarCollectionView.alwaysBounceHorizontal = true
             tabBarCollectionView.backgroundColor = UIColor.white
             tabBarCollectionView.register(NewsTopTabBarViewCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: NewsTopTabBarViewCollectionViewCell.defaultReuseIdentifier())
+            tabBarCollectionView.delegate = self
+            tabBarCollectionView.dataSource = self
             addSubview(tabBarCollectionView)
         }
         
@@ -44,6 +49,11 @@ class NewsTopTabBarView: UIView {
         bottomBorderLabel.backgroundColor = UIColor(red: 229/255.0, green: 229/255.0, blue: 229/255.0, alpha: 1.0)
         self.addSubview(bottomBorderLabel)
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -53,10 +63,32 @@ class NewsTopTabBarView: UIView {
         bottomBorderLabel.frame = CGRect(x: 0, y: bounds.height - 1, width: bounds.width, height: 1)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    
+    // MARK:
+    
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
     }
     
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return testTitles.count
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsTopTabBarViewCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsTopTabBarViewCollectionViewCell
+        cell.setTitleLabelText(testTitles[indexPath.row])
+        return cell
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        var size = self.testTitles[indexPath.row].size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13.0, weight: .semibold)])
+        size.height = bounds.size.height - constants.tabBarCollectionViewTopSpace
+        return size
+    }
 }
 
 
@@ -89,7 +121,7 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        titleLabel.frame = CGRect(x: 0, y: 0, width: contentView.bounds.width, height: contentView.bounds.height)
+        titleLabel.frame = CGRect(x: 0, y: 35, width: contentView.bounds.width, height: 18)
     }
     
     
@@ -100,5 +132,6 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
     
     func setTitleLabelText(_ text: String) {
         titleLabel.text = text
+        self.setNeedsLayout()
     }
 }
