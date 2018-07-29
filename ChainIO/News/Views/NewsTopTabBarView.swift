@@ -2,7 +2,7 @@
 //  NewsTopTabBarView.swift
 //  ChainIO
 //
-//  Created by 李立昊 on 2018/7/27.
+//  Created by Lihao Li on 2018/7/27.
 //  Copyright © 2018 Lihao Li. All rights reserved.
 //
 
@@ -171,11 +171,6 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
     }
     
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -191,5 +186,10 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
     func setTitleLabelText(_ text: String) {
         titleLabel.text = text
         setNeedsLayout()
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
