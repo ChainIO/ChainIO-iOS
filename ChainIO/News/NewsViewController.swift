@@ -8,10 +8,11 @@
 
 import UIKit
 
-class NewsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class NewsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NewsTopTabBarViewDelegate {
     
     enum NewsViewControllerConstant {
         static let topTabBarViewHeight:CGFloat = 85.0
+        static let bottomTabBarHeight:CGFloat = 49.0
     }
     
     var contentProvider: NewsViewControllerContentProvider?
@@ -19,6 +20,8 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     let topTabBarView = NewsTopTabBarView()
     var containerCollectionView:UICollectionView?
+    
+    var containerCollectionViewCurrentPage = 0
     
     let items = ["All", "Blockchain", "Bitcoin", "Ethereum", "Ripple", "Litecoin", "Coinbase", "Robinhood"]
     
@@ -35,6 +38,7 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         view.backgroundColor = .white
         
+        topTabBarView.delegate = self
         view.addSubview(topTabBarView)
         
         //Hard code now, will remove these later
@@ -73,7 +77,12 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         topTabBarView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: NewsViewControllerConstant.topTabBarViewHeight)
         
-        containerCollectionView?.frame = CGRect(x: 0, y: topTabBarView.frame.maxY, width: view.bounds.width, height: view.bounds.height)
+        if #available(iOS 11.0, *) {
+            containerCollectionView?.frame = CGRect(x: 0, y: topTabBarView.frame.maxY, width: view.bounds.width, height: view.bounds.height - topTabBarView.frame.maxY - view.safeAreaInsets.bottom)
+        } else {
+            // Fallback on earlier versions
+            containerCollectionView?.frame = CGRect(x: 0, y: topTabBarView.frame.maxY, width: view.bounds.width, height: view.bounds.height - topTabBarView.frame.maxY - NewsViewControllerConstant.bottomTabBarHeight)
+        }
     }
     
     
@@ -99,10 +108,26 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.frame.size
     }
+    
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let containerCollectionView = containerCollectionView {
+            containerCollectionViewCurrentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.size.width)
+            topTabBarView.setSelectedIndex(containerCollectionViewCurrentPage)
+        }
+    }
+    
+    
+    // MARK: NewsTopTabBarViewDelegate
+    
+    
+    func didSelectIndex(_ index: Int) {
+        containerCollectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: false)
+    }
 }
 
 
-class NewsContainerCollectionViewCell: UICollectionViewCell {
+class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
     
     let newsTableView = UITableView()
     
@@ -111,6 +136,8 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
         
         addSubview(newsTableView)
         
+        newsTableView.delegate = self
+        newsTableView.dataSource = self
         newsTableView.backgroundColor = UIColor(red: CGFloat(arc4random_uniform(256)) / 255.0, green: CGFloat(arc4random_uniform(256)) / 255.0, blue: CGFloat(arc4random_uniform(256)) / 255.0, alpha: 1.0)
     }
     
@@ -124,6 +151,24 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
     
     class func defaultReuseIdentifier() -> String {
         return NSStringFromClass(classForCoder())
+    }
+    
+    
+    // MARK: UITableView
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
     }
     
     

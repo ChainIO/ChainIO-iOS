@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol NewsTopTabBarViewDelegate: AnyObject {
+    func didSelectIndex(_ index: Int)
+}
+
+
 class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     enum NewsTopTabBarViewConstant {
@@ -17,6 +22,8 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     typealias constants = NewsTopTabBarViewConstant
     
     var tabBarSelectedIndex = 0
+    
+    weak var delegate:NewsTopTabBarViewDelegate?
     
     var tabBarCollectionView:UICollectionView?
     let tabBarSelectedIndexBottomIndicator = UILabel()
@@ -78,6 +85,23 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     
+    func setSelectedIndex(_ selectedIndex: Int) {
+        tabBarSelectedIndex = selectedIndex
+        let index = IndexPath(row: selectedIndex, section: 0)
+        tabBarBottomIndexIndicatorScrollTo(index, animate: true)
+        tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
+    }
+    
+    
+    private func tabBarBottomIndexIndicatorScrollTo(_ indexPath: IndexPath, animate: Bool) {
+        if let selectedTabFrame = tabFrameInSuperView(indexPath) {
+            UIView.animate(withDuration: 0.15, animations: {
+                self.tabBarSelectedIndexBottomIndicator.frame = CGRect(x: selectedTabFrame.origin.x, y: (self.tabBarCollectionView?.bounds.height)! - 3, width: selectedTabFrame.width, height: 3)
+            }, completion: nil)
+        }
+    }
+    
+    
     private func layoutTabBarSelectedIndexBottomIndicator() {
         guard let tabBarCollectionView = tabBarCollectionView else {
             return
@@ -106,15 +130,6 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     
-    private func tabBarBottomIndexIndicatorScrollTo(_ indexPath: IndexPath, animate: Bool) {
-        if let selectedTabFrame = tabFrameInSuperView(indexPath) {
-            UIView.animate(withDuration: 0.15, animations: {
-                self.tabBarSelectedIndexBottomIndicator.frame = CGRect(x: selectedTabFrame.origin.x, y: (self.tabBarCollectionView?.bounds.height)! - 3, width: selectedTabFrame.width, height: 3)
-            }, completion: nil)
-        }
-    }
-    
-    
     // MARK: UICollectionView
     
     
@@ -139,6 +154,7 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         tabBarSelectedIndex = indexPath.row
         tabBarBottomIndexIndicatorScrollTo(indexPath, animate: true)
+        delegate?.didSelectIndex(indexPath.row)
     }
     
     
