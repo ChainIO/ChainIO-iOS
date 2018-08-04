@@ -26,10 +26,11 @@
 		D171D5A3210C2659005F1FAA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D171D5A2210C2659005F1FAA /* GoogleService-Info.plist */; };
 		D171D5A7210C3095005F1FAA /* FireBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D171D5A6210C3095005F1FAA /* FireBaseManager.swift */; };
 		D171D5A9210C32F6005F1FAA /* NewsTopTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D171D5A8210C32F6005F1FAA /* NewsTopTabBarView.swift */; };
+		D17F4268211636D300B56362 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17F4267211636D300B56362 /* UserManager.swift */; };
 		D19C3A462115832C002C8D86 /* ProfileViewControllerContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A452115832C002C8D86 /* ProfileViewControllerContentProvider.swift */; };
 		D19C3A48211583D1002C8D86 /* ProfileViewControllerActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A47211583D1002C8D86 /* ProfileViewControllerActionHandler.swift */; };
 		D19C3A4A2115870D002C8D86 /* AppDelegate+ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A492115870D002C8D86 /* AppDelegate+ProfileViewController.swift */; };
-		D19C3A4D21158DC5002C8D86 /* ProfileTopNavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A4C21158DC5002C8D86 /* ProfileTopNavigationBarView.swift */; };
+		D19C3A4D21158DC5002C8D86 /* ProfileTopNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A4C21158DC5002C8D86 /* ProfileTopNavigationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,10 +82,11 @@
 		D171D5A2210C2659005F1FAA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D171D5A6210C3095005F1FAA /* FireBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseManager.swift; sourceTree = "<group>"; };
 		D171D5A8210C32F6005F1FAA /* NewsTopTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTopTabBarView.swift; sourceTree = "<group>"; };
+		D17F4267211636D300B56362 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		D19C3A452115832C002C8D86 /* ProfileViewControllerContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerContentProvider.swift; sourceTree = "<group>"; };
 		D19C3A47211583D1002C8D86 /* ProfileViewControllerActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerActionHandler.swift; sourceTree = "<group>"; };
 		D19C3A492115870D002C8D86 /* AppDelegate+ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+ProfileViewController.swift"; sourceTree = "<group>"; };
-		D19C3A4C21158DC5002C8D86 /* ProfileTopNavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTopNavigationBarView.swift; sourceTree = "<group>"; };
+		D19C3A4C21158DC5002C8D86 /* ProfileTopNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTopNavigationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +231,8 @@
 		D171D5A4210C3052005F1FAA /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				D17F42692116408800B56362 /* Section Manager */,
+				D17F4266211636B800B56362 /* User Manager */,
 				D171D5A5210C3067005F1FAA /* Networking */,
 			);
 			path = Tools;
@@ -250,10 +254,25 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		D17F4266211636B800B56362 /* User Manager */ = {
+			isa = PBXGroup;
+			children = (
+				D17F4267211636D300B56362 /* UserManager.swift */,
+			);
+			path = "User Manager";
+			sourceTree = "<group>";
+		};
+		D17F42692116408800B56362 /* Section Manager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Section Manager";
+			sourceTree = "<group>";
+		};
 		D19C3A4B21158D9B002C8D86 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D19C3A4C21158DC5002C8D86 /* ProfileTopNavigationBarView.swift */,
+				D19C3A4C21158DC5002C8D86 /* ProfileTopNavigationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -580,8 +599,9 @@
 				D1541FB9210853C400A9B2AB /* NewsViewControllerContentProvider.swift in Sources */,
 				D1541FB32108442800A9B2AB /* ProfileViewController.swift in Sources */,
 				D19C3A462115832C002C8D86 /* ProfileViewControllerContentProvider.swift in Sources */,
-				D19C3A4D21158DC5002C8D86 /* ProfileTopNavigationBarView.swift in Sources */,
+				D19C3A4D21158DC5002C8D86 /* ProfileTopNavigationView.swift in Sources */,
 				D171D5A9210C32F6005F1FAA /* NewsTopTabBarView.swift in Sources */,
+				D17F4268211636D300B56362 /* UserManager.swift in Sources */,
 				D1541FAB21083FE700A9B2AB /* TabBarViewController.swift in Sources */,
 				D171D5A7210C3095005F1FAA /* FireBaseManager.swift in Sources */,
 				D1541F7D21083F6300A9B2AB /* AppDelegate.swift in Sources */,

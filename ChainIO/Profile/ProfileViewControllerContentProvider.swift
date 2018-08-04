@@ -2,7 +2,7 @@
 //  ProfileViewControllerContentProvider.swift
 //  ChainIO
 //
-//  Created by 李立昊 on 2018/8/3.
+//  Created by Lihao Li on 2018/8/3.
 //  Copyright © 2018 Lihao Li. All rights reserved.
 //
 
