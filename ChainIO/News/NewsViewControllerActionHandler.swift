@@ -8,10 +8,14 @@
 
 import UIKit
 
-protocol NewsViewControllerActionHandlerDelegate: class {
+protocol NewsViewControllerActionHandlerProtocol {
     
 }
 
-class NewsViewControllerActionHandler: NSObject {
-    weak var delegate: NewsViewControllerActionHandlerDelegate?
+protocol NewsViewControllerActionHandlerDelegate {
+    
+}
+
+struct NewsViewControllerActionHandler: NewsViewControllerActionHandlerProtocol {
+    var delegate: NewsViewControllerActionHandlerDelegate?
 }

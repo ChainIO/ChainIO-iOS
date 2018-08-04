@@ -8,6 +8,10 @@
 
 import UIKit
 
-class NewsViewControllerContentProvider: NSObject {
+protocol NewsViewControllerContentProviderProtocol {
+    
+}
+
+struct NewsViewControllerContentProvider: NewsViewControllerContentProviderProtocol {
 
 }

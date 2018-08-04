@@ -9,7 +9,22 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-
+    
+    var contentProvider: ProfileViewControllerContentProviderProtocol?
+    var actionHandler: ProfileViewControllerActionHandlerProtocol?
+    
+    
+    init(contentProvider: ProfileViewControllerContentProviderProtocol, actionHandler: ProfileViewControllerActionHandlerProtocol) {
+        self.contentProvider = contentProvider
+        self.actionHandler = actionHandler
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

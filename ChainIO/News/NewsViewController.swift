@@ -15,8 +15,8 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
         static let bottomTabBarHeight:CGFloat = 49.0
     }
     
-    var contentProvider: NewsViewControllerContentProvider?
-    var actionHandler: NewsViewControllerActionHandler?
+    var contentProvider: NewsViewControllerContentProviderProtocol?
+    var actionHandler: NewsViewControllerActionHandlerProtocol?
     
     let topTabBarView = NewsTopTabBarView()
     var containerCollectionView:UICollectionView?
@@ -25,7 +25,8 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     let items = ["All", "Blockchain", "Bitcoin", "Ethereum", "Ripple", "Litecoin", "Coinbase", "Robinhood"]
     
-    init(contentProvider: NewsViewControllerContentProvider, actionHandler: NewsViewControllerActionHandler) {
+    
+    init(contentProvider: NewsViewControllerContentProviderProtocol, actionHandler: NewsViewControllerActionHandlerProtocol) {
         self.contentProvider = contentProvider
         self.actionHandler = actionHandler
         

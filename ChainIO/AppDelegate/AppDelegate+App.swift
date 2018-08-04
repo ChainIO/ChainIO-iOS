@@ -25,7 +25,7 @@ extension AppDelegate {
         tabBarItem.selectedImage = UIImage(named: "tab_news")
         
         let newsViewControllerContentProvider = NewsViewControllerContentProvider()
-        let newsViewControllerActionHandler = NewsViewControllerActionHandler()
+        var newsViewControllerActionHandler = NewsViewControllerActionHandler()
         newsViewControllerActionHandler.delegate = self
         let newsViewController = NewsViewController(contentProvider: newsViewControllerContentProvider, actionHandler: newsViewControllerActionHandler)
         newsViewController.tabBarItem = tabBarItem
@@ -33,7 +33,11 @@ extension AppDelegate {
         tabBarItem = UITabBarItem()
         tabBarItem.image = UIImage(named: "tab_profile")
         tabBarItem.selectedImage = UIImage(named: "tab_profile")
-        let profileViewController = ProfileViewController()
+        
+        let profileViewControllerContentProvider = ProfileViewControllerContentProvider()
+        var profileViewControllerActionHandler = ProfileViewControllerActionHandler()
+        profileViewControllerActionHandler.delegate = self
+        let profileViewController = ProfileViewController(contentProvider: profileViewControllerContentProvider, actionHandler: profileViewControllerActionHandler)
         profileViewController.tabBarItem = tabBarItem
         
         let tabBarController = UITabBarController()
