@@ -15,7 +15,6 @@
 		D1541F8721083F6400A9B2AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1541F8521083F6400A9B2AB /* LaunchScreen.storyboard */; };
 		D1541F9221083F6400A9B2AB /* ChainIOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541F9121083F6400A9B2AB /* ChainIOTests.swift */; };
 		D1541F9D21083F6400A9B2AB /* ChainIOUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541F9C21083F6400A9B2AB /* ChainIOUITests.swift */; };
-		D1541FAB21083FE700A9B2AB /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541FAA21083FE700A9B2AB /* TabBarViewController.swift */; };
 		D1541FAD2108408C00A9B2AB /* AppDelegate+App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541FAC2108408C00A9B2AB /* AppDelegate+App.swift */; };
 		D1541FAF210843F200A9B2AB /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541FAE210843F200A9B2AB /* HomeViewController.swift */; };
 		D1541FB12108441B00A9B2AB /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541FB02108441B00A9B2AB /* NewsViewController.swift */; };
@@ -74,7 +73,6 @@
 		D1541F9821083F6400A9B2AB /* ChainIOUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChainIOUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1541F9C21083F6400A9B2AB /* ChainIOUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChainIOUITests.swift; sourceTree = "<group>"; };
 		D1541F9E21083F6400A9B2AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D1541FAA21083FE700A9B2AB /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		D1541FAC2108408C00A9B2AB /* AppDelegate+App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+App.swift"; sourceTree = "<group>"; };
 		D1541FAE210843F200A9B2AB /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		D1541FB02108441B00A9B2AB /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 			isa = PBXGroup;
 			children = (
 				D1541FB421084A5400A9B2AB /* AppDelegate */,
-				D1541FAA21083FE700A9B2AB /* TabBarViewController.swift */,
 				D1541FB521084A6200A9B2AB /* Home */,
 				D1541FB621084A7000A9B2AB /* News */,
 				D1541FB721084A7C00A9B2AB /* Profile */,
@@ -629,7 +626,6 @@
 				D19C3A4D21158DC5002C8D86 /* ProfileTopNavigationView.swift in Sources */,
 				D171D5A9210C32F6005F1FAA /* NewsTopTabBarView.swift in Sources */,
 				D17F4268211636D300B56362 /* UserManager.swift in Sources */,
-				D1541FAB21083FE700A9B2AB /* TabBarViewController.swift in Sources */,
 				D171D5A7210C3095005F1FAA /* FireBaseManager.swift in Sources */,
 				D1541F7D21083F6300A9B2AB /* AppDelegate.swift in Sources */,
 				D1541FAD2108408C00A9B2AB /* AppDelegate+App.swift in Sources */,
