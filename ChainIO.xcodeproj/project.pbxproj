@@ -25,6 +25,7 @@
 		D171D5A3210C2659005F1FAA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D171D5A2210C2659005F1FAA /* GoogleService-Info.plist */; };
 		D171D5A7210C3095005F1FAA /* FireBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D171D5A6210C3095005F1FAA /* FireBaseManager.swift */; };
 		D171D5A9210C32F6005F1FAA /* NewsTopTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D171D5A8210C32F6005F1FAA /* NewsTopTabBarView.swift */; };
+		D1736913211BD27200BD169D /* CIContentProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = D1736912211BD27200BD169D /* CIContentProvider.m */; };
 		D17F4268211636D300B56362 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17F4267211636D300B56362 /* UserManager.swift */; };
 		D17F426C2116497F00B56362 /* OrderableSectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17F426B2116497F00B56362 /* OrderableSectionProtocol.swift */; };
 		D17F426E211649A200B56362 /* FlowLayoutOrderableSectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17F426D211649A200B56362 /* FlowLayoutOrderableSectionProtocol.swift */; };
@@ -83,6 +84,11 @@
 		D171D5A2210C2659005F1FAA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D171D5A6210C3095005F1FAA /* FireBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBaseManager.swift; sourceTree = "<group>"; };
 		D171D5A8210C32F6005F1FAA /* NewsTopTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTopTabBarView.swift; sourceTree = "<group>"; };
+		D173690F211BD0BA00BD169D /* ChainIO-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChainIO-Bridging-Header.h"; sourceTree = "<group>"; };
+		D1736910211BD0BB00BD169D /* CIContentProviderProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CIContentProviderProtocol.h; sourceTree = "<group>"; };
+		D1736911211BD27200BD169D /* CIContentProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CIContentProvider.h; sourceTree = "<group>"; };
+		D1736912211BD27200BD169D /* CIContentProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CIContentProvider.m; sourceTree = "<group>"; };
+		D1736917211BD38300BD169D /* CIContentProvider+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CIContentProvider+Protected.h"; sourceTree = "<group>"; };
 		D17F4267211636D300B56362 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		D17F426B2116497F00B56362 /* OrderableSectionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderableSectionProtocol.swift; sourceTree = "<group>"; };
 		D17F426D211649A200B56362 /* FlowLayoutOrderableSectionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayoutOrderableSectionProtocol.swift; sourceTree = "<group>"; };
@@ -134,6 +140,17 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D1491C3E211AA3F900D50CCA /* ContentProviderProtocol */ = {
+			isa = PBXGroup;
+			children = (
+				D1736910211BD0BB00BD169D /* CIContentProviderProtocol.h */,
+				D1736911211BD27200BD169D /* CIContentProvider.h */,
+				D1736912211BD27200BD169D /* CIContentProvider.m */,
+				D1736917211BD38300BD169D /* CIContentProvider+Protected.h */,
+			);
+			path = ContentProviderProtocol;
+			sourceTree = "<group>";
+		};
 		D1541F7021083F6200A9B2AB = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +185,7 @@
 				D1541F8521083F6400A9B2AB /* LaunchScreen.storyboard */,
 				D1541F8821083F6400A9B2AB /* Info.plist */,
 				D171D5A2210C2659005F1FAA /* GoogleService-Info.plist */,
+				D173690F211BD0BA00BD169D /* ChainIO-Bridging-Header.h */,
 			);
 			path = ChainIO;
 			sourceTree = "<group>";
@@ -234,6 +252,7 @@
 		D171D5A4210C3052005F1FAA /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				D1491C3E211AA3F900D50CCA /* ContentProviderProtocol */,
 				D17F42692116408800B56362 /* Section Manager */,
 				D17F4266211636B800B56362 /* User Manager */,
 				D171D5A5210C3067005F1FAA /* Networking */,
@@ -386,6 +405,7 @@
 				TargetAttributes = {
 					D1541F7821083F6200A9B2AB = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 0940;
 					};
 					D1541F8C21083F6400A9B2AB = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -629,6 +649,7 @@
 				D171D5A7210C3095005F1FAA /* FireBaseManager.swift in Sources */,
 				D1541F7D21083F6300A9B2AB /* AppDelegate.swift in Sources */,
 				D1541FAD2108408C00A9B2AB /* AppDelegate+App.swift in Sources */,
+				D1736913211BD27200BD169D /* CIContentProvider.m in Sources */,
 				D19C3A4A2115870D002C8D86 /* AppDelegate+ProfileViewController.swift in Sources */,
 				D1541FB12108441B00A9B2AB /* NewsViewController.swift in Sources */,
 				D19C3A48211583D1002C8D86 /* ProfileViewControllerActionHandler.swift in Sources */,
@@ -800,6 +821,7 @@
 			baseConfigurationReference = 4806314716AD48759A90FF4A /* Pods-ChainIO.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ChainIO/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -808,6 +830,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.genius.chainIO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChainIO/ChainIO-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -818,6 +842,7 @@
 			baseConfigurationReference = 6DC14E795ABCE98FF23E2B9B /* Pods-ChainIO.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ChainIO/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -826,6 +851,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.genius.chainIO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChainIO/ChainIO-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

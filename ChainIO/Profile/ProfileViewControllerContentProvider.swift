@@ -8,11 +8,11 @@
 
 import UIKit
 
-protocol ProfileViewControllerContentProviderProtocol {
+protocol ProfileViewControllerContentProviderProtocol: CIContentProviderProtocol {
     
 }
 
 
-struct ProfileViewControllerContentProvider: ProfileViewControllerContentProviderProtocol {
+class ProfileViewControllerContentProvider: CIContentProvider, ProfileViewControllerContentProviderProtocol {
     
 }
