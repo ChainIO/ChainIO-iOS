@@ -4,3 +4,4 @@
 
 #import "CIContentProvider.h"
 
+#import "CIContentProvider+Protected.h"

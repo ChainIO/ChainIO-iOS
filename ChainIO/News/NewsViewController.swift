@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NewsTopTabBarViewDelegate {
+class NewsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NewsTopTabBarViewDelegate, CIContentProviderListener {
     
     enum NewsViewControllerConstant {
         static let topTabBarViewHeight:CGFloat = 85.0
@@ -23,14 +23,15 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     var containerCollectionViewCurrentPage = 0
     
-    let items = ["All", "Bitcoin", "Blockchain", "Ethereum", "Ripple", "Litecoin", "ICO", "Coinbase"]
-    
     
     init(contentProvider: NewsViewControllerContentProviderProtocol, actionHandler: NewsViewControllerActionHandlerProtocol) {
+        super.init(nibName: nil, bundle: nil)
+        
         self.contentProvider = contentProvider
         self.actionHandler = actionHandler
         
-        super.init(nibName: nil, bundle: nil)
+        contentProvider.add(self)
+        contentProvider.refresh()
     }
     
     
@@ -41,9 +42,6 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         topTabBarView.delegate = self
         view.addSubview(topTabBarView)
-        
-        //Hard code now, will remove these later
-        topTabBarView.items = items
         
         let containerCollectionViewFlowLayout = UICollectionViewFlowLayout()
         containerCollectionViewFlowLayout.minimumLineSpacing = 0
@@ -65,6 +63,8 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
             containerCollectionView.register(NewsContainerCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: NewsContainerCollectionViewCell.defaultReuseIdentifier())
             view.addSubview(containerCollectionView)
         }
+        
+        loadContent()
     }
     
     
@@ -87,6 +87,12 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     
+    func loadContent() {
+        topTabBarView.items = (self.contentProvider?.content.titlesArray)!
+        containerCollectionView?.reloadData()
+    }
+    
+    
     // MARK: UICollectionView
     
     
@@ -96,7 +102,7 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+        return (self.contentProvider?.content.titlesArray?.count)!
     }
     
     
@@ -124,6 +130,21 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     func didSelectIndex(_ index: Int) {
         containerCollectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: false)
+    }
+    
+    
+    // MARK: CIContentProviderListener
+    
+    
+    func contentProviderDidChangeContent(_ contentProvider: CIContentProviderProtocol!) {
+        if isViewLoaded {
+            loadContent()
+        }
+    }
+    
+    
+    func contentProviderDidError(_ contentProvider: CIContentProviderProtocol!) {
+        
     }
 }
 
