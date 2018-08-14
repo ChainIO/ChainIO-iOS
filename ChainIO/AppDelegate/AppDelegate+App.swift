@@ -15,10 +15,10 @@ extension AppDelegate {
         self.window = window
         
         var tabBarItem = UITabBarItem()
-        tabBarItem.image = UIImage(named: "tab_home")
-        tabBarItem.selectedImage = UIImage(named: "tab_home")
-        let homeViewController = HomeViewController()
-        homeViewController.tabBarItem = tabBarItem
+//        tabBarItem.image = UIImage(named: "tab_home")
+//        tabBarItem.selectedImage = UIImage(named: "tab_home")
+//        let homeViewController = HomeViewController()
+//        homeViewController.tabBarItem = tabBarItem
         
         tabBarItem = UITabBarItem()
         tabBarItem.image = UIImage(named: "tab_news")
@@ -41,8 +41,7 @@ extension AppDelegate {
         profileViewController.tabBarItem = tabBarItem
         
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [homeViewController, newsViewController, profileViewController]
-        tabBarController.selectedIndex = 1
+        tabBarController.viewControllers = [newsViewController, profileViewController]
         
         self.window?.rootViewController = tabBarController
     }

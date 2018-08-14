@@ -23,7 +23,7 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     var containerCollectionViewCurrentPage = 0
     
-    let items = ["All", "Blockchain", "Bitcoin", "Ethereum", "Ripple", "Litecoin", "Coinbase", "Robinhood"]
+    let items = ["All", "Bitcoin", "Blockchain", "Ethereum", "Ripple", "Litecoin", "ICO", "Coinbase"]
     
     
     init(contentProvider: NewsViewControllerContentProviderProtocol, actionHandler: NewsViewControllerActionHandlerProtocol) {
