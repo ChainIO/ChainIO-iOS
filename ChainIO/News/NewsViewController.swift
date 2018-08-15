@@ -88,7 +88,10 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     func loadContent() {
-        topTabBarView.items = (self.contentProvider?.content.titlesArray)!
+        if let titlesArray = self.contentProvider?.content.titlesArray {
+            topTabBarView.items = titlesArray
+        }
+        
         containerCollectionView?.reloadData()
     }
     
@@ -102,7 +105,7 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.contentProvider?.content.titlesArray?.count)!
+        return self.contentProvider?.content.titlesArray?.count ?? 0
     }
     
     

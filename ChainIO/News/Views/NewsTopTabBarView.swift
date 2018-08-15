@@ -32,7 +32,9 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     var items: [String] = [String]() {
         didSet {
             tabBarCollectionView?.reloadData()
-            tabBarCollectionView?.selectItem(at: IndexPath(row: tabBarSelectedIndex, section: 0), animated: false, scrollPosition: .init(rawValue: 0))
+            tabBarCollectionView?.layoutIfNeeded()
+            tabBarCollectionView?.selectItem(at: IndexPath(item: tabBarSelectedIndex, section: 0), animated: false, scrollPosition: .init(rawValue: 0))
+            layoutTabBarSelectedIndexBottomIndicator()
         }
     }
     
@@ -87,7 +89,7 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     
     func setSelectedIndex(_ selectedIndex: Int) {
         tabBarSelectedIndex = selectedIndex
-        let index = IndexPath(row: selectedIndex, section: 0)
+        let index = IndexPath(item: selectedIndex, section: 0)
         tabBarBottomIndexIndicatorScrollTo(index, animate: true)
         tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
     }
@@ -107,7 +109,7 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
             return
         }
         
-        let indexPathForSelectedTab = IndexPath(row: tabBarSelectedIndex, section: 0)
+        let indexPathForSelectedTab = IndexPath(item: tabBarSelectedIndex, section: 0)
         if tabBarCollectionView.cellForItem(at: indexPathForSelectedTab) != nil {
             guard let selectedTabFrame = tabFrameInSuperView(indexPathForSelectedTab) else {
                 return
@@ -121,6 +123,11 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         guard let tabBarCollectionView = tabBarCollectionView else {
             return .zero
         }
+        
+        guard let _ = tabBarCollectionView.cellForItem(at: indexPath) else {
+            return .zero
+        }
+        
         let attributes = tabBarCollectionView.layoutAttributesForItem(at: indexPath)
         guard let tabRect = attributes?.frame else {
             return .zero
@@ -145,21 +152,21 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsTopTabBarViewCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsTopTabBarViewCollectionViewCell
-        cell.setTitleLabelText(items[indexPath.row])
-        cell.isSelected = (indexPath.row == tabBarSelectedIndex)
+        cell.setTitleLabelText(items[indexPath.item])
+        cell.isSelected = (indexPath.item == tabBarSelectedIndex)
         return cell
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        tabBarSelectedIndex = indexPath.row
+        tabBarSelectedIndex = indexPath.item
         tabBarBottomIndexIndicatorScrollTo(indexPath, animate: true)
-        delegate?.didSelectIndex(indexPath.row)
+        delegate?.didSelectIndex(indexPath.item)
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = items[indexPath.row].size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13.0, weight: .semibold)])
+        var size = items[indexPath.item].size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13.0, weight: .semibold)])
         size.height = bounds.size.height - constants.tabBarCollectionViewTopSpace
         return size
     }

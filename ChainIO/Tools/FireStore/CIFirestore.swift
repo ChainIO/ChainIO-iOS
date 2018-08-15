@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class CIFirestore: NSObject {
-    let sharedInstance = CIFirestore()
+    static let sharedInstance = CIFirestore()
     
     var configured = false
     
