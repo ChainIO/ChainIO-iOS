@@ -19,17 +19,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-ChainIO.xcscheme</key>
+		<key>Pods-Blocain.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-ChainIOTests.xcscheme</key>
+		<key>Pods-BlocainTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-ChainIOUITests.xcscheme</key>
+		<key>Pods-BlocainUITests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

@@ -1,6 +1,0 @@
-framework module Pods_ChainIOTests {
-  umbrella header "Pods-ChainIOTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

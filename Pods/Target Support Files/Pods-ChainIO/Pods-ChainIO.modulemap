@@ -1,6 +1,0 @@
-framework module Pods_ChainIO {
-  umbrella header "Pods-ChainIO-umbrella.h"
-
-  export *
-  module * { export * }
-}
