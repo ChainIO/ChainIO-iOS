@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContentProviderListener, NewsContainerCollectionViewCellDelegate {
+class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContentProviderListener {
     
     enum NewsViewControllerConstant {
         static let topTabBarViewHeight:CGFloat = 85.0
@@ -151,7 +151,6 @@ extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         updateIndex()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsContainerCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsContainerCollectionViewCell
-        cell.delegate = self
         if let newsContent = contentProvider?.content.contentsDictionary[(contentProvider?.content.titlesArray[indexPath.item])!] {
             cell.dataSource = newsContent
         }
