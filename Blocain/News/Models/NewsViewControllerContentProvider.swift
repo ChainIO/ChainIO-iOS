@@ -10,18 +10,24 @@ import UIKit
 import FirebaseFirestore
 
 protocol NewsViewControllerContentProtocol {
-    var titlesArray: [String]? {get set}
+    var titlesArray: [String] {get set}
+    var contentsDictionary: [String: [NewsContentEntity]] {get set}
 }
 
 
 protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     var content: NewsViewControllerContentProtocol {get}
+    var index: Int {get set}
+    
+    func fetch(singleTopicAt index: Int)
 }
 
 
 class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerContentProviderProtocol {
     var content: NewsViewControllerContentProtocol
+    private var contentFetcher = NewsContentFetcher.defaultFetcher
     
+    var index: Int = 0
     
     override init() {
         content = NewsViewControllerContent()
@@ -44,13 +50,62 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                         
                         if let data: [String: Any] = snapshot.data() {
                             if let topicArray = data["topicName"] as? [String] {
-                                self?.content.titlesArray?.append(contentsOf: topicArray)
+                                self?.content.titlesArray.append(contentsOf: topicArray)
                             }
                         }
                         
-                        self?.setContentOnMainThread(self?.content)
+                        guard let titleArray = self?.content.titlesArray else {
+                            self?.setContentOnMainThread(self?.content)
+                            return
+                        }
+                        
+                        guard (self?.index)! < titleArray.count else {
+                            self?.setContentOnMainThread(self?.content)
+                            return
+                        }
+                        
+                        
+                        self?.contentFetcher.fetchContent(with: titleArray[(self?.index)!], processingQueue: processingQueue!, completion: { (newsContentEntities, success) in
+                            guard let newsContentEntities = newsContentEntities, success == true else {
+                                self?.setContentOnMainThread(self?.content)
+                                return
+                            }
+                            self?.content.contentsDictionary[titleArray[(self?.index)!]] = newsContentEntities
+                            self?.setContentOnMainThread(self?.content)
+                        })
                     }
                 })
+            })
+        }
+    }
+    
+    
+    func fetch(singleTopicAt index: Int) {
+        let processingQueue = self.processingQueue
+        processingQueue?.async { [weak self] in
+            guard let titleArray = self?.content.titlesArray else {
+                self?.setContentOnMainThread(self?.content)
+                return
+            }
+            
+            guard index < titleArray.count else {
+                self?.setContentOnMainThread(self?.content)
+                return
+            }
+            
+            if let _ = self?.content.contentsDictionary[titleArray[index]] {
+                return
+            }
+            
+            
+            self?.contentFetcher.fetchContent(with: titleArray[index], processingQueue: processingQueue!, completion: { (newsContentEntities, success) in
+                guard let newsContentEntities = newsContentEntities, success == true else {
+                    self?.setContentOnMainThread(self?.content)
+                    return
+                }
+                
+                self?.content.contentsDictionary[titleArray[(self?.index)!]] = newsContentEntities
+                self?.setContentOnMainThread(self?.content)
             })
         }
     }
@@ -58,9 +113,11 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
 
 
 struct NewsViewControllerContent: NewsViewControllerContentProtocol {
-    var titlesArray: [String]?
+    var titlesArray: [String]
+    var contentsDictionary: [String: [NewsContentEntity]]
     
-    init(titlesArray: [String]? = nil) {
-        self.titlesArray = titlesArray == nil ? [String]() : titlesArray
+    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil) {
+        self.titlesArray = titlesArray == nil ? [String]() : titlesArray!
+        self.contentsDictionary = contentsDictionary == nil ? [String: [NewsContentEntity]]() : contentsDictionary!
     }
 }

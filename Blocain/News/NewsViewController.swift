@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NewsTopTabBarViewDelegate, CIContentProviderListener {
+class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContentProviderListener, NewsContainerCollectionViewCellDelegate {
     
     enum NewsViewControllerConstant {
         static let topTabBarViewHeight:CGFloat = 85.0
@@ -96,34 +96,11 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     
-    // MARK: UICollectionView
-    
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.contentProvider?.content.titlesArray?.count ?? 0
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsContainerCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsContainerCollectionViewCell
-        return cell
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return collectionView.frame.size
-    }
-    
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    private func updateIndex() {
         if let containerCollectionView = containerCollectionView {
             containerCollectionViewCurrentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.size.width)
             topTabBarView.setSelectedIndex(containerCollectionViewCurrentPage)
+            contentProvider?.index = containerCollectionViewCurrentPage
         }
     }
     
@@ -133,6 +110,7 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     func didSelectIndex(_ index: Int) {
         containerCollectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: false)
+        contentProvider?.index = index
     }
     
     
@@ -148,5 +126,63 @@ class NewsViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     func contentProviderDidError(_ contentProvider: CIContentProviderProtocol!) {
         
+    }
+    
+}
+
+
+extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.contentProvider?.content.titlesArray.count ?? 0
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        contentProvider?.fetch(singleTopicAt: indexPath.item)
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        updateIndex()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsContainerCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsContainerCollectionViewCell
+        cell.delegate = self
+        if let newsContent = contentProvider?.content.contentsDictionary[(contentProvider?.content.titlesArray[indexPath.item])!] {
+            cell.dataSource = newsContent
+        }
+        return cell
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.frame.size
+    }
+    
+    
+    //MARK: NewsContainerCollectionViewCellDelegate
+    
+    
+    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int) {
+        
+    }
+    
+}
+
+
+extension NewsViewController: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateIndex()
+    }
+    
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            updateIndex()
+        }
     }
 }

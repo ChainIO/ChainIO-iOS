@@ -23,7 +23,7 @@
 
 @protocol CIContentProviderProtocol <NSObject>
 
-@property (nonatomic, readonly) id viewModel;
+@property (nonatomic, readonly) id Container;
 
 - (void)addContentProviderListener:(id<CIContentProviderListener>)contentProviderListener;
 - (void)removeContentProviderListener:(id<CIContentProviderListener>)contentProviderListener;

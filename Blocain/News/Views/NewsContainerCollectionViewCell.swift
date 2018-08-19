@@ -8,9 +8,23 @@
 
 import UIKit
 
+protocol NewsContainerCollectionViewCellDelegate {
+    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int)
+}
+
 class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
     
-    let newsTableView = UITableView()
+    var delegate: NewsContainerCollectionViewCellDelegate?
+    
+    let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
+    
+    var currentPage = 1
+    
+    var dataSource: [NewsContentEntity]? {
+        didSet {
+            newsTableView.reloadData()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,7 +33,8 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
         
         newsTableView.delegate = self
         newsTableView.dataSource = self
-        newsTableView.backgroundColor = UIColor(red: CGFloat(arc4random_uniform(256)) / 255.0, green: CGFloat(arc4random_uniform(256)) / 255.0, blue: CGFloat(arc4random_uniform(256)) / 255.0, alpha: 1.0)
+        
+        newsTableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: "UITableViewCell")
     }
     
     
@@ -44,12 +59,25 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return dataSource?.count ?? 0
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+        cell.textLabel?.text = dataSource?[indexPath.row].title
+        return cell
+    }
+    
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let count = dataSource?.count else {
+            return
+        }
+        if indexPath.row == count - 5 {
+            self.delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: currentPage + 1)
+            currentPage += 1
+        }
     }
     
     
