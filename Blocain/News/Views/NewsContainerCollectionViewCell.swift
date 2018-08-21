@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol NewsContainerCollectionViewCellDelegate {
+    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int)
+}
+
 class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
+    
+    var delegate: NewsContainerCollectionViewCellDelegate?
     
     let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
     
@@ -17,6 +23,8 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
             newsTableView.reloadData()
         }
     }
+    
+    var currentPage = 1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,8 +70,18 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     }
     
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let count = dataSource?.count else {
+            return
+        }
+        if indexPath.row == count - 5 {
+            self.delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: currentPage + 1)
+            currentPage += 1
+        }
+    }
+    
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }

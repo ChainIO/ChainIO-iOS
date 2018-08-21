@@ -162,18 +162,11 @@ extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return collectionView.frame.size
     }
     
-    
-    //MARK: NewsContainerCollectionViewCellDelegate
-    
-    
-    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int) {
-        
-    }
-    
 }
 
 
 extension NewsViewController: UIScrollViewDelegate {
+    
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         updateIndex()
     }
@@ -184,4 +177,5 @@ extension NewsViewController: UIScrollViewDelegate {
             updateIndex()
         }
     }
+    
 }

@@ -41,40 +41,60 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         processingQueue?.async { [weak self] in
             let firestore = CIFirestore.sharedInstance
             firestore.waitForConfigureWith(completionQueue: processingQueue!, completion: {
-                Firestore.firestore().document("/Topics/F4qqmZj5Dvz9ar8px9ze").getDocument(completion: { (snapshot, error) in
-                    processingQueue?.async {
-                        guard let snapshot = snapshot, error == nil else {
-                            self?.defaultErrorBlock()
-                            return
+                Firestore.firestore().document("/WhiteList/J2tgaauOQpni8wiHg1UW").getDocument(completion: { (snapshot, error) in
+                    guard let snapshot = snapshot, error == nil else {
+                        self?.defaultErrorBlock()
+                        return
+                    }
+                    
+                    if let sourceNameData: [String: Any] = snapshot.data() {
+                        if let sourceNamesArray = sourceNameData["SourceName"] as? [String] {
+                            NewsSourceManager.sharedManager.newsSourceArray = sourceNamesArray
+                            
+                            Firestore.firestore().document("/Topics/F4qqmZj5Dvz9ar8px9ze").getDocument(completion: { (snapshot, error) in
+                                processingQueue?.async {
+                                    guard let snapshot = snapshot, error == nil else {
+                                        self?.defaultErrorBlock()
+                                        return
+                                    }
+                                    
+                                    if let data: [String: Any] = snapshot.data() {
+                                        if let topicArray = data["topicName"] as? [String] {
+                                            self?.content.titlesArray.append(contentsOf: topicArray)
+                                        }
+                                    }
+                                    
+                                    guard let titleArray = self?.content.titlesArray else {
+                                        self?.setContentOnMainThread(self?.content)
+                                        return
+                                    }
+                                    
+                                    guard (self?.index)! < titleArray.count else {
+                                        self?.setContentOnMainThread(self?.content)
+                                        return
+                                    }
+                                    
+                                    
+                                    self?.contentFetcher.fetchContent(with: titleArray[(self?.index)!], processingQueue: processingQueue!, completion: { (newsContentEntities, success) in
+                                        guard let newsContentEntities = newsContentEntities, success == true else {
+                                            self?.setContentOnMainThread(self?.content)
+                                            return
+                                        }
+                                        
+                                        let highQualityNewsContentEntities = NewsSourceManager.sharedManager.filterHighQualityContent(newsContentEntitiesArray: newsContentEntities)
+                                        
+                                        
+                                        self?.content.contentsDictionary[titleArray[(self?.index)!]] = highQualityNewsContentEntities
+                                        self?.setContentOnMainThread(self?.content)
+                                    })
+                                }
+                            })
                         }
-                        
-                        if let data: [String: Any] = snapshot.data() {
-                            if let topicArray = data["topicName"] as? [String] {
-                                self?.content.titlesArray.append(contentsOf: topicArray)
-                            }
-                        }
-                        
-                        guard let titleArray = self?.content.titlesArray else {
-                            self?.setContentOnMainThread(self?.content)
-                            return
-                        }
-                        
-                        guard (self?.index)! < titleArray.count else {
-                            self?.setContentOnMainThread(self?.content)
-                            return
-                        }
-                        
-                        
-                        self?.contentFetcher.fetchContent(with: titleArray[(self?.index)!], processingQueue: processingQueue!, completion: { (newsContentEntities, success) in
-                            guard let newsContentEntities = newsContentEntities, success == true else {
-                                self?.setContentOnMainThread(self?.content)
-                                return
-                            }
-                            self?.content.contentsDictionary[titleArray[(self?.index)!]] = newsContentEntities
-                            self?.setContentOnMainThread(self?.content)
-                        })
                     }
                 })
+                
+                
+
             })
         }
     }
@@ -104,7 +124,9 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                     return
                 }
                 
-                self?.content.contentsDictionary[titleArray[(self?.index)!]] = newsContentEntities
+                let highQualityNewsContentEntities = NewsSourceManager.sharedManager.filterHighQualityContent(newsContentEntitiesArray: newsContentEntities)
+                
+                self?.content.contentsDictionary[titleArray[(self?.index)!]] = highQualityNewsContentEntities
                 self?.setContentOnMainThread(self?.content)
             })
         }
