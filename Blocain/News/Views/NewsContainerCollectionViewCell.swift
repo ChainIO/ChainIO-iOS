@@ -18,7 +18,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
     
-    var dataSource: [NewsContentEntity]? {
+    var viewModels: [NewsTableViewCellModelProtocol] {
         didSet {
             newsTableView.reloadData()
         }
@@ -27,14 +27,15 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     var currentPage = 1
     
     override init(frame: CGRect) {
+        viewModels = [NewsTableViewCellModelProtocol]()
+        
         super.init(frame: frame)
         
-        addSubview(newsTableView)
-        
+        newsTableView.separatorStyle = .none
+        newsTableView.register(NewsTableViewCell.classForCoder(), forCellReuseIdentifier: NewsTableViewCell.defaultIdentifier)
         newsTableView.delegate = self
         newsTableView.dataSource = self
-        
-        newsTableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: "UITableViewCell")
+        addSubview(newsTableView)
     }
     
     
@@ -59,25 +60,38 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource?.count ?? 0
+        return viewModels.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
-        cell.textLabel?.text = dataSource?[indexPath.row].title
+        let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.defaultIdentifier, for: indexPath) as! NewsTableViewCell
+        cell.loadViewModel(viewModels[indexPath.row])
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let count = dataSource?.count else {
-            return
-        }
-        if indexPath.row == count - 5 {
+        if indexPath.row == viewModels.count - 5 {
             self.delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: currentPage + 1)
             currentPage += 1
         }
+    }
+    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        let viewModel = viewModels[indexPath.row]
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont.systemFont(ofSize: 16.0, weight: .bold)
+        titleLabel.textAlignment = .left
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.numberOfLines = viewModel.shouldHideImage ? 3 : 5
+        titleLabel.frame.size = CGSize(width: viewModel.shouldHideImage ? contentView.frame.width - 40 : contentView.frame.width - 20 - 9 - 110 - 16, height: 300)
+        titleLabel.text = viewModel.title
+        titleLabel.sizeToFit()
+        
+        return titleLabel.frame.height + 8 + 14 + 20 + 8 + 18 + 20
     }
     
     

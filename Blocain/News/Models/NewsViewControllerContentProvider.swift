@@ -12,6 +12,7 @@ import FirebaseFirestore
 protocol NewsViewControllerContentProtocol {
     var titlesArray: [String] {get set}
     var contentsDictionary: [String: [NewsContentEntity]] {get set}
+    var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]] {get set}
 }
 
 
@@ -81,10 +82,10 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                                             return
                                         }
                                         
-                                        let highQualityNewsContentEntities = NewsSourceManager.sharedManager.filterHighQualityContent(newsContentEntitiesArray: newsContentEntities)
+                                        let (contents, contentViewModels) = NewsSourceManager.sharedManager.filterContents(newsContentEntitiesArray: newsContentEntities)
+                                        self?.content.contentsDictionary[titleArray[(self?.index)!]] = contents
+                                        self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] = contentViewModels
                                         
-                                        
-                                        self?.content.contentsDictionary[titleArray[(self?.index)!]] = highQualityNewsContentEntities
                                         self?.setContentOnMainThread(self?.content)
                                     })
                                 }
@@ -124,9 +125,10 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                     return
                 }
                 
-                let highQualityNewsContentEntities = NewsSourceManager.sharedManager.filterHighQualityContent(newsContentEntitiesArray: newsContentEntities)
+                let (contents, contentViewModels) = NewsSourceManager.sharedManager.filterContents(newsContentEntitiesArray: newsContentEntities)
+                self?.content.contentsDictionary[titleArray[(self?.index)!]] = contents
+                self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] = contentViewModels
                 
-                self?.content.contentsDictionary[titleArray[(self?.index)!]] = highQualityNewsContentEntities
                 self?.setContentOnMainThread(self?.content)
             })
         }
@@ -137,9 +139,11 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
 struct NewsViewControllerContent: NewsViewControllerContentProtocol {
     var titlesArray: [String]
     var contentsDictionary: [String: [NewsContentEntity]]
+    var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]
     
-    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil) {
+    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil, contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]? = nil) {
         self.titlesArray = titlesArray == nil ? [String]() : titlesArray!
         self.contentsDictionary = contentsDictionary == nil ? [String: [NewsContentEntity]]() : contentsDictionary!
+        self.contentsViewModelDictionary = contentsViewModelDictionary == nil ? [String: [NewsTableViewCellModelProtocol]]() : contentsViewModelDictionary!
     }
 }

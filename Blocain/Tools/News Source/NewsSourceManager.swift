@@ -19,7 +19,7 @@ class NewsSourceManager: NSObject {
         super.init()
     }
     
-    func filterHighQualityContent(newsContentEntitiesArray: [NewsContentEntity]) -> [NewsContentEntity] {
+    func filterContents(newsContentEntitiesArray: [NewsContentEntity]) -> ([NewsContentEntity], [NewsTableViewCellModelProtocol]) {
         let highQualityNewsContentEntities = newsContentEntitiesArray.filter({ (newsEntity) -> Bool in
             if let sourceName = newsEntity.source?.sourceName {
                 return newsSourceArray.index(of: sourceName) != nil
@@ -27,6 +27,10 @@ class NewsSourceManager: NSObject {
             return false
         })
         
-        return highQualityNewsContentEntities
+        let highQualityNewsContentEntityViewModels: [NewsTableViewCellModelProtocol] = highQualityNewsContentEntities.map {
+            return NewsTableViewCellModel(with: $0)
+        }
+        
+        return (highQualityNewsContentEntities, highQualityNewsContentEntityViewModels)
     }
 }

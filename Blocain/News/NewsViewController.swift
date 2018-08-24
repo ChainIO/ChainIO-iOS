@@ -151,8 +151,8 @@ extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         updateIndex()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsContainerCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsContainerCollectionViewCell
-        if let newsContent = contentProvider?.content.contentsDictionary[(contentProvider?.content.titlesArray[indexPath.item])!] {
-            cell.dataSource = newsContent
+        if let viewModels = contentProvider?.content.contentsViewModelDictionary[(contentProvider?.content.titlesArray[indexPath.item])!] {
+            cell.viewModels = viewModels
         }
         return cell
     }

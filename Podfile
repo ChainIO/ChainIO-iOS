@@ -8,6 +8,7 @@ target 'Blocain' do
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
+  pod 'Nuke'
   
   target 'BlocainTests' do
     inherit! :search_paths
