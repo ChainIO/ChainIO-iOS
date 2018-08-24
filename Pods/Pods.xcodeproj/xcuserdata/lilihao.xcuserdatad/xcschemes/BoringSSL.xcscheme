@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C6C3CDAD44561A5D6BD0EC7B6FDD66D4"
+               BlueprintIdentifier = "A2AF05C471DA34DDE87E84F51F7142BD"
                BuildableName = "openssl.framework"
                BlueprintName = "BoringSSL"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C6C3CDAD44561A5D6BD0EC7B6FDD66D4"
+            BlueprintIdentifier = "A2AF05C471DA34DDE87E84F51F7142BD"
             BuildableName = "openssl.framework"
             BlueprintName = "BoringSSL"
             ReferencedContainer = "container:Pods.xcodeproj">

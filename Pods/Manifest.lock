@@ -5,6 +5,9 @@ PODS:
   - BoringSSL/Implementation (9.2):
     - BoringSSL/Interface (= 9.2)
   - BoringSSL/Interface (9.2)
+  - Crashlytics (3.10.7):
+    - Fabric (~> 1.7.11)
+  - Fabric (1.7.11)
   - Firebase/Core (4.8.2):
     - FirebaseAnalytics (= 4.0.9)
     - FirebaseCore (= 4.0.14)
@@ -17,10 +20,10 @@ PODS:
   - FirebaseAnalytics (4.0.9):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
   - FirebaseCore (4.0.14):
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseFirestore (0.10.0):
     - FirebaseAnalytics (~> 4.0)
     - FirebaseCore (~> 4.0)
@@ -34,7 +37,7 @@ PODS:
     - FirebaseCore (~> 4.0)
     - GTMSessionFetcher/Core (~> 1.1)
   - GoogleToolboxForMac/Defines (2.1.3)
-  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+  - "GoogleToolboxForMac/NSData+zlib (2.1.3)":
     - GoogleToolboxForMac/Defines (= 2.1.3)
   - gRPC (1.9.0):
     - gRPC-RxLibrary (= 1.9.0)
@@ -66,13 +69,39 @@ PODS:
   - Protobuf (3.5.0)
 
 DEPENDENCIES:
+  - Crashlytics (~> 3.10.7)
+  - Fabric (~> 1.7.11)
   - Firebase/Core
   - Firebase/Firestore
   - Firebase/Storage
   - Nuke
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - BoringSSL
+    - Crashlytics
+    - Fabric
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseFirestore
+    - FirebaseInstanceID
+    - FirebaseStorage
+    - GoogleToolboxForMac
+    - gRPC
+    - gRPC-Core
+    - gRPC-ProtoRPC
+    - gRPC-RxLibrary
+    - GTMSessionFetcher
+    - leveldb-library
+    - nanopb
+    - Nuke
+    - Protobuf
+
 SPEC CHECKSUMS:
   BoringSSL: f3d6b8ce199b9c450a8cfc14895d07a2627fc232
+  Crashlytics: ccaac42660eb9351b9960c0d66106b0bcf99f4fa
+  Fabric: f233c9492b3bbc1f04e3882986740f7988a58edb
   Firebase: 7d3b8cd837ad9fcd391657734c0d56dab8e9a5a3
   FirebaseAnalytics: 388b630c15713f5dbf364071f5f3d6077fb52f4e
   FirebaseCore: 2e0b98fb2d64ca8140136beff15772bdd14d2dd7
@@ -90,6 +119,6 @@ SPEC CHECKSUMS:
   Nuke: d83812262734dad51e3c498cb1c4f7923f2b78c6
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
 
-PODFILE CHECKSUM: 90bf1a6105c0dff9e5e3c34637e88e52de32068f
+PODFILE CHECKSUM: 20b664ae0b7214b69ebb87ea92392a3ca8a17935
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3
