@@ -86,7 +86,7 @@ class NewsTableViewCell: UITableViewCell {
         
         if let imageURLString = viewModel.imageURL {
             if let imageURL = URL(string: imageURLString) {
-                Manager.shared.loadImage(with: imageURL, into: newsImageView)
+                Nuke.loadImage(with: imageURL, into: newsImageView)
             }
         }
         
