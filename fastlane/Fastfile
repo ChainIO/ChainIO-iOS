@@ -1,0 +1,39 @@
+# More documentation about how to customize your build
+# can be found here:
+# https://docs.fastlane.tools
+fastlane_version "2.68.0"
+
+# This value helps us track success metrics for Fastfiles
+# we automatically generate. Feel free to remove this line
+# once you get things running smoothly!
+generated_fastfile_id "5f44d9cc-949d-40e6-8960-48cb8fc16bc7"
+
+default_platform :ios
+
+# Fastfile actions accept additional configuration, but
+# don't worry, fastlane will prompt you for required
+# info which you can add here later
+lane :beta do
+  sync_code_signing
+  disable_automatic_code_signing(path: "Blocain.xcodeproj")
+  build_app
+  enable_automatic_code_signing(path: "Blocain.xcodeproj")
+
+  # cocoapods
+
+  # build your iOS app
+  build_app(
+    # scheme: "Blocain",
+    export_method: "development"
+  )
+
+  # upload to Beta by Crashlytics
+  crashlytics(
+    api_token: "9affc94a07ec9313cca1ac73c278789fecf2a4d5",
+    build_secret: "0529942a227caadae58d5549dcf9c98ea8a82f41d6c7eebceed36f332bf3df1b"
+  )
+
+  # slack(
+  #   slack_url: "https://hooks.slack.com/services/IDS"
+  # )
+end

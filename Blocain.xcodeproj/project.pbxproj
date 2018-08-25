@@ -437,7 +437,7 @@
 				D1541F7621083F6200A9B2AB /* Frameworks */,
 				D1541F7721083F6200A9B2AB /* Resources */,
 				739BB3554B35DB150451520E /* [CP] Embed Pods Frameworks */,
-				D1552708212FD0B000BC37EC /* ShellScript */,
+				D1B0050A21310EC0009EF3D8 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -499,13 +499,16 @@
 					D1541F7821083F6200A9B2AB = {
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 0940;
+						ProvisioningStyle = Manual;
 					};
 					D1541F8C21083F6400A9B2AB = {
 						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Manual;
 						TestTargetID = D1541F7821083F6200A9B2AB;
 					};
 					D1541F9721083F6400A9B2AB = {
 						CreatedOnToolsVersion = 9.4.1;
+						ProvisioningStyle = Manual;
 						TestTargetID = D1541F7821083F6200A9B2AB;
 					};
 				};
@@ -650,7 +653,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D1552708212FD0B000BC37EC /* ShellScript */ = {
+		D1B0050A21310EC0009EF3D8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -661,7 +664,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\"";
+			shellScript = "./Fabric.framework/run 9affc94a07ec9313cca1ac73c278789fecf2a4d5 0529942a227caadae58d5549dcf9c98ea8a82f41d6c7eebceed36f332bf3df1b";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -864,7 +867,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer: LIHAO LI (9Q2ZHMHB4H)";
+				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = N8925WS6N5;
 				INFOPLIST_FILE = Blocain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -885,7 +891,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer: LIHAO LI (9Q2ZHMHB4H)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = N8925WS6N5;
 				INFOPLIST_FILE = Blocain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -905,7 +913,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = ChainIOTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -926,7 +934,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = ChainIOTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -946,7 +954,7 @@
 			baseConfigurationReference = 4F218D668016B3D1A0BEFE69 /* Pods-BlocainUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = ChainIOUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -966,7 +974,7 @@
 			baseConfigurationReference = 3D1219F0BD8AD845ABC28B94 /* Pods-BlocainUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = ChainIOUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
