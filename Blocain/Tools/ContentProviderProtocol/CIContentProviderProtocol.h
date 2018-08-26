@@ -13,6 +13,7 @@
 @protocol CIContentProviderListener <NSObject>
 
 - (void)contentProviderDidChangeContent:(id<CIContentProviderProtocol>)contentProvider;
+- (void)contentProviderDidAddContent:(id<CIContentProviderProtocol>)contentProvider;
 - (void)contentProviderDidError:(id<CIContentProviderProtocol>)contentProvider;
 
 @optional

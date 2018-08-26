@@ -124,6 +124,15 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     }
     
     
+    func contentProviderDidAddContent(_ contentProvider: CIContentProviderProtocol!) {
+        if let cell = containerCollectionView?.cellForItem(at: IndexPath(item: containerCollectionViewCurrentPage, section: 0)) as? NewsContainerCollectionViewCell {
+            if let viewModels = self.contentProvider?.content.contentsViewModelDictionary[(self.contentProvider?.content.titlesArray[containerCollectionViewCurrentPage])!] {
+                cell.viewModels = viewModels
+            }
+        }
+    }
+    
+    
     func contentProviderDidError(_ contentProvider: CIContentProviderProtocol!) {
         
     }
@@ -151,6 +160,7 @@ extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         updateIndex()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsContainerCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsContainerCollectionViewCell
+        cell.delegate = self
         if let viewModels = contentProvider?.content.contentsViewModelDictionary[(contentProvider?.content.titlesArray[indexPath.item])!] {
             cell.viewModels = viewModels
         }
@@ -178,4 +188,11 @@ extension NewsViewController: UIScrollViewDelegate {
         }
     }
     
+}
+
+
+extension NewsViewController: NewsContainerCollectionViewCellDelegate {
+    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int) {
+        self.contentProvider?.fetchNextPage()
+    }
 }

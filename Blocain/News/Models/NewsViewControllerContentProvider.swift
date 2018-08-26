@@ -21,6 +21,7 @@ protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     var index: Int {get set}
     
     func fetch(singleTopicAt index: Int)
+    func fetchNextPage()
 }
 
 
@@ -29,6 +30,10 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
     private var contentFetcher = NewsContentFetcher.defaultFetcher
     
     var index: Int = 0
+    
+    private var isLoadingNextPage = false
+    
+    private var alreadyLoadedPageArray = [Int]()
     
     override init() {
         content = NewsViewControllerContent()
@@ -62,6 +67,7 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                                     if let data: [String: Any] = snapshot.data() {
                                         if let topicArray = data["topicName"] as? [String] {
                                             self?.content.titlesArray.append(contentsOf: topicArray)
+                                            self?.alreadyLoadedPageArray = [Int](repeating: 1, count: topicArray.count)
                                         }
                                     }
                                     
@@ -85,7 +91,6 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                                         let (contents, contentViewModels) = NewsSourceManager.sharedManager.filterContents(newsContentEntitiesArray: newsContentEntities)
                                         self?.content.contentsDictionary[titleArray[(self?.index)!]] = contents
                                         self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] = contentViewModels
-                                        
                                         self?.setContentOnMainThread(self?.content)
                                     })
                                 }
@@ -132,6 +137,47 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                 self?.setContentOnMainThread(self?.content)
             })
         }
+    }
+    
+    func fetchNextPage() {
+        if !isLoadingNextPage {
+            isLoadingNextPage = true
+            let processingQueue = self.processingQueue
+            processingQueue?.async { [weak self] in
+                guard let titleArray = self?.content.titlesArray else {
+                    self?.setContentOnMainThread(self?.content)
+                    return
+                }
+                
+                guard (self?.index)! < titleArray.count else {
+                    self?.setContentOnMainThread(self?.content)
+                    return
+                }
+                
+                let page = (self?.alreadyLoadedPageArray[(self?.index)!])! + 1
+                self?.contentFetcher.fetchContent(with: page, title: titleArray[(self?.index)!], processingQueue: processingQueue!, completion: { (newsContentEntities, success) in
+                    guard let newsContentEntities = newsContentEntities, success == true else {
+                        self?.setContentOnMainThread(self?.content)
+                        return
+                    }
+                    let (contents, contentViewModels) = NewsSourceManager.sharedManager.filterContents(newsContentEntitiesArray: newsContentEntities)
+                    if var currentContent = self?.content.contentsDictionary[titleArray[(self?.index)!]] {
+                        currentContent.append(contentsOf: contents)
+                        self?.content.contentsDictionary[titleArray[(self?.index)!]] = currentContent
+                    }
+                    if var currentContentViewModels = self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] {
+                        currentContentViewModels.append(contentsOf: contentViewModels)
+                        self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] = currentContentViewModels
+                    }
+                    
+                    self?.alreadyLoadedPageArray[(self?.index)!] = page
+                    self?.addNewContent(onMainThread: self?.content)
+                    self?.isLoadingNextPage = false
+                })
+            }
+            
+        }
+        
     }
 }
 

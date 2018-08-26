@@ -18,13 +18,15 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
     
+    var didWantToLoadMore = false
+    
     var viewModels: [NewsTableViewCellModelProtocol] {
         didSet {
             newsTableView.reloadData()
+            didWantToLoadMore = false
         }
     }
     
-    var currentPage = 1
     
     override init(frame: CGRect) {
         viewModels = [NewsTableViewCellModelProtocol]()
@@ -67,15 +69,13 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.defaultIdentifier, for: indexPath) as! NewsTableViewCell
         cell.loadViewModel(viewModels[indexPath.row])
-        return cell
-    }
-    
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == viewModels.count - 5 {
-            self.delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: currentPage + 1)
-            currentPage += 1
+        let rowsToLoadFromBottom = 5;
+        let rowsLoaded = viewModels.count
+        if !didWantToLoadMore && indexPath.row == rowsLoaded - rowsToLoadFromBottom {
+            didWantToLoadMore = true
+            delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: Int(ceil(Double(viewModels.count) / 20.0)) + 1)
         }
+        return cell
     }
     
     

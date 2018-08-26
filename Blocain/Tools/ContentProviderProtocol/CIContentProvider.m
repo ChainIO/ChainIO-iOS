@@ -81,6 +81,24 @@
 }
 
 
+- (void)addContentIfNeeded {
+    if (self.content != self.contentToChangeTo) {
+        for (id<CIContentProviderListener> listener in self.contentProviderListeners) {
+            if ([listener respondsToSelector:@selector(contentProviderWillChangeContent:)]) {
+                [listener contentProviderWillChangeContent:self];
+            }
+        }
+        
+        self.content = self.contentToChangeTo;
+        self.contentToChangeTo = nil;
+        
+        for (id<CIContentProviderListener> listener in self.contentProviderListeners) {
+            [listener contentProviderDidAddContent:self];
+        }
+    }
+}
+
+
 - (void(^)(void))defaultErrorBlock:(id)content {
     __typeof(self) __weak weakSelf = self;
     void(^errorOnMainThread)(void) = ^{
@@ -103,6 +121,22 @@
         }
     };
     
+    if ([NSThread isMainThread]) {
+        setContentBlock();
+    }else {
+        dispatch_async(dispatch_get_main_queue(), setContentBlock);
+    }
+}
+
+
+- (void)addNewContentOnMainThread:(id)content {
+    __typeof(self) __weak weakSelf = self;
+    void(^setContentBlock)(void) = ^(void){
+        weakSelf.contentToChangeTo = content;
+        if (weakSelf.canChangeContent) {
+            [weakSelf addContentIfNeeded];
+        }
+    };
     if ([NSThread isMainThread]) {
         setContentBlock();
     }else {
