@@ -13,7 +13,7 @@ class NewsContentFetcher: NSObject {
         static let host = "https://newsapi.org/v2/"
         static let path = "everything"
         static let apiKey = "57f652b525dd49f39745f52846df7a40"
-        static let pageSize = "20"
+        static let pageSize = "100"
         static let language = "en"
         static let sortBy = "publishedAt"
     }

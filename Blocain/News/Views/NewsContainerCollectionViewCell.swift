@@ -18,12 +18,10 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
     
-    var didWantToLoadMore = false
     
     var viewModels: [NewsTableViewCellModelProtocol] {
         didSet {
             newsTableView.reloadData()
-            didWantToLoadMore = false
         }
     }
     
@@ -71,8 +69,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
         cell.loadViewModel(viewModels[indexPath.row])
         let rowsToLoadFromBottom = 5;
         let rowsLoaded = viewModels.count
-        if !didWantToLoadMore && indexPath.row == rowsLoaded - rowsToLoadFromBottom {
-            didWantToLoadMore = true
+        if indexPath.row == rowsLoaded - rowsToLoadFromBottom {
             delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: Int(ceil(Double(viewModels.count) / 20.0)) + 1)
         }
         return cell
