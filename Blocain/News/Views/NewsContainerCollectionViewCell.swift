@@ -18,10 +18,12 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
     
+    var didRequestMore = false
     
     var viewModels: [NewsTableViewCellModelProtocol] {
         didSet {
             newsTableView.reloadData()
+            didRequestMore = false
         }
     }
     
@@ -67,9 +69,10 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.defaultIdentifier, for: indexPath) as! NewsTableViewCell
         cell.loadViewModel(viewModels[indexPath.row])
-        let rowsToLoadFromBottom = 5;
+        let rowsToLoadFromBottom = 10;
         let rowsLoaded = viewModels.count
-        if indexPath.row == rowsLoaded - rowsToLoadFromBottom {
+        if !didRequestMore && indexPath.row == rowsLoaded - rowsToLoadFromBottom {
+            didRequestMore = true
             delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: Int(ceil(Double(viewModels.count) / 20.0)) + 1)
         }
         return cell
