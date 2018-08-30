@@ -68,6 +68,7 @@ class ContentFetcher: NSObject {
         return request
     }
     
+    
     func fetchContent(with request: URLRequest, processingQueue: DispatchQueue, successHandler: @escaping ([AnyHashable: Any]) -> Void, errorHandler: @escaping () -> Void) {
         let session = URLSession(configuration: .default)
         session.dataTask(with: request) { (data, response, error) in

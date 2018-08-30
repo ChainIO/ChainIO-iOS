@@ -192,7 +192,14 @@ extension NewsViewController: UIScrollViewDelegate {
 
 
 extension NewsViewController: NewsContainerCollectionViewCellDelegate {
-    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int) {
-        self.contentProvider?.fetchNextPage()
+    
+    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int) {
+        contentProvider?.favoriteItem(at: index)
     }
+    
+    
+    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int) {
+        contentProvider?.fetchNextPage()
+    }
+    
 }

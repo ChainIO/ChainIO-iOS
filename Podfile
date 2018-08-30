@@ -9,9 +9,9 @@ target 'Blocain' do
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
-  pod 'Nuke'
   pod 'Fabric', '~> 1.7.11'
   pod 'Crashlytics', '~> 3.10.7'
+  pod 'Nuke'
   
   target 'BlocainTests' do
     inherit! :search_paths

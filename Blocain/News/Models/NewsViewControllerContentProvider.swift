@@ -22,6 +22,8 @@ protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     
     func fetch(singleTopicAt index: Int)
     func fetchNextPage()
+    
+    func favoriteItem(at index: Int)
 }
 
 
@@ -177,6 +179,10 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
             }
             
         }
+    }
+    
+    
+    func favoriteItem(at index: Int) {
         
     }
 }

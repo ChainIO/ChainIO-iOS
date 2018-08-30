@@ -14,6 +14,7 @@ protocol NewsTableViewCellModelProtocol {
     var imageURL: String? {get}
     var publishedAt: String? {get}
     var shouldHideImage: Bool {get}
+    var contentURL: String {get}
 }
 
 class NewsTableViewCellModel: NSObject, NewsTableViewCellModelProtocol {
@@ -22,6 +23,7 @@ class NewsTableViewCellModel: NSObject, NewsTableViewCellModelProtocol {
     var imageURL: String?
     var publishedAt: String?
     var shouldHideImage = false
+    var contentURL: String = ""
     
     private override init() {
         super.init()
@@ -34,6 +36,7 @@ class NewsTableViewCellModel: NSObject, NewsTableViewCellModelProtocol {
         title = newsContentEntity.title
         imageURL = newsContentEntity.urlToImage
         publishedAt = newsContentEntity.publishedAt
+        contentURL = newsContentEntity.url
         
         shouldHideImage = (newsContentEntity.urlToImage == nil ? true : false)
     }
