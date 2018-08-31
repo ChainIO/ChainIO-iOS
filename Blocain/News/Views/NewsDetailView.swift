@@ -24,7 +24,7 @@ class NewsDetailView: UIView {
     
     private let topBar = UIView()
     private let estimatedProgressView = UIView()
-    private let closeButton = BLButton()
+    private let backButton = BLButton()
     private let bookmarkButton = BLButton()
     private let webView = WKWebView()
     private let titleLabel = UILabel()
@@ -49,12 +49,12 @@ class NewsDetailView: UIView {
         topBar.backgroundColor = .black
         addSubview(topBar)
 
-        closeButton.backgroundColor = .white
-        closeButton.addTarget(self, action: #selector(self.dissmissNewsDetailView), for: .touchUpInside)
-        topBar.addSubview(closeButton)
+        backButton.setImage(UIImage(named: "back"), for: .normal)
+        backButton.addTarget(self, action: #selector(self.dissmissNewsDetailView), for: .touchUpInside)
+        topBar.addSubview(backButton)
         
-        bookmarkButton.backgroundColor = .white
         bookmarkButton.addTarget(self, action: #selector(self.tappedBookmarkButton), for: .touchUpInside)
+        bookmarkButton.setImage(UIImage(named: "bookmark"), for: .normal)
         topBar.addSubview(bookmarkButton)
         
         estimatedProgressView.isUserInteractionEnabled = false
@@ -82,18 +82,29 @@ class NewsDetailView: UIView {
     
     
     override func layoutSubviews() {
-        topBar.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: 85.0)
-        closeButton.frame = CGRect(x: self.frame.width - 22 - 10, y: 46, width: 22, height: 22)
-        bookmarkButton.frame = CGRect(x: self.frame.width - 22 - 10 - 22 - 22, y: 46, width: 22, height: 22)
-        estimatedProgressView.layer.removeAllAnimations()
-        layoutEstimatedProgress(estimatedProgress: webView.estimatedProgress)
+        topBar.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: 66.0)
         
-        webView.frame = CGRect(x: 0, y: topBar.frame.maxY, width: self.frame.width, height: self.frame.size.height - topBar.frame.maxY)
+        if let closeButtonImageWidth = backButton.imageView?.image?.size.width, let closeButtonImageHeight = backButton.imageView?.image?.size.height {
+            backButton.frame = CGRect(x: 14, y: 31, width: closeButtonImageWidth, height: closeButtonImageHeight)
+        }else {
+            backButton.frame = CGRect(x: 14, y: 31, width: 22, height: 22)
+        }
         
         titleLabel.text = title
         titleLabel.sizeToFit()
         titleLabel.frame.size.height = 32
-        titleLabel.center = CGPoint(x: topBar.center.x, y: topBar.center.y + 10.5)
+        titleLabel.center = CGPoint(x: topBar.center.x, y: topBar.center.y + 10)
+        
+        if let bookmarkImageWidth = bookmarkButton.imageView?.image?.size.width, let bookmarkImageHeight = bookmarkButton.imageView?.image?.size.height {
+            bookmarkButton.frame = CGRect(x: self.frame.width - 14 - bookmarkImageWidth, y: 31, width: bookmarkImageWidth, height: bookmarkImageHeight)
+        }else {
+            bookmarkButton.frame = CGRect(x: self.frame.width - 14 - 22, y: 31, width: 22, height: 22)
+        }
+        
+        estimatedProgressView.layer.removeAllAnimations()
+        layoutEstimatedProgress(estimatedProgress: webView.estimatedProgress)
+        
+        webView.frame = CGRect(x: 0, y: topBar.frame.maxY, width: self.frame.width, height: self.frame.size.height - topBar.frame.maxY)
     }
     
     
