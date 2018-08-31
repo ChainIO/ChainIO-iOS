@@ -23,6 +23,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     var containerCollectionViewCurrentPage = 0
     
+    private var willPresentDetailView = false
+    
     
     init(contentProvider: NewsViewControllerContentProviderProtocol, actionHandler: NewsViewControllerActionHandlerProtocol) {
         super.init(nibName: nil, bundle: nil)
@@ -192,7 +194,6 @@ extension NewsViewController: UIScrollViewDelegate {
 
 
 extension NewsViewController: NewsContainerCollectionViewCellDelegate {
-    
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int) {
         contentProvider?.favoriteItem(at: index)
     }
@@ -201,5 +202,28 @@ extension NewsViewController: NewsContainerCollectionViewCellDelegate {
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int) {
         contentProvider?.fetchNextPage()
     }
+    
+    
+    func newsContainerCollectionViewCellDidWantToPresentDetailPage() {
+        willPresentDetailView = true
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    
+    func newsContainerCollectionViewCellDidWantToDismissDetailPage() {
+        willPresentDetailView = false
+        setNeedsStatusBarAppearanceUpdate()
+    }
+}
+
+
+extension NewsViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        if willPresentDetailView {
+            return .lightContent
+        }
+        return .default
+    }
+    
     
 }

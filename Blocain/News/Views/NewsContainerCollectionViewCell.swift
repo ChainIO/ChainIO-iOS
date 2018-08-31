@@ -11,6 +11,9 @@ import UIKit
 protocol NewsContainerCollectionViewCellDelegate {
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int)
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int)
+    
+    func newsContainerCollectionViewCellDidWantToPresentDetailPage()
+    func newsContainerCollectionViewCellDidWantToDismissDetailPage()
 }
 
 class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource, NewsDetailViewDelegate {
@@ -66,6 +69,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     private func animateNewsDetailView(on row: Int) {
         if !isShowingDetailView {
+            delegate?.newsContainerCollectionViewCellDidWantToPresentDetailPage()
             isShowingDetailView = true
             newsDetailIndex = row
             newsDetailView.contentURL = viewModels[row].contentURL
@@ -85,6 +89,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
             UIView.animate(withDuration: 0.5, delay: 0.2, options: .layoutSubviews, animations: {
                 self.newsDetailView.frame = CGRect(x: UIScreen.main.bounds.width / 2.0, y: UIScreen.main.bounds.height / 2.0, width: 0, height: 0)
                 self.newsDetailView.alpha = 0.0
+                self.delegate?.newsContainerCollectionViewCellDidWantToDismissDetailPage()
             }, completion: { (finished) in
                 self.newsDetailView.removeFromSuperview()
             })
