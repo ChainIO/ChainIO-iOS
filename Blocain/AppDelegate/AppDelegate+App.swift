@@ -42,9 +42,10 @@ extension AppDelegate {
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [newsViewController, profileViewController]
-        
-        self.window?.rootViewController = tabBarController
+        let tabBarNavigationController = UINavigationController(rootViewController: tabBarController)
+        tabBarNavigationController.setNavigationBarHidden(true, animated: false)
+        tabBarNavigationController.navigationBar
+        self.tabBarNavigationController = tabBarNavigationController
+        self.window?.rootViewController = tabBarNavigationController
     }
 }
-
-

@@ -9,5 +9,8 @@
 import UIKit
 
 extension AppDelegate: NewsViewControllerActionHandlerDelegate {
-    
+    func actionHandlerDidTapCell(at index: Int) {
+        let newsDetailViewController = NewsDetailViewController()
+        self.tabBarNavigationController.pushViewController(newsDetailViewController, animated: true)
+    }
 }

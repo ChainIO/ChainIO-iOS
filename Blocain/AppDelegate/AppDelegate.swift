@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CIFirestore.sharedInstance.configure()
         Fabric.with([Crashlytics.self])
         didFinishLaunchingForApp()
+        UINavigationBar.appearance().barStyle = .blackOpaque
         return true
     }
 

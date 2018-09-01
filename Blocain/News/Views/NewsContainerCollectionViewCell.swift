@@ -12,11 +12,10 @@ protocol NewsContainerCollectionViewCellDelegate {
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int)
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int)
     
-    func newsContainerCollectionViewCellDidWantToPresentDetailPage()
-    func newsContainerCollectionViewCellDidWantToDismissDetailPage()
+    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didTapCell index: Int)
 }
 
-class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource, NewsDetailViewDelegate {
+class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
     
     var delegate: NewsContainerCollectionViewCellDelegate?
     
@@ -67,48 +66,13 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
         return NSStringFromClass(classForCoder())
     }
     
-    private func animateNewsDetailView(on row: Int) {
-        if !isShowingDetailView {
-            delegate?.newsContainerCollectionViewCellDidWantToPresentDetailPage()
-            isShowingDetailView = true
-            newsDetailIndex = row
-            newsDetailView.contentURL = viewModels[row].contentURL
-            newsDetailView.title = viewModels[row].sourceName
-            newsDetailView.delegate = self
-            
-            UIApplication.shared.keyWindow!.addSubview(newsDetailView)
-            UIApplication.shared.keyWindow!.bringSubview(toFront: newsDetailView)
-            newsDetailView.center = CGPoint(x: UIScreen.main.bounds.width / 2.0, y: UIScreen.main.bounds.height / 2.0)
-            newsDetailView.frame.size = CGSize(width: 20, height: 20)
-            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
-                self.newsDetailView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                self.newsDetailView.alpha = 1.0
-            }, completion: nil)
-        }else {
-            isShowingDetailView = false
-            UIView.animate(withDuration: 0.5, delay: 0.2, options: .layoutSubviews, animations: {
-                self.newsDetailView.frame = CGRect(x: UIScreen.main.bounds.width / 2.0, y: UIScreen.main.bounds.height / 2.0, width: 0, height: 0)
-                self.newsDetailView.alpha = 0.0
-                self.delegate?.newsContainerCollectionViewCellDidWantToDismissDetailPage()
-            }, completion: { (finished) in
-                self.newsDetailView.removeFromSuperview()
-            })
-        }
-    }
     
-    
-    func newsDetailViewDidWantToDismiss() {
-        animateNewsDetailView(on: -1)
-    }
-    
-    
-    
+
     func newsDetailViewTappedBookmarkButton() {
         if let index = newsDetailIndex {
             delegate?.newsContainerCollectionViewCell(self, didWantToFavorite: index)
         }
     }
-    
     
     
     // MARK: UITableView
@@ -140,9 +104,8 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cellCenter = tableView.cellForRow(at: indexPath)?.center {
             transitionStartPoint = tableView.convert(cellCenter, to: contentView)
-            animateNewsDetailView(on: indexPath.row)
         }
-       
+        delegate?.newsContainerCollectionViewCell(self, didTapCell: indexPath.row)
     }
     
     

@@ -9,18 +9,11 @@
 import UIKit
 import WebKit
 
-protocol NewsDetailViewDelegate {
-    func newsDetailViewDidWantToDismiss()
-    func newsDetailViewTappedBookmarkButton()
-}
-
 class NewsDetailView: UIView {
     
     private enum NewsDetailViewConstant {
         static let webViewEstimatedProgressKeyPath = "estimatedProgress"
     }
-    
-    var delegate: NewsDetailViewDelegate?
     
     private let topBar = UIView()
     private let estimatedProgressView = UIView()
@@ -50,10 +43,10 @@ class NewsDetailView: UIView {
         addSubview(topBar)
 
         backButton.setImage(UIImage(named: "back"), for: .normal)
-        backButton.addTarget(self, action: #selector(self.dissmissNewsDetailView), for: .touchUpInside)
+//        backButton.addTarget(self, action: #selector(self.dissmissNewsDetailView), for: .touchUpInside)
         topBar.addSubview(backButton)
         
-        bookmarkButton.addTarget(self, action: #selector(self.tappedBookmarkButton), for: .touchUpInside)
+//        bookmarkButton.addTarget(self, action: #selector(self.tappedBookmarkButton), for: .touchUpInside)
         bookmarkButton.setImage(UIImage(named: "bookmark"), for: .normal)
         topBar.addSubview(bookmarkButton)
         
@@ -69,15 +62,15 @@ class NewsDetailView: UIView {
         titleLabel.textAlignment = .center
         addSubview(titleLabel)
         
-        let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(self.dissmissNewsDetailView))
-        swipeRightGesture.direction = .right
-        webView.addGestureRecognizer(swipeRightGesture)
-        webView.scrollView.panGestureRecognizer.require(toFail: swipeRightGesture)
+//        let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(self.dissmissNewsDetailView))
+//        swipeRightGesture.direction = .right
+//        webView.addGestureRecognizer(swipeRightGesture)
+//        webView.scrollView.panGestureRecognizer.require(toFail: swipeRightGesture)
         
-        let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(self.dissmissNewsDetailView))
-        swipeLeftGesture.direction = .left
-        webView.addGestureRecognizer(swipeLeftGesture)
-        webView.scrollView.panGestureRecognizer.require(toFail: swipeLeftGesture)
+//        let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(self.dissmissNewsDetailView))
+//        swipeLeftGesture.direction = .left
+//        webView.addGestureRecognizer(swipeLeftGesture)
+//        webView.scrollView.panGestureRecognizer.require(toFail: swipeLeftGesture)
     }
     
     
@@ -142,15 +135,6 @@ class NewsDetailView: UIView {
         }
     }
     
-    
-    @objc func tappedBookmarkButton() {
-        delegate?.newsDetailViewTappedBookmarkButton()
-    }
-    
-    
-    @objc func dissmissNewsDetailView() {
-        delegate?.newsDetailViewDidWantToDismiss()
-    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
