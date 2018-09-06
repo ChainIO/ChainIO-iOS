@@ -27,10 +27,20 @@ class NewsSourceManager: NSObject {
             return false
         })
         
-        let highQualityNewsContentEntityViewModels: [NewsTableViewCellModelProtocol] = highQualityNewsContentEntities.map {
+        var set = Set<NewsContentEntity>()
+        let uniqueNewsContentEntities = highQualityNewsContentEntities.filter { (newsEntity) -> Bool in
+            if set.contains(newsEntity) {
+                return false
+            }else {
+                set.insert(newsEntity)
+                return true
+            }
+        }
+        
+        let uniqueNewsContentEntityViewModels: [NewsTableViewCellModelProtocol] = uniqueNewsContentEntities.map {
             return NewsTableViewCellModel(with: $0)
         }
         
-        return (highQualityNewsContentEntities, highQualityNewsContentEntityViewModels)
+        return (uniqueNewsContentEntities, uniqueNewsContentEntityViewModels)
     }
 }

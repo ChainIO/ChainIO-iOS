@@ -28,6 +28,25 @@ struct NewsContentEntity: Codable {
     }
 }
 
+
+extension NewsContentEntity: Equatable {
+    static func == (lhs: NewsContentEntity, rhs: NewsContentEntity) -> Bool {
+        return lhs.title == rhs.title &&
+            lhs.description == rhs.description
+    }
+}
+
+
+extension NewsContentEntity: Hashable {
+    var hashValue: Int {
+        guard let description = description else {
+            return title.hashValue
+        }
+        return title.hashValue ^ description.hashValue
+    }
+}
+
+
 struct Source: Codable {
     let sourceId: String?
     let sourceName: String?
