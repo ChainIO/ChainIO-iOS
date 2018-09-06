@@ -24,6 +24,10 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     var containerCollectionViewCurrentPage = 0
     
     
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     init(contentProvider: NewsViewControllerContentProviderProtocol, actionHandler: NewsViewControllerActionHandlerProtocol) {
         super.init(nibName: nil, bundle: nil)
         
@@ -81,7 +85,6 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         if #available(iOS 11.0, *) {
             containerCollectionView?.frame = CGRect(x: 0, y: topTabBarView.frame.maxY, width: view.bounds.width, height: view.bounds.height - topTabBarView.frame.maxY - view.safeAreaInsets.bottom)
         } else {
-            // Fallback on earlier versions
             containerCollectionView?.frame = CGRect(x: 0, y: topTabBarView.frame.maxY, width: view.bounds.width, height: view.bounds.height - topTabBarView.frame.maxY - NewsViewControllerConstant.bottomTabBarHeight)
         }
     }
@@ -98,7 +101,7 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     private func updateIndex() {
         if let containerCollectionView = containerCollectionView {
-            containerCollectionViewCurrentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.size.width)
+            containerCollectionViewCurrentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.width)
             topTabBarView.setSelectedIndex(containerCollectionViewCurrentPage)
             contentProvider?.index = containerCollectionViewCurrentPage
         }
@@ -191,7 +194,23 @@ extension NewsViewController: UIScrollViewDelegate {
 }
 
 
+extension NewsViewController: NewsDetailViewControllerScrollHelperListenerProtocol {
+    
+    func newsDetailViewControllerScrollHelper(inStream centerIndex: Int) {
+        if let cell = containerCollectionView?.cellForItem(at: IndexPath(item: containerCollectionViewCurrentPage, section: 0)) as? NewsContainerCollectionViewCell {
+            cell.tableViewScroll(to: centerIndex)
+        }
+    }
+    
+}
+
+
 extension NewsViewController: NewsContainerCollectionViewCellDelegate {
+    
+    func newsContainerCollectionViewCellDidWantToRefresh(_ newsContainerCollectionViewCell: UICollectionViewCell) {
+        contentProvider?.pullToRefresh()
+    }
+    
     
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int) {
         contentProvider?.favoriteItem(at: index)

@@ -22,6 +22,7 @@ protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     
     func fetch(singleTopicAt index: Int)
     func fetchNextPage()
+    func pullToRefresh()
     
     func favoriteItem(at index: Int)
 }
@@ -141,6 +142,7 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         }
     }
     
+    
     func fetchNextPage() {
         if !isLoadingNextPage {
             isLoadingNextPage = true
@@ -177,8 +179,15 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                     self?.isLoadingNextPage = false
                 })
             }
-            
         }
+    }
+    
+    
+    func pullToRefresh() {
+        alreadyLoadedPageArray[index] = 0
+        content.contentsDictionary[content.titlesArray[index]]?.removeAll()
+        content.contentsViewModelDictionary[content.titlesArray[index]]?.removeAll()
+        fetchNextPage()
     }
     
     

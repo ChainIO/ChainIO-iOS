@@ -146,12 +146,17 @@
 
 
 - (dispatch_queue_t)processingQueue {
-    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    if (!_processingQueue) {
+        _processingQueue = dispatch_queue_create("com.blocain.processingQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return _processingQueue;
 }
 
 - (void)refresh {
     //subclasses should override
     [self doesNotRecognizeSelector:_cmd];
 }
+
+@synthesize Container;
 
 @end

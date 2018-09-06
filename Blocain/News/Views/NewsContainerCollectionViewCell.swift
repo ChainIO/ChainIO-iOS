@@ -11,24 +11,22 @@ import UIKit
 protocol NewsContainerCollectionViewCellDelegate {
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int)
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int)
+    func newsContainerCollectionViewCellDidWantToRefresh(_ newsContainerCollectionViewCell: UICollectionViewCell)
     
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didTapCell index: Int)
 }
 
-class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
+class NewsContainerCollectionViewCell: UICollectionViewCell {
     
     var delegate: NewsContainerCollectionViewCellDelegate?
     
-    let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
+    private let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
+    
+    private let refreshControl = UIRefreshControl()
     
     var didRequestMore = false
-    private var isShowingDetailView = false
     
-    private lazy var newsDetailView: NewsDetailView = {
-        let newsDetailView = NewsDetailView()
-        newsDetailView.translatesAutoresizingMaskIntoConstraints = false
-        return newsDetailView
-    }()
+    private var isShowingDetailView = false
     
     private var transitionStartPoint: CGPoint?
     
@@ -36,6 +34,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     
     var viewModels: [NewsTableViewCellModelProtocol] {
         didSet {
+            refreshControl.endRefreshing()
             newsTableView.reloadData()
             didRequestMore = false
         }
@@ -47,11 +46,16 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
         
         super.init(frame: frame)
         
+        newsTableView.refreshControl = refreshControl
         newsTableView.separatorStyle = .none
         newsTableView.register(NewsTableViewCell.classForCoder(), forCellReuseIdentifier: NewsTableViewCell.defaultIdentifier)
         newsTableView.delegate = self
         newsTableView.dataSource = self
         addSubview(newsTableView)
+        
+        refreshControl.addTarget(self, action: #selector(self.pullToRefresh), for: .valueChanged)
+        refreshControl.tintColor = UIColor(red: 0.25, green: 0.72, blue: 0.85, alpha: 1.0)
+        refreshControl.attributedTitle = NSAttributedString(string: "Fetching News", attributes: [NSAttributedStringKey.foregroundColor: UIColor(red: 0.25, green: 0.72, blue: 0.85, alpha: 1.0)])
     }
     
     
@@ -67,6 +71,16 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     }
     
     
+    func tableViewScroll(to index: Int) {
+        newsTableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: false)
+        let rowsToLoadFromBottom = 10;
+        let rowsLoaded = viewModels.count
+        if !didRequestMore && index == rowsLoaded - rowsToLoadFromBottom {
+            didRequestMore = true
+            delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: Int(ceil(Double(viewModels.count) / 20.0)) + 1)
+        }
+    }
+    
 
     func newsDetailViewTappedBookmarkButton() {
         if let index = newsDetailIndex {
@@ -75,8 +89,18 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
     }
     
     
-    // MARK: UITableView
+    @objc private func pullToRefresh() {
+        delegate?.newsContainerCollectionViewCellDidWantToRefresh(self)
+    }
     
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+extension NewsContainerCollectionViewCell: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -124,8 +148,4 @@ class NewsContainerCollectionViewCell: UICollectionViewCell, UITableViewDelegate
         return titleLabel.frame.height + 8 + 14 + 20 + 8 + 18 + 20
     }
     
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }

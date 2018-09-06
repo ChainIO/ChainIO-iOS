@@ -25,9 +25,11 @@ extension AppDelegate {
         tabBarItem.selectedImage = UIImage(named: "tab_news")
         
         let newsViewControllerContentProvider = NewsViewControllerContentProvider()
+        self.newsViewControllerContentProvider = newsViewControllerContentProvider
         var newsViewControllerActionHandler = NewsViewControllerActionHandler()
         newsViewControllerActionHandler.delegate = self
         let newsViewController = NewsViewController(contentProvider: newsViewControllerContentProvider, actionHandler: newsViewControllerActionHandler)
+        self.newsViewController = newsViewController
         newsViewController.tabBarItem = tabBarItem
         
         tabBarItem = UITabBarItem()
@@ -44,7 +46,6 @@ extension AppDelegate {
         tabBarController.viewControllers = [newsViewController, profileViewController]
         let tabBarNavigationController = UINavigationController(rootViewController: tabBarController)
         tabBarNavigationController.setNavigationBarHidden(true, animated: false)
-        tabBarNavigationController.navigationBar
         self.tabBarNavigationController = tabBarNavigationController
         self.window?.rootViewController = tabBarNavigationController
     }

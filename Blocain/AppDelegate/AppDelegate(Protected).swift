@@ -10,7 +10,9 @@ import UIKit
 
 extension AppDelegate {
     struct AppDelegateProtected {
-        static var tabBarNavigationController: UINavigationController = UINavigationController()
+        static var tabBarNavigationController = UINavigationController()
+        static var newsViewControllerContentProvider = NewsViewControllerContentProvider()
+        static var newsViewController = NewsViewController()
     }
     
     var tabBarNavigationController: UINavigationController {
@@ -19,6 +21,24 @@ extension AppDelegate {
         }
         set(newValue) {
             AppDelegateProtected.tabBarNavigationController = newValue
+        }
+    }
+    
+    var newsViewController: NewsViewController {
+        get {
+            return AppDelegateProtected.newsViewController
+        }
+        set(newValue) {
+            AppDelegateProtected.newsViewController = newValue
+        }
+    }
+    
+    var newsViewControllerContentProvider: NewsViewControllerContentProvider {
+        get {
+            return AppDelegateProtected.newsViewControllerContentProvider
+        }
+        set(newValue) {
+            AppDelegateProtected.newsViewControllerContentProvider = newValue
         }
     }
 }
