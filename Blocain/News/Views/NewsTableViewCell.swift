@@ -86,10 +86,10 @@ class NewsTableViewCell: UITableViewCell {
         
         if let imageURLString = viewModel.imageURL {
             if let imageURL = URL(string: imageURLString) {
-                Nuke.loadImage(with: imageURL, into: newsImageView)
+                let options = ImageLoadingOptions(placeholder: nil, transition: .fadeIn(duration: 0.33), failureImage: nil, failureImageTransition: nil, contentModes: nil)
+                Nuke.loadImage(with: imageURL, options: options, into: newsImageView, progress: nil, completion: nil)
             }
         }
-        
     }
 
 }
