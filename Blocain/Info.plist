@@ -4,8 +4,25 @@
 <dict>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-        <key>NSAllowsArbitraryLoadsInWebContent</key>
-        <true/>
+		<key>NSExceptionDomains</key>
+        <dict>
+            <key>marketwatch.com</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+            <key>foxnews.com</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+        </dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsForMedia</key>
+		<true/>
 	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
