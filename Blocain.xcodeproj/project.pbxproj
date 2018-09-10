@@ -12,7 +12,10 @@
 		2167FC50318899BD92BD05AC /* Pods_ChainIOUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82A80CCFE3297423F156D718 /* Pods_ChainIOUITests.framework */; };
 		8B3F259CADA8C0FE8544047B /* Pods_BlocainUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C168D6F8298B242B5570C958 /* Pods_BlocainUITests.framework */; };
 		D10841762122B463004BB666 /* CIFirestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10841752122B463004BB666 /* CIFirestore.swift */; };
+		D121AE332143992F004EBF9A /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D121AE322143992F004EBF9A /* OnboardingViewController.swift */; };
+		D121AE362143ABAB004EBF9A /* TopicsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D121AE352143ABAB004EBF9A /* TopicsPickerView.swift */; };
 		D147D8F22127ED00000C1339 /* NewsContentFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D147D8F12127ED00000C1339 /* NewsContentFetcher.swift */; };
+		D149C8E62144E94200DBEA47 /* TopicPickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D149C8E52144E94200DBEA47 /* TopicPickerLabel.swift */; };
 		D14EADB8213A249200247A64 /* NewsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14EADB7213A249200247A64 /* NewsDetailViewController.swift */; };
 		D14EADBA213A542500247A64 /* AppDelegate(Protected).swift in Sources */ = {isa = PBXBuildFile; fileRef = D14EADB9213A542500247A64 /* AppDelegate(Protected).swift */; };
 		D1541F7D21083F6300A9B2AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1541F7C21083F6300A9B2AB /* AppDelegate.swift */; };
@@ -88,7 +91,10 @@
 		C168D6F8298B242B5570C958 /* Pods_BlocainUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BlocainUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD7558108BDA9D5289E6DC9C /* Pods_Blocain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Blocain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D10841752122B463004BB666 /* CIFirestore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIFirestore.swift; sourceTree = "<group>"; };
+		D121AE322143992F004EBF9A /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		D121AE352143ABAB004EBF9A /* TopicsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicsPickerView.swift; sourceTree = "<group>"; };
 		D147D8F12127ED00000C1339 /* NewsContentFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsContentFetcher.swift; sourceTree = "<group>"; };
+		D149C8E52144E94200DBEA47 /* TopicPickerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicPickerLabel.swift; sourceTree = "<group>"; };
 		D14EADB7213A249200247A64 /* NewsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsDetailViewController.swift; sourceTree = "<group>"; };
 		D14EADB9213A542500247A64 /* AppDelegate(Protected).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate(Protected).swift"; sourceTree = "<group>"; };
 		D1541F7921083F6200A9B2AB /* Blocain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blocain.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -205,6 +211,23 @@
 			path = FireStore;
 			sourceTree = "<group>";
 		};
+		D121AE31214398FB004EBF9A /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				D121AE322143992F004EBF9A /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		D121AE372143ABB4004EBF9A /* Topics Picker */ = {
+			isa = PBXGroup;
+			children = (
+				D121AE352143ABAB004EBF9A /* TopicsPickerView.swift */,
+				D149C8E52144E94200DBEA47 /* TopicPickerLabel.swift */,
+			);
+			path = "Topics Picker";
+			sourceTree = "<group>";
+		};
 		D147D8F02127ECBA000C1339 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +282,7 @@
 		D1541F7B21083F6200A9B2AB /* Blocain */ = {
 			isa = PBXGroup;
 			children = (
+				D121AE31214398FB004EBF9A /* Onboarding */,
 				D1541FB421084A5400A9B2AB /* AppDelegate */,
 				D1541FB621084A7000A9B2AB /* News */,
 				D14EADB6213A247600247A64 /* NewsDetail */,
@@ -346,6 +370,7 @@
 		D171D5A4210C3052005F1FAA /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				D121AE372143ABB4004EBF9A /* Topics Picker */,
 				D1E24A062133CD670067EC49 /* Button */,
 				D1552703212FBDA000BC37EC /* TimeInterval */,
 				D1B4B929212BD1FA00A633BF /* News Source */,
@@ -706,7 +731,9 @@
 				D17F426C2116497F00B56362 /* OrderableSectionProtocol.swift in Sources */,
 				D1541FBB210857AD00A9B2AB /* NewsViewControllerActionHandler.swift in Sources */,
 				D1541FB9210853C400A9B2AB /* NewsViewControllerContentProvider.swift in Sources */,
+				D121AE332143992F004EBF9A /* OnboardingViewController.swift in Sources */,
 				D1541FB32108442800A9B2AB /* ProfileViewController.swift in Sources */,
+				D121AE362143ABAB004EBF9A /* TopicsPickerView.swift in Sources */,
 				D1B4B92D212BD78900A633BF /* NewsTableViewCell.swift in Sources */,
 				D17F4271211667C900B56362 /* OrderableSection.swift in Sources */,
 				D19C3A462115832C002C8D86 /* ProfileViewControllerContentProvider.swift in Sources */,
@@ -723,6 +750,7 @@
 				D17EA1862126794D007C5714 /* ContentFetcher.swift in Sources */,
 				D1541F7D21083F6300A9B2AB /* AppDelegate.swift in Sources */,
 				D1541FAD2108408C00A9B2AB /* AppDelegate+App.swift in Sources */,
+				D149C8E62144E94200DBEA47 /* TopicPickerLabel.swift in Sources */,
 				D1736913211BD27200BD169D /* CIContentProvider.m in Sources */,
 				D19C3A4A2115870D002C8D86 /* AppDelegate+ProfileViewController.swift in Sources */,
 				D16B539A213BA87A0061D15F /* NewsDetailCollectionViewCell.swift in Sources */,

@@ -13,12 +13,22 @@ extension AppDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.makeKeyAndVisible()
         self.window = window
-        
+        onboardingViewController()
+    }
+    
+    
+    func onboardingViewController() {
+        let onboardingViewController = OnboardingViewController()
+        self.window?.rootViewController = onboardingViewController
+    }
+    
+    
+    func defaultRootViewController() {
         var tabBarItem = UITabBarItem()
-//        tabBarItem.image = UIImage(named: "tab_home")
-//        tabBarItem.selectedImage = UIImage(named: "tab_home")
-//        let homeViewController = HomeViewController()
-//        homeViewController.tabBarItem = tabBarItem
+        //        tabBarItem.image = UIImage(named: "tab_home")
+        //        tabBarItem.selectedImage = UIImage(named: "tab_home")
+        //        let homeViewController = HomeViewController()
+        //        homeViewController.tabBarItem = tabBarItem
         
         tabBarItem = UITabBarItem()
         tabBarItem.image = UIImage(named: "tab_news")
