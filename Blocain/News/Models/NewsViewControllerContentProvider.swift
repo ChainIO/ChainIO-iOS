@@ -28,6 +28,19 @@ protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
 }
 
 
+struct NewsViewControllerContent: NewsViewControllerContentProtocol {
+    var titlesArray: [String]
+    var contentsDictionary: [String: [NewsContentEntity]]
+    var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]
+    
+    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil, contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]? = nil) {
+        self.titlesArray = titlesArray == nil ? [String]() : titlesArray!
+        self.contentsDictionary = contentsDictionary == nil ? [String: [NewsContentEntity]]() : contentsDictionary!
+        self.contentsViewModelDictionary = contentsViewModelDictionary == nil ? [String: [NewsTableViewCellModelProtocol]]() : contentsViewModelDictionary!
+    }
+}
+
+
 class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerContentProviderProtocol {
     var content: NewsViewControllerContentProtocol
     private var contentFetcher = NewsContentFetcher.defaultFetcher
@@ -193,18 +206,5 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
     
     func favoriteItem(at index: Int) {
         
-    }
-}
-
-
-struct NewsViewControllerContent: NewsViewControllerContentProtocol {
-    var titlesArray: [String]
-    var contentsDictionary: [String: [NewsContentEntity]]
-    var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]
-    
-    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil, contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]? = nil) {
-        self.titlesArray = titlesArray == nil ? [String]() : titlesArray!
-        self.contentsDictionary = contentsDictionary == nil ? [String: [NewsContentEntity]]() : contentsDictionary!
-        self.contentsViewModelDictionary = contentsViewModelDictionary == nil ? [String: [NewsTableViewCellModelProtocol]]() : contentsViewModelDictionary!
     }
 }

@@ -8,13 +8,32 @@
 
 import UIKit
 
-class OnboardingViewController: UIViewController {
+class OnboardingViewController: UIViewController, CIContentProviderListener {
     
     private let skipButton = BLButton()
     private let handImageView = UIImageView()
     private let titleLabel = UILabel()
     private let topicsPickerView = TopicsPickerView()
     private let startButton = BLButton()
+    
+    private let contentProvider: OnboardingViewControllerContentProviderProtocol
+    
+    init(contentProvider: OnboardingViewControllerContentProviderProtocol) {
+        self.contentProvider = contentProvider
+        
+        super.init(nibName: nil, bundle: nil)
+        
+        contentProvider.add(self)
+        contentProvider.refresh()
+    }
+    
+    
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     override func loadView() {
         super.loadView()
@@ -75,12 +94,32 @@ class OnboardingViewController: UIViewController {
     }
     
     
+    private func loadContent() {
+        topicsPickerView.topicDataModelArray = contentProvider.content.topicDataModelArray
+    }
+    
+    
     @objc func tappedSkipButton() {
         
     }
     
     
     @objc func tappedStartButton() {
+        
+    }
+    
+    
+    // MARK: CIContentProviderListener
+    
+    
+    func contentProviderDidChangeContent(_ contentProvider: CIContentProviderProtocol!) {
+        if isViewLoaded {
+            loadContent()
+        }
+    }
+    
+    
+    func contentProviderDidError(_ contentProvider: CIContentProviderProtocol!) {
         
     }
 }

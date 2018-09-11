@@ -18,7 +18,8 @@ extension AppDelegate {
     
     
     func onboardingViewController() {
-        let onboardingViewController = OnboardingViewController()
+        let onboardingViewControllerContentProvider = OnboardingViewControllerContentProvider()
+        let onboardingViewController = OnboardingViewController(contentProvider: onboardingViewControllerContentProvider)
         self.window?.rootViewController = onboardingViewController
     }
     

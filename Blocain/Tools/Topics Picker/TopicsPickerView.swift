@@ -14,7 +14,11 @@ class TopicsPickerView: UIView {
     
     private var collectionView: UICollectionView!
     
-    private var topics = ["Blockchain", "Bitcoin", "Ripple", "Bitcoin Cash", "Ethereum", "Smart Contracts", "Cryptocurrency", "Litecoin", "Coinbase", "ICO", "Dapp", "Celebrities", "aaa", "bbb", "ccc", "eeee", "fff", "ggg"]
+    var topicDataModelArray = [TopicDataModel]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     private var longPressGesture: UILongPressGestureRecognizer!
     
@@ -94,13 +98,13 @@ extension TopicsPickerView: UICollectionViewDelegate, UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return topics.count
+        return topicDataModelArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopicsPickerCell.defaultIdentifier, for: indexPath) as! TopicsPickerCell
-        cell.setTitleLabelText(topics[indexPath.item])
-        cell.isSelected = indexPath.item % 2 == 0
+        cell.setTitleLabelText(topicDataModelArray[indexPath.item].name)
+        cell.isSelected = topicDataModelArray[indexPath.item].isDefaultSelected
         return cell
     }
     
@@ -109,14 +113,14 @@ extension TopicsPickerView: UICollectionViewDelegate, UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let title = topics[sourceIndexPath.item]
-        topics.remove(at: sourceIndexPath.item)
-        topics.insert(title, at: destinationIndexPath.item)
+        let title = topicDataModelArray[sourceIndexPath.item]
+        topicDataModelArray.remove(at: sourceIndexPath.item)
+        topicDataModelArray.insert(title, at: destinationIndexPath.item)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let tmpLabel = TopicPickerLabel()
-        tmpLabel.text = topics[indexPath.item]
+        tmpLabel.text = topicDataModelArray[indexPath.item].name
         let size = tmpLabel.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: 40))
         return size
     }
