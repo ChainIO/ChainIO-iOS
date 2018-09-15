@@ -8,18 +8,22 @@
 
 import UIKit
 
-class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContentProviderListener {
-    
-    enum NewsViewControllerConstant {
+class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContentProviderListener, NewsTopicsPickerViewDelegate {
+    private enum NewsViewControllerConstant {
         static let topTabBarViewHeight:CGFloat = 85.0
         static let bottomTabBarHeight:CGFloat = 49.0
     }
     
-    var contentProvider: NewsViewControllerContentProviderProtocol?
-    var actionHandler: NewsViewControllerActionHandlerProtocol?
+    private var contentProvider: NewsViewControllerContentProviderProtocol?
+    private var actionHandler: NewsViewControllerActionHandlerProtocol?
     
-    let topTabBarView = NewsTopTabBarView()
-    var containerCollectionView:UICollectionView?
+    private let topTabBarView = NewsTopTabBarView()
+    
+    private var containerCollectionView:UICollectionView?
+    
+    private let newsTopicPickerView = NewsTopicsPickerView()
+    
+    private var isShowingTopicsPickerView = false
     
     var containerCollectionViewCurrentPage = 0
     
@@ -27,6 +31,7 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     init() {
         super.init(nibName: nil, bundle: nil)
     }
+    
     
     init(contentProvider: NewsViewControllerContentProviderProtocol, actionHandler: NewsViewControllerActionHandlerProtocol) {
         super.init(nibName: nil, bundle: nil)
@@ -68,6 +73,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
             view.addSubview(containerCollectionView)
         }
         
+        newsTopicPickerView.delegate = self
+        
         loadContent()
     }
     
@@ -87,14 +94,16 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         } else {
             containerCollectionView?.frame = CGRect(x: 0, y: topTabBarView.frame.maxY, width: view.bounds.width, height: view.bounds.height - topTabBarView.frame.maxY - NewsViewControllerConstant.bottomTabBarHeight)
         }
+        
+        newsTopicPickerView.frame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: (UIApplication.shared.keyWindow?.bounds.height)! + 49)
     }
     
     
     func loadContent() {
-        if let titlesArray = self.contentProvider?.content.titlesArray {
-            topTabBarView.items = titlesArray
-        }
+        guard let content = self.contentProvider?.content else { return }
         
+        topTabBarView.items = content.titlesArray
+        newsTopicPickerView.topicsDataModelArray = content.topicsDataArray
         containerCollectionView?.reloadData()
     }
     
@@ -108,12 +117,62 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     }
     
     
+    private func topicsPickerView(shouldShow: Bool) {
+        if shouldShow {
+            UIApplication.shared.keyWindow!.addSubview(self.newsTopicPickerView)
+            UIApplication.shared.keyWindow!.bringSubview(toFront: self.newsTopicPickerView)
+            
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
+                var frame = self.newsTopicPickerView.frame
+                frame.origin.y = 0
+                self.newsTopicPickerView.frame = frame
+                
+            }, completion: nil)
+        }else {
+            isShowingTopicsPickerView = false
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                var frame = self.newsTopicPickerView.frame
+                frame.origin.y = self.view.bounds.height
+                self.newsTopicPickerView.frame = frame
+            }) { (finished) in
+                if finished {
+                    self.newsTopicPickerView.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    
+    // MARK: NewsTopicsPickerViewDelegate
+    
+    
+    func tappedEmptyArea() {
+        topicsPickerView(shouldShow: false)
+    }
+    
+    
+    func tappedSaveButton() {
+        topicsPickerView(shouldShow: false)
+    }
+    
+    
+    func topicsDidChange() {
+        contentProvider?.refreshTopicsAndNewsItems()
+    }
+    
+    
     // MARK: NewsTopTabBarViewDelegate
     
     
     func didSelectIndex(_ index: Int) {
         containerCollectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: false)
         contentProvider?.index = index
+    }
+    
+    
+    func tappedFilterButton() {
+        isShowingTopicsPickerView = !isShowingTopicsPickerView
+        topicsPickerView(shouldShow: isShowingTopicsPickerView)
     }
     
     

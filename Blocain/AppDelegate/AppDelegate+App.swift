@@ -13,18 +13,26 @@ extension AppDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.makeKeyAndVisible()
         self.window = window
-        onboardingViewController()
+        
+        let userDefaults = UserDefaults.standard
+        let hasShownOnboarding = userDefaults.bool(forKey: "hasShownOnboarding")
+        if hasShownOnboarding {
+            showNewsViewController()
+        }else {
+            showOnboardingViewController()
+        }
     }
     
     
-    func onboardingViewController() {
+    func showOnboardingViewController() {
         let onboardingViewControllerContentProvider = OnboardingViewControllerContentProvider()
+        onboardingViewControllerContentProvider.delegate = self
         let onboardingViewController = OnboardingViewController(contentProvider: onboardingViewControllerContentProvider)
         self.window?.rootViewController = onboardingViewController
     }
     
     
-    func defaultRootViewController() {
+    func showNewsViewController() {
         var tabBarItem = UITabBarItem()
         //        tabBarItem.image = UIImage(named: "tab_home")
         //        tabBarItem.selectedImage = UIImage(named: "tab_home")
@@ -60,4 +68,13 @@ extension AppDelegate {
         self.tabBarNavigationController = tabBarNavigationController
         self.window?.rootViewController = tabBarNavigationController
     }
+}
+
+
+extension AppDelegate: OnboardingViewControllerContentProviderDelegate {
+    
+    func onboardingViewControllerTappedActionButton() {
+        showNewsViewController()
+    }
+    
 }

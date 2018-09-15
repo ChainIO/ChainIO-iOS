@@ -10,6 +10,7 @@ import UIKit
 
 protocol NewsTopTabBarViewDelegate: AnyObject {
     func didSelectIndex(_ index: Int)
+    func tappedFilterButton()
 }
 
 
@@ -25,9 +26,10 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     
     weak var delegate:NewsTopTabBarViewDelegate?
     
-    var tabBarCollectionView:UICollectionView?
-    let tabBarSelectedIndexBottomIndicator = UILabel()
-    let bottomBorderLabel = UILabel()
+    private var tabBarCollectionView:UICollectionView?
+    private let tabBarSelectedIndexBottomIndicator = UILabel()
+    private let bottomBorderLabel = UILabel()
+    private let filterButton = BLButton()
     
     var items: [String] = [String]() {
         didSet {
@@ -69,6 +71,10 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         
         bottomBorderLabel.backgroundColor = UIColor(red: 229/255.0, green: 229/255.0, blue: 229/255.0, alpha: 1.0)
         addSubview(bottomBorderLabel)
+        
+        filterButton.setImage(UIImage(named: "ic_filter"), for: .normal)
+        filterButton.addTarget(self, action: #selector(self.tappedFilterButton), for: .touchUpInside)
+        addSubview(filterButton)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -83,7 +89,14 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         
         bottomBorderLabel.frame = CGRect(x: 0, y: bounds.height - 1, width: bounds.width, height: 1)
         
+        filterButton.frame = CGRect(x: bounds.width - (filterButton.imageView?.image?.size.width ?? 45), y: bounds.height - (filterButton.imageView?.image?.size.height ?? 22) - 10, width: filterButton.imageView?.image?.size.width ?? 45, height: filterButton.imageView?.image?.size.height ?? 22)
+        
         layoutTabBarSelectedIndexBottomIndicator()
+    }
+    
+    
+    @objc private func tappedFilterButton() {
+        delegate?.tappedFilterButton()
     }
     
     

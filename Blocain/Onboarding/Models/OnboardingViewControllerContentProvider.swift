@@ -14,11 +14,19 @@ protocol OnboardingViewControllerContentProtocol {
 
 protocol OnboardingViewControllerContentProviderProtocol: CIContentProviderProtocol {
     var content: OnboardingViewControllerContentProtocol {get}
+    
+    func tappedActionButton()
+}
+
+
+protocol OnboardingViewControllerContentProviderDelegate {
+    func onboardingViewControllerTappedActionButton()
 }
 
 
 struct OnboardingViewControllerContent: OnboardingViewControllerContentProtocol {
     var topicDataModelArray: [TopicDataModel]
+    
     
     init(topicDataModelArray: [TopicDataModel]? = nil) {
         self.topicDataModelArray = topicDataModelArray == nil ? [TopicDataModel]() : topicDataModelArray!
@@ -28,6 +36,7 @@ struct OnboardingViewControllerContent: OnboardingViewControllerContentProtocol 
 
 class OnboardingViewControllerContentProvider: CIContentProvider, OnboardingViewControllerContentProviderProtocol {
     var content: OnboardingViewControllerContentProtocol
+    var delegate: OnboardingViewControllerContentProviderDelegate?
     
     override init() {
         content = OnboardingViewControllerContent()
@@ -49,5 +58,10 @@ class OnboardingViewControllerContentProvider: CIContentProvider, OnboardingView
                 strongSelf.setContentOnMainThread(strongSelf.content)
             })
         }
+    }
+    
+    
+    func tappedActionButton() {
+        delegate?.onboardingViewControllerTappedActionButton()
     }
 }

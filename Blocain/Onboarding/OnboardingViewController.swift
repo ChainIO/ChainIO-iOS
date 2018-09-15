@@ -8,15 +8,15 @@
 
 import UIKit
 
-class OnboardingViewController: UIViewController, CIContentProviderListener {
+class OnboardingViewController: UIViewController, CIContentProviderListener, TopicsPickerViewDelegate {
     
     private let skipButton = BLButton()
     private let handImageView = UIImageView()
     private let titleLabel = UILabel()
     private let topicsPickerView = TopicsPickerView()
-    private let startButton = BLButton()
     
     private let contentProvider: OnboardingViewControllerContentProviderProtocol
+    
     
     init(contentProvider: OnboardingViewControllerContentProviderProtocol) {
         self.contentProvider = contentProvider
@@ -26,8 +26,6 @@ class OnboardingViewController: UIViewController, CIContentProviderListener {
         contentProvider.add(self)
         contentProvider.refresh()
     }
-    
-    
     
     
     required init?(coder aDecoder: NSCoder) {
@@ -53,20 +51,16 @@ class OnboardingViewController: UIViewController, CIContentProviderListener {
         titleLabel.textAlignment = .left
         view.addSubview(titleLabel)
         
+        topicsPickerView.title = "Pick the topics that you would like to see and read about."
+        topicsPickerView.buttonTitle = "Start"
+        topicsPickerView.delegate = self
         view.addSubview(topicsPickerView)
         
-        startButton.setTitle("Start", for: .normal)
-        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 18.0, weight: .semibold)
-        startButton.backgroundColor = UIColor(red: 74/255.0, green: 144/255.0, blue: 226/255.0, alpha: 1.0)
-        startButton.addTarget(self, action: #selector(self.tappedStartButton), for: .touchUpInside)
-        startButton.layer.cornerRadius = 27.0
-        view.addSubview(startButton)
         
         skipButton.translatesAutoresizingMaskIntoConstraints = false
         handImageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         topicsPickerView.translatesAutoresizingMaskIntoConstraints = false
-        startButton.translatesAutoresizingMaskIntoConstraints = false
         
         skipButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 32.0).isActive = true
         skipButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0).isActive = true
@@ -84,13 +78,8 @@ class OnboardingViewController: UIViewController, CIContentProviderListener {
         
         topicsPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         topicsPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        topicsPickerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0.0).isActive = true
-        topicsPickerView.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -50.0).isActive = true
-        
-        startButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24.0).isActive = true
-        startButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24.0).isActive = true
-        startButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -56.0).isActive = true
-        startButton.heightAnchor.constraint(equalToConstant: 54.0).isActive = true
+        topicsPickerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 17.0).isActive = true
+        topicsPickerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
     
@@ -99,13 +88,23 @@ class OnboardingViewController: UIViewController, CIContentProviderListener {
     }
     
     
-    @objc func tappedSkipButton() {
-        
+    private func markAsShown() {
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(true, forKey: "hasShownOnboarding")
+        userDefaults.synchronize()
     }
     
     
-    @objc func tappedStartButton() {
-        
+    @objc func tappedSkipButton() {
+        TopicManager.sharedManager.saveOriginalTopics()
+        markAsShown()
+        contentProvider.tappedActionButton()
+    }
+    
+    
+    func tappedDoneButton() {
+        markAsShown()
+        contentProvider.tappedActionButton()
     }
     
     

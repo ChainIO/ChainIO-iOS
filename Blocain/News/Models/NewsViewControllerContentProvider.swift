@@ -13,6 +13,7 @@ protocol NewsViewControllerContentProtocol {
     var titlesArray: [String] {get set}
     var contentsDictionary: [String: [NewsContentEntity]] {get set}
     var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]] {get set}
+    var topicsDataArray: [TopicDataModel] {get set}
 }
 
 
@@ -21,9 +22,10 @@ protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     var index: Int {get set}
     
     func fetch(singleTopicAt index: Int)
+    func fetchTopics()
     func fetchNextPage()
     func pullToRefresh()
-    
+    func refreshTopicsAndNewsItems()
     func favoriteItem(at index: Int)
 }
 
@@ -32,11 +34,13 @@ struct NewsViewControllerContent: NewsViewControllerContentProtocol {
     var titlesArray: [String]
     var contentsDictionary: [String: [NewsContentEntity]]
     var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]
+    var topicsDataArray: [TopicDataModel]
     
-    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil, contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]? = nil) {
+    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil, contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]? = nil, topicsDataArray: [TopicDataModel]? = nil) {
         self.titlesArray = titlesArray == nil ? [String]() : titlesArray!
         self.contentsDictionary = contentsDictionary == nil ? [String: [NewsContentEntity]]() : contentsDictionary!
         self.contentsViewModelDictionary = contentsViewModelDictionary == nil ? [String: [NewsTableViewCellModelProtocol]]() : contentsViewModelDictionary!
+        self.topicsDataArray = topicsDataArray == nil ? [TopicDataModel]() : topicsDataArray!
     }
 }
 
@@ -50,6 +54,8 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
     private var isLoadingNextPage = false
     
     private var alreadyLoadedPageArray = [Int]()
+    
+    private var topicDataModelArray = [TopicDataModel]()
     
     override init() {
         content = NewsViewControllerContent()
@@ -72,53 +78,65 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                     if let sourceNameData: [String: Any] = snapshot.data() {
                         if let sourceNamesArray = sourceNameData["SourceName"] as? [String] {
                             NewsSourceManager.sharedManager.newsSourceArray = sourceNamesArray
-                            
-                            Firestore.firestore().document("/Topics/F4qqmZj5Dvz9ar8px9ze").getDocument(completion: { (snapshot, error) in
-                                processingQueue?.async {
-                                    guard let snapshot = snapshot, error == nil else {
-                                        self?.defaultErrorBlock()
-                                        return
-                                    }
-                                    
-                                    if let data: [String: Any] = snapshot.data() {
-                                        if let topicArray = data["topicName"] as? [String] {
-                                            self?.content.titlesArray.append(contentsOf: topicArray)
-                                            self?.alreadyLoadedPageArray = [Int](repeating: 1, count: topicArray.count)
-                                        }
-                                    }
-                                    
-                                    guard let titleArray = self?.content.titlesArray else {
-                                        self?.setContentOnMainThread(self?.content)
-                                        return
-                                    }
-                                    
-                                    guard (self?.index)! < titleArray.count else {
-                                        self?.setContentOnMainThread(self?.content)
-                                        return
-                                    }
-                                    
-                                    
-                                    self?.contentFetcher.fetchContent(with: titleArray[(self?.index)!], processingQueue: processingQueue!, completion: { (newsContentEntities, success) in
-                                        guard let newsContentEntities = newsContentEntities, success == true else {
-                                            self?.setContentOnMainThread(self?.content)
-                                            return
-                                        }
-                                        
-                                        let (contents, contentViewModels) = NewsSourceManager.sharedManager.filterContents(newsContentEntitiesArray: newsContentEntities)
-                                        self?.content.contentsDictionary[titleArray[(self?.index)!]] = contents
-                                        self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] = contentViewModels
-                                        self?.setContentOnMainThread(self?.content)
-                                    })
+                            TopicManager.sharedManager.fetchCombinedTopicsDataModels(processingQueue: processingQueue!) { (localTopicDataModelArray, remoteDataModelArray, combinedDataModelArray, error) in
+                                guard let combinedDataModelArray = combinedDataModelArray, error == nil else { return }
+                                self?.content.topicsDataArray = combinedDataModelArray
+                                
+                                let sortedTopicDataModelArray = combinedDataModelArray.filter({ (topicDataModel) -> Bool in
+                                    return topicDataModel.isSelected
+                                })
+                                var topicNameArray = [String]()
+                                sortedTopicDataModelArray.forEach({ (topicDataModel) in
+                                    topicNameArray.append(topicDataModel.name)
+                                })
+                                
+                                self?.content.titlesArray.append(contentsOf: topicNameArray)
+                                self?.alreadyLoadedPageArray = [Int](repeating: 1, count: topicNameArray.count)
+                                
+                                guard let titleArray = self?.content.titlesArray else {
+                                    self?.setContentOnMainThread(self?.content)
+                                    return
                                 }
-                            })
+                                
+                                guard (self?.index)! < titleArray.count else {
+                                    self?.setContentOnMainThread(self?.content)
+                                    return
+                                }
+                                
+                                
+                                self?.contentFetcher.fetchContent(with: titleArray[(self?.index)!], processingQueue: processingQueue!, completion: { (newsContentEntities, success) in
+                                    guard let newsContentEntities = newsContentEntities, success == true else {
+                                        self?.setContentOnMainThread(self?.content)
+                                        return
+                                    }
+                                    
+                                    let (contents, contentViewModels) = NewsSourceManager.sharedManager.filterContents(newsContentEntitiesArray: newsContentEntities)
+                                    self?.content.contentsDictionary[titleArray[(self?.index)!]] = contents
+                                    self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] = contentViewModels
+                                    self?.setContentOnMainThread(self?.content)
+                                })
+
+                            }
                         }
                     }
                 })
-                
-                
-
             })
         }
+    }
+    
+    
+    func refreshTopicsAndNewsItems() {
+        let localTopicDataModelArray = TopicManager.sharedManager.getTopicDataModelArrayFromUserDefaults().filter { (topicDataModel) -> Bool in
+            return topicDataModel.isSelected
+        }
+        var topicNameArray = [String]()
+        localTopicDataModelArray.forEach({ (topicDataModel) in
+            topicNameArray.append(topicDataModel.name)
+        })
+        self.content.titlesArray.removeAll()
+        self.content.titlesArray.append(contentsOf: topicNameArray)
+        self.alreadyLoadedPageArray = [Int](repeating: 1, count: topicNameArray.count)
+        fetch(singleTopicAt: index)
     }
     
     
@@ -193,6 +211,11 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                 })
             }
         }
+    }
+    
+    
+    func fetchTopics() {
+        
     }
     
     
