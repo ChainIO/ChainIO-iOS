@@ -136,6 +136,7 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         self.content.titlesArray.removeAll()
         self.content.titlesArray.append(contentsOf: topicNameArray)
         self.alreadyLoadedPageArray = [Int](repeating: 1, count: topicNameArray.count)
+        self.content.contentsDictionary.removeAll()
         fetch(singleTopicAt: index)
     }
     
