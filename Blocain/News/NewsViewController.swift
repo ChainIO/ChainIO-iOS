@@ -190,6 +190,9 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         if let cell = containerCollectionView?.cellForItem(at: IndexPath(item: containerCollectionViewCurrentPage, section: 0)) as? NewsContainerCollectionViewCell {
             if let viewModels = self.contentProvider?.content.contentsViewModelDictionary[(self.contentProvider?.content.titlesArray[containerCollectionViewCurrentPage])!] {
                 cell.viewModels = viewModels
+                if let errorMessage = self.contentProvider?.content.topTabBarTopicsDataArray[containerCollectionViewCurrentPage].errorMessage {
+                    cell.errorMessage = errorMessage
+                }
             }
         }
     }
@@ -225,6 +228,9 @@ extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.delegate = self
         if let viewModels = contentProvider?.content.contentsViewModelDictionary[(contentProvider?.content.titlesArray[indexPath.item])!] {
             cell.viewModels = viewModels
+            if let errorMessage = contentProvider?.content.topTabBarTopicsDataArray[indexPath.item].errorMessage {
+                cell.errorMessage = errorMessage
+            }
         }
         return cell
     }

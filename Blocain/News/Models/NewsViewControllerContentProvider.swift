@@ -14,6 +14,7 @@ protocol NewsViewControllerContentProtocol {
     var contentsDictionary: [String: [NewsContentEntity]] {get set}
     var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]] {get set}
     var topicsDataArray: [TopicDataModel] {get set}
+    var topTabBarTopicsDataArray: [TopicDataModel] {get set}
 }
 
 
@@ -35,12 +36,14 @@ struct NewsViewControllerContent: NewsViewControllerContentProtocol {
     var contentsDictionary: [String: [NewsContentEntity]]
     var contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]
     var topicsDataArray: [TopicDataModel]
+    var topTabBarTopicsDataArray: [TopicDataModel]
     
-    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil, contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]? = nil, topicsDataArray: [TopicDataModel]? = nil) {
+    init(titlesArray: [String]? = nil, contentsDictionary: [String: [NewsContentEntity]]? = nil, contentsViewModelDictionary: [String: [NewsTableViewCellModelProtocol]]? = nil, topicsDataArray: [TopicDataModel]? = nil, topTabBarTopicsDataArray: [TopicDataModel]? = nil) {
         self.titlesArray = titlesArray == nil ? [String]() : titlesArray!
         self.contentsDictionary = contentsDictionary == nil ? [String: [NewsContentEntity]]() : contentsDictionary!
         self.contentsViewModelDictionary = contentsViewModelDictionary == nil ? [String: [NewsTableViewCellModelProtocol]]() : contentsViewModelDictionary!
         self.topicsDataArray = topicsDataArray == nil ? [TopicDataModel]() : topicsDataArray!
+        self.topTabBarTopicsDataArray = topTabBarTopicsDataArray == nil ? [TopicDataModel]() : topTabBarTopicsDataArray!
     }
 }
 
@@ -85,6 +88,8 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                                 let sortedTopicDataModelArray = combinedDataModelArray.filter({ (topicDataModel) -> Bool in
                                     return topicDataModel.isSelected
                                 })
+                                self?.content.topTabBarTopicsDataArray = sortedTopicDataModelArray
+                                
                                 var topicNameArray = [String]()
                                 sortedTopicDataModelArray.forEach({ (topicDataModel) in
                                     topicNameArray.append(topicDataModel.name)
@@ -115,7 +120,6 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                                     self?.content.contentsViewModelDictionary[titleArray[(self?.index)!]] = contentViewModels
                                     self?.setContentOnMainThread(self?.content)
                                 })
-
                             }
                         }
                     }
@@ -129,12 +133,16 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         let localTopicDataModelArray = TopicManager.sharedManager.getTopicDataModelArrayFromUserDefaults().filter { (topicDataModel) -> Bool in
             return topicDataModel.isSelected
         }
+        self.content.topTabBarTopicsDataArray.removeAll()
+        self.content.topTabBarTopicsDataArray = localTopicDataModelArray
+        
         var topicNameArray = [String]()
         localTopicDataModelArray.forEach({ (topicDataModel) in
             topicNameArray.append(topicDataModel.name)
         })
         self.content.titlesArray.removeAll()
         self.content.titlesArray.append(contentsOf: topicNameArray)
+        
         self.alreadyLoadedPageArray = [Int](repeating: 1, count: topicNameArray.count)
         self.content.contentsDictionary.removeAll()
         fetch(singleTopicAt: index)

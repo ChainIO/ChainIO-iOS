@@ -53,8 +53,10 @@ class OnboardingViewControllerContentProvider: CIContentProvider, OnboardingView
             
             TopicManager.sharedManager.fetchTopicsDataModels(processingQueue: processingQueue, completion: { (topicDataModelArray, error) in
                 guard let topicDataModelArray = topicDataModelArray, error == nil else { return }
-                
-                strongSelf.content.topicDataModelArray = topicDataModelArray
+                let availableTopicDataModelArray = topicDataModelArray.filter({ (topicDataModel) -> Bool in
+                    return topicDataModel.isAvailable
+                })
+                strongSelf.content.topicDataModelArray = availableTopicDataModelArray
                 strongSelf.setContentOnMainThread(strongSelf.content)
             })
         }

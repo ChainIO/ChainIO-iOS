@@ -14,21 +14,25 @@ class TopicDataModel: NSObject, NSCoding {
     let name: String
     var index: Int
     var isDefaultSelected: Bool
-    let query: String
+    var query: String
     var customIndex: Int
     var isSelected: Bool
+    var isAvailable: Bool
+    var errorMessage: String
     
     override var hashValue: Int {
         return name.hashValue
     }
     
-    init(name: String, index: Int, isDefaultSelected: Bool, query: String, customIndex: Int, isSelected: Bool) {
+    init(name: String, index: Int, isDefaultSelected: Bool, query: String, customIndex: Int, isSelected: Bool, isAvailable: Bool, errorMessage: String) {
         self.name = name
         self.index = index
         self.isDefaultSelected = isDefaultSelected
         self.query = query
         self.customIndex = customIndex
         self.isSelected = isSelected
+        self.isAvailable = isAvailable
+        self.errorMessage = errorMessage
     }
     
     
@@ -39,8 +43,10 @@ class TopicDataModel: NSObject, NSCoding {
         let query = aDecoder.decodeObject(forKey: "query") as! String
         let customIndex = aDecoder.decodeInteger(forKey: "customIndex")
         let isSelected = aDecoder.decodeBool(forKey: "isSelected")
+        let isAvailable = aDecoder.decodeBool(forKey: "isAvailable")
+        let errorMessage = aDecoder.decodeObject(forKey: "errorMessage") as! String
         
-        self.init(name: name, index: index, isDefaultSelected: isDefaultSelected, query: query, customIndex: customIndex, isSelected: isSelected)
+        self.init(name: name, index: index, isDefaultSelected: isDefaultSelected, query: query, customIndex: customIndex, isSelected: isSelected, isAvailable: isAvailable, errorMessage: errorMessage)
     }
     
     
@@ -51,6 +57,8 @@ class TopicDataModel: NSObject, NSCoding {
         aCoder.encode(query, forKey: "query")
         aCoder.encode(customIndex, forKey: "customIndex")
         aCoder.encode(isSelected, forKey: "isSelected")
+        aCoder.encode(isAvailable, forKey: "isAvailable")
+        aCoder.encode(errorMessage, forKey: "errorMessage")
     }
     
     
@@ -86,7 +94,7 @@ class TopicManager: NSObject {
                     if let dataArray = data["Topics"] as? [AnyObject] {
                         var topicDataModelArray = [TopicDataModel]()
                         for data in dataArray {
-                            let topicDataModel = TopicDataModel(name: data.object(forKey: "name") as! String, index: data.object(forKey: "index") as! Int, isDefaultSelected: data.object(forKey: "isDefaultSelected") as! Bool, query: data.object(forKey: "query") as! String, customIndex: Int.max, isSelected: data.object(forKey: "isDefaultSelected") as! Bool)
+                            let topicDataModel = TopicDataModel(name: data.object(forKey: "name") as! String, index: data.object(forKey: "index") as! Int, isDefaultSelected: data.object(forKey: "isDefaultSelected") as! Bool, query: data.object(forKey: "query") as! String, customIndex: Int.max, isSelected: data.object(forKey: "isDefaultSelected") as! Bool, isAvailable: data.object(forKey: "isAvailable") as! Bool, errorMessage: data.object(forKey: "errorMessage") as! String)
                             topicDataModelArray.append(topicDataModel)
                         }
                         topicDataModelArray.sort(){$0.index < $1.index}
@@ -109,8 +117,15 @@ class TopicManager: NSObject {
             var set = Set<TopicDataModel>()
             var combinedTopicDataModelArray = [TopicDataModel]()
             localTopicDataModelArray.forEach({ (topicDataModel) in
-                set.insert(topicDataModel)
-                combinedTopicDataModelArray.append(topicDataModel)
+                if remoteTopicDataModelArray.contains(topicDataModel) {
+                    let remoteTopicDataModel = remoteTopicDataModelArray.filter(){$0 == topicDataModel}.first
+                    topicDataModel.errorMessage = remoteTopicDataModel?.errorMessage ?? ""
+                    topicDataModel.isAvailable = remoteTopicDataModel?.isAvailable ?? true
+                    topicDataModel.query = remoteTopicDataModel?.query ?? ""
+                    topicDataModel.isDefaultSelected = remoteTopicDataModel?.isDefaultSelected ?? true
+                    set.insert(topicDataModel)
+                    combinedTopicDataModelArray.append(topicDataModel)
+                }
             })
             
             remoteTopicDataModelArray.forEach({ (topicDataModel) in
@@ -119,6 +134,7 @@ class TopicManager: NSObject {
                     set.insert(topicDataModel)
                 }
             })
+            
             combinedTopicDataModelArray.sort(){$0.customIndex < $1.customIndex}
             completion(localTopicDataModelArray, remoteTopicDataModelArray, combinedTopicDataModelArray, error)
         }

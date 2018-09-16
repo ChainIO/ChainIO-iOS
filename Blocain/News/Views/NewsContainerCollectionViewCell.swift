@@ -32,11 +32,20 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
     
     private var newsDetailIndex: Int?
     
+    private var errorMessageLabel = UILabel()
+    
     var viewModels: [NewsTableViewCellModelProtocol] {
         didSet {
             refreshControl.endRefreshing()
             newsTableView.reloadData()
             didRequestMore = false
+        }
+    }
+    
+    var errorMessage:String = "" {
+        didSet {
+            errorMessageLabel.text = errorMessage
+            layoutSubviews()
         }
     }
     
@@ -56,13 +65,24 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
         refreshControl.addTarget(self, action: #selector(self.pullToRefresh), for: .valueChanged)
         refreshControl.tintColor = UIColor(red: 0.25, green: 0.72, blue: 0.85, alpha: 1.0)
         refreshControl.attributedTitle = NSAttributedString(string: "Fetching News", attributes: [NSAttributedStringKey.foregroundColor: UIColor(red: 0.25, green: 0.72, blue: 0.85, alpha: 1.0)])
+        
+        errorMessageLabel.textAlignment = .center
+        errorMessageLabel.backgroundColor = .red
+        errorMessageLabel.textColor = .white
+        errorMessageLabel.font = UIFont.systemFont(ofSize: 14.0)
+        addSubview(errorMessageLabel)
     }
     
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        newsTableView.frame = contentView.frame
+        
+        
+        let errorMessageLabelSize = errorMessageLabel.sizeThatFits(CGSize(width: contentView.frame.width, height: contentView.frame.height))
+        errorMessageLabel.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: errorMessageLabelSize.height)
+        
+        newsTableView.frame = CGRect(x: 0, y: errorMessageLabel.frame.maxY, width: contentView.frame.width, height: contentView.frame.height - errorMessageLabel.frame.maxY)
     }
     
     
