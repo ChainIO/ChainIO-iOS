@@ -65,12 +65,16 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
             tabBarCollectionView.dataSource = self
             addSubview(tabBarCollectionView)
             
-            tabBarSelectedIndexBottomIndicator.backgroundColor = .black
+            tabBarSelectedIndexBottomIndicator.backgroundColor = UIColor(red: 74 / 255.0, green: 144 / 255.0, blue: 226 / 255.0, alpha: 1.0)
             tabBarSelectedIndexBottomIndicator.layer.cornerRadius = 0.5
             tabBarCollectionView.addSubview(tabBarSelectedIndexBottomIndicator)
         }
         
-        bottomBorderLabel.backgroundColor = UIColor(red: 229/255.0, green: 229/255.0, blue: 229/255.0, alpha: 1.0)
+        bottomBorderLabel.backgroundColor = UIColor(red: 118/255.0, green: 118/255.0, blue: 118/255.0, alpha: 0.08)
+        bottomBorderLabel.layer.shadowColor = UIColor(red: 118/255.0, green: 118/255.0, blue: 118/255.0, alpha: 0.08).cgColor
+        bottomBorderLabel.layer.shadowOffset = CGSize(width: 0.0, height: -2.0)
+        layer.shadowRadius = 9.0
+        layer.shadowOpacity = 1.0
         addSubview(bottomBorderLabel)
         
         filterButton.setImage(UIImage(named: "ic_filter"), for: .normal)
