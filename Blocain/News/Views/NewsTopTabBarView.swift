@@ -60,6 +60,7 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
             tabBarCollectionView.alwaysBounceHorizontal = true
             tabBarCollectionView.backgroundColor = .white
             tabBarCollectionView.register(NewsTopTabBarViewCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: NewsTopTabBarViewCollectionViewCell.defaultReuseIdentifier())
+            tabBarCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 30)
             tabBarCollectionView.delegate = self
             tabBarCollectionView.dataSource = self
             addSubview(tabBarCollectionView)
@@ -179,7 +180,7 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = items[indexPath.item].size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13.0, weight: .semibold)])
+        var size = items[indexPath.item].size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14.0, weight: .semibold)])
         size.height = bounds.size.height - constants.tabBarCollectionViewTopSpace
         return size
     }
@@ -192,14 +193,18 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            titleLabel.textColor = UIColor.init(white: 0 / 255.0, alpha: isSelected ? 1.0 : 0.4)
+            if isSelected {
+                titleLabel.textColor = UIColor(red: 74.0 / 255.0, green: 144.0 / 255.0, blue: 226 / 255.0, alpha: 1.0)
+            }else {
+                titleLabel.textColor = UIColor(red: 75.0 / 255.0, green: 85.0 / 255.0, blue: 89 / 255.0, alpha: 1.0)
+            }
         }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        titleLabel.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        titleLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         titleLabel.textColor = UIColor.darkGray
         titleLabel.backgroundColor = .clear
         titleLabel.textAlignment = .center
@@ -210,7 +215,7 @@ class NewsTopTabBarViewCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        titleLabel.frame = CGRect(x: 0, y: 35, width: contentView.bounds.width, height: 18)
+        titleLabel.frame = CGRect(x: 0, y: 31, width: contentView.bounds.width, height: 18)
     }
     
     
