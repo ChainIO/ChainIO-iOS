@@ -108,12 +108,12 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     func setSelectedIndex(_ selectedIndex: Int) {
         tabBarSelectedIndex = selectedIndex
         let index = IndexPath(item: selectedIndex, section: 0)
-        if tabFrameInSuperView(index) == nil {
+        if tabFrameInWindow(index) == nil {
             tabBarCollectionView?.scrollToItem(at: index, at: .centeredHorizontally, animated: true)
         }
         
-        if let cellFrame = tabFrameInSuperView(index) {
-            if cellFrame.width + cellFrame.origin.x > self.bounds.width - 30 {
+        if let cellFrame = tabFrameInWindow(index) {
+            if cellFrame.width + cellFrame.origin.x > self.bounds.width - 30 || cellFrame.origin.x < 20 {
                 tabBarCollectionView?.scrollToItem(at: index, at: .centeredHorizontally, animated: true)
             }
             tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
@@ -143,6 +143,25 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
             }
             tabBarSelectedIndexBottomIndicator.frame = CGRect(x: selectedTabFrame.origin.x, y: tabBarCollectionView.bounds.height - 3, width: selectedTabFrame.width, height: 3)
         }
+    }
+    
+    
+    private func tabFrameInWindow(_ indexPath: IndexPath) -> CGRect? {
+        guard let tabBarCollectionView = tabBarCollectionView else {
+            return nil
+        }
+        
+        guard let _ = tabBarCollectionView.cellForItem(at: indexPath) else {
+            return nil
+        }
+        
+        let attributes = tabBarCollectionView.layoutAttributesForItem(at: indexPath)
+        guard let tabRect = attributes?.frame else {
+            return nil
+        }
+        
+        let tabFrame = tabBarCollectionView.convert(tabRect, to: self)
+        return tabFrame
     }
     
     
