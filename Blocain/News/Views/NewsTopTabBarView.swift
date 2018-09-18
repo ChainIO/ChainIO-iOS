@@ -31,6 +31,8 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     private let bottomBorderLabel = UILabel()
     private let filterButton = BLButton()
     
+    private var shouldCheckBottomIndicator = false
+    
     var items: [String] = [String]() {
         didSet {
             tabBarCollectionView?.reloadData()
@@ -108,8 +110,19 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     func setSelectedIndex(_ selectedIndex: Int) {
         tabBarSelectedIndex = selectedIndex
         let index = IndexPath(item: selectedIndex, section: 0)
+        if tabFrameInSuperView(index) == nil {
+            tabBarCollectionView?.scrollToItem(at: index, at: .centeredHorizontally, animated: true)
+        }
+        
+        if let cellFrame = tabFrameInSuperView(index) {
+            if cellFrame.width + cellFrame.origin.x > self.bounds.width - 30 {
+                tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
+                tabBarCollectionView?.scrollToItem(at: index, at: .centeredHorizontally, animated: true)
+            }else {
+                tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
+            }
+        }
         tabBarBottomIndexIndicatorScrollTo(index, animate: true)
-        tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
     }
     
     
@@ -139,17 +152,18 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     
     private func tabFrameInSuperView(_ indexPath: IndexPath) -> CGRect? {
         guard let tabBarCollectionView = tabBarCollectionView else {
-            return .zero
+            return nil
         }
         
         guard let _ = tabBarCollectionView.cellForItem(at: indexPath) else {
-            return .zero
+            return nil
         }
         
         let attributes = tabBarCollectionView.layoutAttributesForItem(at: indexPath)
         guard let tabRect = attributes?.frame else {
-            return .zero
+            return nil
         }
+        
         let tabFrame = tabBarCollectionView.convert(tabRect, to: tabBarCollectionView)
         return tabFrame
     }
