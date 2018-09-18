@@ -24,6 +24,7 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     private let newsTopicPickerView = NewsTopicsPickerView()
     
     private var isShowingTopicsPickerView = false
+    private var isShowingAlertView = false
     
     var containerCollectionViewCurrentPage = 0
     
@@ -158,6 +159,25 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     func topicsDidChange() {
         contentProvider?.refreshTopicsAndNewsItems()
+    }
+    
+    
+    func showErrorMessage() {
+        if !isShowingAlertView {
+            let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+            alertWindow.rootViewController = UIViewController()
+            alertWindow.windowLevel = UIWindowLevelAlert + 1
+            
+            let alertViewController = UIAlertController(title: "Error", message: "Please pick at least one topic to get started.", preferredStyle: .alert)
+            alertViewController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                alertViewController.dismiss(animated: true, completion: {[weak self] in
+                    self?.isShowingAlertView = false
+                })
+            }))
+            
+            alertWindow.makeKeyAndVisible()
+            alertWindow.rootViewController?.present(alertViewController, animated: true, completion: nil)
+        }
     }
     
     

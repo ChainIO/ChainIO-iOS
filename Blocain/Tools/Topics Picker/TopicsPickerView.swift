@@ -11,6 +11,7 @@ import UIKit
 @objc protocol TopicsPickerViewDelegate {
     func tappedDoneButton()
     @objc optional func topicsDidChange()
+    @objc optional func showErrorMessage()
 }
 
 
@@ -116,6 +117,12 @@ class TopicsPickerView: UIView {
     
     
     @objc func tappedDoneButton() {
+        let tmpArray = topicDataModelArray.filter(){$0.isSelected == true}
+        guard tmpArray.count > 0 else {
+            delegate?.showErrorMessage?()
+            return
+        }
+        
         TopicManager.sharedManager.saveUserCustomTopics(array: topicDataModelArray)
         if didChangeTopics {
             delegate?.topicsDidChange?()

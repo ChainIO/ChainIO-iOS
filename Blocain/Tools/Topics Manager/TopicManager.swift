@@ -20,7 +20,7 @@ class TopicDataModel: NSObject, NSCoding {
     var isAvailable: Bool
     var errorMessage: String
     
-    override var hashValue: Int {
+    override var hash: Int {
         return name.hashValue
     }
     

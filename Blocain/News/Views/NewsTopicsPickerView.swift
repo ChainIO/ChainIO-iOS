@@ -12,6 +12,7 @@ protocol NewsTopicsPickerViewDelegate {
     func tappedEmptyArea()
     func tappedSaveButton()
     func topicsDidChange()
+    func showErrorMessage()
 }
 
 class NewsTopicsPickerView: UIView, TopicsPickerViewDelegate, UIGestureRecognizerDelegate {
@@ -22,16 +23,15 @@ class NewsTopicsPickerView: UIView, TopicsPickerViewDelegate, UIGestureRecognize
     private let dividerLabel = UILabel()
     
     var topicsDataModelArray: [TopicDataModel] {
-        set(newValue) {
-            topicsPickerView.topicDataModelArray = newValue
+        didSet {
+            topicsPickerView.topicDataModelArray = topicsDataModelArray
             topicsPickerView.collectionView.reloadData()
-        }
-        get {
-            return self.topicsDataModelArray
         }
     }
     
     override init(frame: CGRect) {
+        topicsDataModelArray = [TopicDataModel]()
+        
         super.init(frame: frame)
         
         backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.58)
@@ -93,6 +93,10 @@ class NewsTopicsPickerView: UIView, TopicsPickerViewDelegate, UIGestureRecognize
         self.delegate?.topicsDidChange()
     }
     
+    
+    func showErrorMessage() {
+        self.delegate?.showErrorMessage()
+    }
     
     
     required init?(coder aDecoder: NSCoder) {
