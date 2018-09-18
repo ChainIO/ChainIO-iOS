@@ -31,8 +31,6 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
     private let bottomBorderLabel = UILabel()
     private let filterButton = BLButton()
     
-    private var shouldCheckBottomIndicator = false
-    
     var items: [String] = [String]() {
         didSet {
             tabBarCollectionView?.reloadData()
@@ -116,11 +114,9 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         
         if let cellFrame = tabFrameInSuperView(index) {
             if cellFrame.width + cellFrame.origin.x > self.bounds.width - 30 {
-                tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
                 tabBarCollectionView?.scrollToItem(at: index, at: .centeredHorizontally, animated: true)
-            }else {
-                tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
             }
+            tabBarCollectionView?.selectItem(at: index, animated: false, scrollPosition: .init(rawValue: 0))
         }
         tabBarBottomIndexIndicatorScrollTo(index, animate: true)
     }
