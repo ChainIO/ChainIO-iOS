@@ -45,7 +45,7 @@ class NewsTableViewCell: UITableViewCell {
         infoLabel.textAlignment = .left
         newsInfoContainerView.addSubview(infoLabel)
         
-        newsImageView.backgroundColor = .red
+        newsImageView.backgroundColor = UIColor(red: 146 / 255.0, green: 146 / 255.0, blue: 146 / 255.0, alpha: 1.0)
         contentView.addSubview(newsImageView)
         
         separatorLabel.backgroundColor = UIColor(red: 242/255.0, green: 242/255.0, blue: 242/255.0, alpha: 1.0)

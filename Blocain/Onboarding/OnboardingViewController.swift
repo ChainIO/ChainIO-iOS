@@ -43,7 +43,7 @@ class OnboardingViewController: UIViewController, CIContentProviderListener, Top
         skipButton.addTarget(self, action: #selector(self.tappedSkipButton), for: .touchUpInside)
         view.addSubview(skipButton)
         
-        handImageView.backgroundColor = .red
+        handImageView.image = UIImage(named: "hello")
         view.addSubview(handImageView)
         
         titleLabel.text = "Welcome to Blocain."

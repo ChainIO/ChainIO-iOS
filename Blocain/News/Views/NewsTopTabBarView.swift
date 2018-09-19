@@ -94,7 +94,7 @@ class NewsTopTabBarView: UIView, UICollectionViewDelegate, UICollectionViewDataS
         
         bottomBorderLabel.frame = CGRect(x: 0, y: bounds.height - 1, width: bounds.width, height: 1)
         
-        filterButton.frame = CGRect(x: bounds.width - (filterButton.imageView?.image?.size.width ?? 45), y: bounds.height - (filterButton.imageView?.image?.size.height ?? 22) - 10, width: filterButton.imageView?.image?.size.width ?? 45, height: filterButton.imageView?.image?.size.height ?? 22)
+        filterButton.frame = CGRect(x: bounds.width - (filterButton.imageView?.image?.size.width ?? 45), y: bounds.height - (filterButton.imageView?.image?.size.height ?? 22) - 14, width: filterButton.imageView?.image?.size.width ?? 45, height: filterButton.imageView?.image?.size.height ?? 22)
         
         layoutTabBarSelectedIndexBottomIndicator()
     }
