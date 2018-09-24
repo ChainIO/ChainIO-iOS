@@ -8,6 +8,7 @@
 
 import UIKit
 import Nuke
+import FLAnimatedImage
 
 class NewsTableViewCell: UITableViewCell {
     
@@ -16,6 +17,7 @@ class NewsTableViewCell: UITableViewCell {
     private let titleLabel = UILabel()
     private let infoLabel = UILabel()
     private let newsImageView = UIImageView()
+    private let newsGifView = FLAnimatedImageView()
     private let separatorLabel = UILabel()
     
     class var defaultIdentifier: String {
@@ -45,6 +47,9 @@ class NewsTableViewCell: UITableViewCell {
         infoLabel.textAlignment = .left
         newsInfoContainerView.addSubview(infoLabel)
         
+        newsGifView.backgroundColor = UIColor(red: 146 / 255.0, green: 146 / 255.0, blue: 146 / 255.0, alpha: 1.0)
+        contentView.addSubview(newsGifView)
+        
         newsImageView.backgroundColor = UIColor(red: 146 / 255.0, green: 146 / 255.0, blue: 146 / 255.0, alpha: 1.0)
         contentView.addSubview(newsImageView)
         
@@ -61,6 +66,7 @@ class NewsTableViewCell: UITableViewCell {
         sourceLabel.sizeToFit()
         
         newsImageView.frame = CGRect(x: contentView.frame.width - 15 - 110, y: (contentView.frame.height - 80) / 2.0, width: 110, height: 80)
+        newsGifView.frame = CGRect(x: contentView.frame.width - 15 - 110, y: (contentView.frame.height - 80) / 2.0, width: 110, height: 80)
         
         titleLabel.frame = CGRect(x: 0, y: sourceLabel.frame.maxY + 8, width: newsImageView.isHidden ? contentView.frame.width - 40 : contentView.frame.width - 20 - 9 - 110 - 16, height: 300)
         titleLabel.sizeToFit()
@@ -74,8 +80,8 @@ class NewsTableViewCell: UITableViewCell {
     }
     
     
-    func loadViewModel(_ viewModel: NewsTableViewCellModelProtocol) {
-        newsImageView.isHidden = viewModel.shouldHideImage
+    func loadViewModel(_ viewModel: NewsTableViewCellViewModelProtocol) {
+        newsImageView.isHidden = !viewModel.shouldShowImage
         titleLabel.numberOfLines = newsImageView.isHidden ? 3 : 5
         sourceLabel.text = viewModel.sourceName
         titleLabel.text = viewModel.title
@@ -84,10 +90,21 @@ class NewsTableViewCell: UITableViewCell {
             infoLabel.text = Date.convertUTCTimeToElapsedTime(utcTime: publishedTime)
         }
         
+        
+        
         if let imageURLString = viewModel.imageURL {
             if let imageURL = URL(string: imageURLString) {
                 let options = ImageLoadingOptions(placeholder: nil, transition: .fadeIn(duration: 0.33), failureImage: nil, failureImageTransition: nil, contentModes: nil)
-                Nuke.loadImage(with: imageURL, options: options, into: newsImageView, progress: nil, completion: nil)
+                newsGifView.isHidden = !viewModel.shouldShowGif
+                newsImageView.isHidden = !viewModel.shouldShowImage
+                if newsGifView.isHidden == false {
+                    if let animatedImage = try? FLAnimatedImage(animatedGIFData: Data(contentsOf: imageURL)) {
+                        newsGifView.animatedImage = animatedImage
+                    }
+                }else if newsImageView.isHidden == false {
+                    Nuke.loadImage(with: imageURL, options: options, into: newsImageView, progress: nil, completion: nil)
+                }
+                
             }
         }
     }

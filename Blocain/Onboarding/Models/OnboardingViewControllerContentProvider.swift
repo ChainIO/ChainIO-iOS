@@ -46,7 +46,7 @@ class OnboardingViewControllerContentProvider: CIContentProvider, OnboardingView
     
     
     override func refresh() {
-        guard let processingQueue = self.processingQueue else { return }
+        let processingQueue = self.processingQueue
         
         processingQueue.async{[weak self] in
             guard let strongSelf = self else { return }

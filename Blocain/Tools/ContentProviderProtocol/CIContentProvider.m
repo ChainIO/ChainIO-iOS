@@ -145,7 +145,7 @@
 }
 
 
-- (dispatch_queue_t)processingQueue {
+- (_Nonnull dispatch_queue_t)processingQueue {
     if (!_processingQueue) {
         _processingQueue = dispatch_queue_create("com.blocain.processingQueue", DISPATCH_QUEUE_SERIAL);
     }

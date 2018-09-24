@@ -44,6 +44,7 @@ class NewsDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         
         view.backgroundColor = .white
         
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20.0, weight: .semibold)]
         self.navigationController?.navigationBar.barTintColor = .black
         let backButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(self.tappedBackButton))
         backButtonItem.tintColor = .white
@@ -85,6 +86,7 @@ class NewsDetailViewController: UIViewController, UIGestureRecognizerDelegate {
         
         collectionView.contentOffset = CGPoint(x: CGFloat(scrollHelper.collectionViewInitialIndex) * view.bounds.width, y: 0)
         collectionViewCurrentIndex = scrollHelper.collectionViewInitialIndex
+        self.navigationItem.title = scrollHelper.dataSource[collectionViewCurrentIndex].source?.name
     }
 
     

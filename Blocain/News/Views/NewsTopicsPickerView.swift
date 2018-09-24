@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol NewsTopicsPickerViewDelegate {
+protocol NewsTopicsPickerViewDelegate: AnyObject {
     func tappedEmptyArea()
     func tappedSaveButton()
     func topicsDidChange()
@@ -16,7 +16,7 @@ protocol NewsTopicsPickerViewDelegate {
 }
 
 class NewsTopicsPickerView: UIView, TopicsPickerViewDelegate, UIGestureRecognizerDelegate {
-    var delegate: NewsTopicsPickerViewDelegate?
+    weak var delegate: NewsTopicsPickerViewDelegate?
     
     private let topicsPickerView = TopicsPickerView()
     private let topPlaceHolderView = UIView()

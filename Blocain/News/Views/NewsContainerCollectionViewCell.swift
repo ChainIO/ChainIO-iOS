@@ -34,7 +34,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
     
     private var errorMessageLabel = UILabel()
     
-    var viewModels: [NewsTableViewCellModelProtocol] {
+    var viewModels: [NewsTableViewCellViewModelProtocol] {
         didSet {
             refreshControl.endRefreshing()
             newsTableView.reloadData()
@@ -51,7 +51,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
     
     
     override init(frame: CGRect) {
-        viewModels = [NewsTableViewCellModelProtocol]()
+        viewModels = [NewsTableViewCellViewModelProtocol]()
         
         super.init(frame: frame)
         
@@ -160,8 +160,8 @@ extension NewsContainerCollectionViewCell: UITableViewDelegate, UITableViewDataS
         titleLabel.font = UIFont.systemFont(ofSize: 16.0, weight: .bold)
         titleLabel.textAlignment = .left
         titleLabel.lineBreakMode = .byTruncatingTail
-        titleLabel.numberOfLines = viewModel.shouldHideImage ? 3 : 5
-        titleLabel.frame.size = CGSize(width: viewModel.shouldHideImage ? contentView.frame.width - 40 : contentView.frame.width - 20 - 9 - 110 - 16, height: 300)
+        titleLabel.numberOfLines = !viewModel.shouldShowImage ? 3 : 5
+        titleLabel.frame.size = CGSize(width: !viewModel.shouldShowImage ? contentView.frame.width - 40 : contentView.frame.width - 20 - 9 - 110 - 16, height: 300)
         titleLabel.text = viewModel.title
         titleLabel.sizeToFit()
         

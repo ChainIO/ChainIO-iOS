@@ -10,7 +10,7 @@
 
 @interface CIContentProvider ()
 
-@property (nonatomic) dispatch_queue_t processingQueue;
+@property (nonatomic) _Nonnull dispatch_queue_t processingQueue;
 @property (nonatomic, readonly) void(^defaultErrorBlock)(void);
 
 - (void)setContentOnMainThread:(id)content;
