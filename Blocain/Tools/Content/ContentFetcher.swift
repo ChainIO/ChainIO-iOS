@@ -45,7 +45,11 @@ class ContentFetcher: NSObject {
                 queryItems.append(URLQueryItem(name: key, value: value))
             }
         }
-        components?.queryItems = queryItems
+        if #available(iOS 11.0, *) {
+            components?.percentEncodedQueryItems = queryItems
+        } else {
+            // Fallback on earlier versions
+        }
         
         guard let url = components?.url else {
             return nil
@@ -53,11 +57,12 @@ class ContentFetcher: NSObject {
         
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.rawValue
+        request.setValue("92def0d0", forHTTPHeaderField: "X-AYLIEN-NewsAPI-Application-ID")
+        request.setValue("c3304064c90c78dc651c6dfb464021bc", forHTTPHeaderField: "X-AYLIEN-NewsAPI-Application-Key")
         
         if let bodyJsonObject = bodyJsonObject {
             do {
                 let bodyData = try JSONSerialization.data(withJSONObject: bodyJsonObject, options: .prettyPrinted)
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = bodyData
             } catch {
                 print(error.localizedDescription)

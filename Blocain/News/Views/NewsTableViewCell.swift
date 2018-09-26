@@ -8,6 +8,7 @@
 
 import UIKit
 import Nuke
+import FLAnimatedImage
 
 class NewsTableViewCell: UITableViewCell {
     
@@ -74,8 +75,8 @@ class NewsTableViewCell: UITableViewCell {
     }
     
     
-    func loadViewModel(_ viewModel: NewsTableViewCellModelProtocol) {
-        newsImageView.isHidden = viewModel.shouldHideImage
+    func loadViewModel(_ viewModel: NewsTableViewCellViewModelProtocol) {
+        newsImageView.isHidden = !viewModel.shouldShowImage
         titleLabel.numberOfLines = newsImageView.isHidden ? 3 : 5
         sourceLabel.text = viewModel.sourceName
         titleLabel.text = viewModel.title
@@ -84,10 +85,16 @@ class NewsTableViewCell: UITableViewCell {
             infoLabel.text = Date.convertUTCTimeToElapsedTime(utcTime: publishedTime)
         }
         
+        
+        
         if let imageURLString = viewModel.imageURL {
             if let imageURL = URL(string: imageURLString) {
                 let options = ImageLoadingOptions(placeholder: nil, transition: .fadeIn(duration: 0.33), failureImage: nil, failureImageTransition: nil, contentModes: nil)
-                Nuke.loadImage(with: imageURL, options: options, into: newsImageView, progress: nil, completion: nil)
+                newsImageView.isHidden = !viewModel.shouldShowImage
+                if !newsImageView.isHidden {
+                    Nuke.loadImage(with: imageURL, options: options, into: newsImageView, progress: nil, completion: nil)
+                }
+                
             }
         }
     }

@@ -17,6 +17,7 @@ import WebKit
 }
 
 protocol NewsDetailViewControllerScrollHelperProtocol {
+    var dataSource: [NewsDataModel] {get}
     var collectionViewInitialIndex: Int {get}
     var collectionViewPreviousIndex: Int? {get set}
     
@@ -36,11 +37,11 @@ class NewsDetailViewControllerScrollHelper: NSObject {
     private var indexInStream: Int
     var collectionViewPreviousIndex: Int?
     
-    private var contentArray: [NewsContentEntity]? {
+    private var contentArray: [NewsDataModel]? {
         return self.contentProvider.content.contentsDictionary[self.contentProvider.content.titlesArray[self.contentProvider.index]]
     }
     
-    private var dataSource: [NewsContentEntity]!
+    var dataSource: [NewsDataModel]
     private var webViewsArray: [WKWebView]!
     
     private var listeners = NSHashTable<NewsDetailViewControllerScrollHelperListenerProtocol>.weakObjects()
@@ -62,7 +63,7 @@ class NewsDetailViewControllerScrollHelper: NSObject {
     init(contentProvider: NewsViewControllerContentProviderProtocol, indexInStream: Int) {
         self.contentProvider = contentProvider
         self.indexInStream = indexInStream
-        self.dataSource = [NewsContentEntity]()
+        self.dataSource = [NewsDataModel]()
         self.webViewsArray = [WKWebView]()
             
         super.init()
@@ -110,13 +111,13 @@ class NewsDetailViewControllerScrollHelper: NSObject {
         }
         
         for newsContentEntity in dataSource {
-            if let url = URL(string: newsContentEntity.url) {
-                let request = URLRequest(url: url)
-                let webView = WKWebView()
-                webView.load(request)
-                
-                webViewsArray.append(webView)
-            }
+//            if let url = URL(string: newsContentEntity.media?[0].url ?? "") {
+//                let request = URLRequest(url: url)
+//                let webView = WKWebView()
+//                webView.load(request)
+//
+//                webViewsArray.append(webView)
+//            }
         }
         
     }
@@ -132,7 +133,7 @@ extension NewsDetailViewControllerScrollHelper: NewsDetailViewControllerScrollHe
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsDetailCollectionViewCell.defaultIdentifier, for: indexPath) as! NewsDetailCollectionViewCell
-        cell.webView = webViewsArray[indexPath.item]
+//        cell.webView = webViewsArray[indexPath.item]
         return cell
     }
     
@@ -161,7 +162,7 @@ extension NewsDetailViewControllerScrollHelper: NewsDetailViewControllerScrollHe
                 }
             }
             dataSource.append(contentArray[indexInStream + 1])
-            if let last = dataSource.last, let url = URL(string: last.url) {
+            if let last = dataSource.last, let url = URL(string: last.media?[0].url ?? "") {
                 let request = URLRequest(url: url)
                 let webView = WKWebView()
                 webView.load(request)
@@ -185,7 +186,7 @@ extension NewsDetailViewControllerScrollHelper: NewsDetailViewControllerScrollHe
                 }
             }
             dataSource.insert(contentArray[indexInStream - 1], at: 0)
-            if let first = dataSource.first, let url = URL(string: first.url) {
+            if let first = dataSource.first, let url = URL(string: first.media?[0].url ?? "") {
                 let request = URLRequest(url: url)
                 let webView = WKWebView()
                 webView.load(request)

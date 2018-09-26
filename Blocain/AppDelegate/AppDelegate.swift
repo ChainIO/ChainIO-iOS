@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import Fabric
 import Crashlytics
+import Nuke
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         CIFirestore.sharedInstance.configure()
         Fabric.with([Crashlytics.self])
+        ImagePipeline.Configuration.isAnimatedImageDataEnabled = true
         didFinishLaunchingForApp()
         UINavigationBar.appearance().barStyle = .blackOpaque
         return true

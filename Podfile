@@ -13,6 +13,7 @@ target 'Blocain' do
   pod 'Fabric', '~> 1.7.11'
   pod 'Crashlytics', '~> 3.10.7'
   pod 'Nuke'
+  pod 'FLAnimatedImage', '~> 1.0'
   
   target 'BlocainTests' do
     inherit! :search_paths
