@@ -14,7 +14,6 @@ protocol NewsTableViewCellViewModelProtocol {
     var imageURL: String? {get}
     var publishedAt: String? {get}
     var shouldShowImage: Bool {get}
-    var shouldShowGif: Bool {get}
 }
 
 class NewsTableViewCellViewModel: NSObject, NewsTableViewCellViewModelProtocol {
@@ -23,7 +22,6 @@ class NewsTableViewCellViewModel: NSObject, NewsTableViewCellViewModelProtocol {
     var imageURL: String?
     var publishedAt: String?
     var shouldShowImage = false
-    var shouldShowGif = false
     
     private override init() {
         super.init()
@@ -41,10 +39,9 @@ class NewsTableViewCellViewModel: NSObject, NewsTableViewCellViewModelProtocol {
         for i in 0..<media.count {
             let mediaObject = media[i]
             guard let url = mediaObject.url else { return }
-            if mediaObject.type == "image" && mediaObject.url != nil && url.count > 4 {
+            if mediaObject.type == "image" && url.count > 4 && !url.hasSuffix(".gif") {
                 shouldShowImage = true
                 imageURL = url
-                shouldShowGif = imageURL?.hasSuffix(".gif") ?? false
                 break
             }
         }

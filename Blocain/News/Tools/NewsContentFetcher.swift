@@ -26,7 +26,7 @@ class NewsContentFetcher: NSObject {
         static let appKey = "c3304064c90c78dc651c6dfb464021bc"
         static let publishedAtStart = "NOW-60DAYS"
         static let publishedAtEnd = "NOW"
-        static let pageSize = "10"
+        static let pageSize = "30"
         static let language = "en"
         static let sortBy = "recency"
         static let sourceLocationsCountry = "US"
@@ -47,6 +47,11 @@ class NewsContentFetcher: NSObject {
             return
         }
         
+        var cursor: String?
+        if let pageCursor = pageCursor {
+            cursor = pageCursor.addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[] ").inverted)
+        }
+        
         if let request = contentFetcher.request(with: .get, host: AylienNewsContentFetcherConstant.host, path: AylienNewsContentFetcherConstant.path, arguments: [
             "title": title,
             "published_at.start": AylienNewsContentFetcherConstant.publishedAtStart,
@@ -55,7 +60,7 @@ class NewsContentFetcher: NSObject {
             "source.locations.country": AylienNewsContentFetcherConstant.sourceLocationsCountry,
             "sort_by": AylienNewsContentFetcherConstant.sortBy,
             "per_page": AylienNewsContentFetcherConstant.pageSize,
-            "next_page_cursor": pageCursor == nil ? "*" : pageCursor!
+            "cursor": cursor == nil ? "*" : cursor!
             ], bodyJsonObject: nil) {
             contentFetcher.fetchContent(with: request, processingQueue: processingQueue, successHandler: { (json) in
                 if let storiesJsonData = json["stories"] as? [[AnyHashable: Any]] {

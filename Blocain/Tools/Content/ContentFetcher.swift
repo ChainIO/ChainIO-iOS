@@ -45,7 +45,11 @@ class ContentFetcher: NSObject {
                 queryItems.append(URLQueryItem(name: key, value: value))
             }
         }
-        components?.queryItems = queryItems
+        if #available(iOS 11.0, *) {
+            components?.percentEncodedQueryItems = queryItems
+        } else {
+            // Fallback on earlier versions
+        }
         
         guard let url = components?.url else {
             return nil
