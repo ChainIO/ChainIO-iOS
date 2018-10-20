@@ -104,6 +104,7 @@ PODS:
     - gRPC-RxLibrary (= 1.14.1)
   - GTMSessionFetcher/Core (1.2.0)
   - leveldb-library (1.20)
+  - lottie-ios (2.5.0)
   - Mixpanel-swift (2.4.4):
     - Mixpanel-swift/Complete (= 2.4.4)
   - Mixpanel-swift/Complete (2.4.4)
@@ -123,6 +124,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Storage
   - FLAnimatedImage (~> 1.0)
+  - lottie-ios
   - Mixpanel-swift
   - Nuke
 
@@ -148,6 +150,7 @@ SPEC REPOS:
     - gRPC-RxLibrary
     - GTMSessionFetcher
     - leveldb-library
+    - lottie-ios
     - Mixpanel-swift
     - nanopb
     - Nuke
@@ -174,11 +177,12 @@ SPEC CHECKSUMS:
   gRPC-RxLibrary: c4c826507ad3c8c8fab6887f153938eb04b86d59
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
+  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
   Mixpanel-swift: 1908db7a972b362fcab1a0c3b37ec6087b95d8d9
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Nuke: a9a31bbd6c6723753ab024ef22057dcaaf046c1b
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
 
-PODFILE CHECKSUM: 64b9cb69b296a440dafa8abfab91e01277a6e63c
+PODFILE CHECKSUM: d63f1750f78dcd575d12faa79544100a026820b9
 
 COCOAPODS: 1.5.3

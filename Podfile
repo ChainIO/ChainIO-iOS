@@ -15,6 +15,7 @@ target 'Blocain' do
   pod 'Nuke'
   pod 'FLAnimatedImage', '~> 1.0'
   pod 'Mixpanel-swift'
+  pod 'lottie-ios'
   
   target 'BlocainTests' do
     inherit! :search_paths

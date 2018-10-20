@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Lottie
 
 class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContentProviderListener, NewsTopicsPickerViewDelegate {
     private enum NewsViewControllerConstant {
@@ -18,6 +19,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     private var actionHandler: NewsViewControllerActionHandlerProtocol?
     
     private let topTabBarView = NewsTopTabBarView()
+    
+    private let spinnerAnimationView = LOTAnimationView(name: "loader")
     
     private var containerCollectionView:UICollectionView?
     
@@ -74,9 +77,15 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
             view.addSubview(containerCollectionView)
         }
         
+        spinnerAnimationView.contentMode = .scaleAspectFill
+        spinnerAnimationView.loopAnimation = true
+        spinnerAnimationView.isHidden = false
+        view.addSubview(spinnerAnimationView)
+        spinnerAnimationView.play()
+        
         newsTopicPickerView.delegate = self
         
-        loadContent()
+ //       loadContent()
     }
     
     
@@ -89,6 +98,9 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         super.viewDidLayoutSubviews()
         
         topTabBarView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: NewsViewControllerConstant.topTabBarViewHeight)
+        
+        spinnerAnimationView.center = view.center
+        spinnerAnimationView.frame.size = CGSize(width: 200.0, height: 200.0)
         
         if #available(iOS 11.0, *) {
             containerCollectionView?.frame = CGRect(x: 0, y: topTabBarView.frame.maxY, width: view.bounds.width, height: view.bounds.height - topTabBarView.frame.maxY - view.safeAreaInsets.bottom)
@@ -106,6 +118,9 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         topTabBarView.items = content.titlesArray
         newsTopicPickerView.topicsDataModelArray = content.topicsDataArray
         containerCollectionView?.reloadData()
+        
+        spinnerAnimationView.stop()
+        spinnerAnimationView.isHidden = true
     }
     
     
@@ -113,6 +128,9 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         if let containerCollectionView = containerCollectionView {
             let currentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.width)
             if containerCollectionViewCurrentPage != currentPage {
+                
+                spinnerAnimationView.isHidden = false
+                spinnerAnimationView.play()
                 
                 topTabBarView.setSelectedIndex(currentPage)
                 contentProvider?.index = currentPage
