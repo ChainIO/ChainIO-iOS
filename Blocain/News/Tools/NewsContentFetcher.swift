@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class NewsContentFetcher: NSObject {
 
@@ -17,7 +18,7 @@ class NewsContentFetcher: NSObject {
         static let appKey = "c3304064c90c78dc651c6dfb464021bc"
         static let publishedAtStart = "NOW-60DAYS"
         static let publishedAtEnd = "NOW"
-        static let pageSize = "30"
+        static let pageSize = "100"
         static let language = "en"
         static let sortBy = "recency"
         static let sourceLocationsCountry = "US"
@@ -26,6 +27,11 @@ class NewsContentFetcher: NSObject {
     static let defaultFetcher = NewsContentFetcher()
     
     private var contentFetcher = ContentFetcher.defaultFetcher
+    
+    
+    private var blackList: [Int]?
+    
+    private var semaphore: DispatchSemaphore?
     
     
     private override init() {
@@ -43,6 +49,12 @@ class NewsContentFetcher: NSObject {
             cursor = pageCursor.addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[] ").inverted)
         }
         
+        if blackList == nil {
+            fetchBlackList(processingQueue: processingQueue)
+            semaphore = DispatchSemaphore(value: 0)
+        }
+        
+        
         if let request = contentFetcher.request(with: .get, host: AylienNewsContentFetcherConstant.host, path: AylienNewsContentFetcherConstant.path, arguments: [
             "title": title,
             "published_at.start": AylienNewsContentFetcherConstant.publishedAtStart,
@@ -58,8 +70,17 @@ class NewsContentFetcher: NSObject {
                     if let newsJsonData = try? JSONSerialization.data(withJSONObject: storiesJsonData, options: []) {
                         do {
                             let newsArray = try JSONDecoder().decode([NewsDataModel].self, from: newsJsonData)
+                            let finalNewsArray = newsArray.filter({ (newsDataModel) -> Bool in
+                                guard let newsDataModelId = newsDataModel.source?.id, let blackList = self.blackList else { return true}
+                                
+                                if !blackList.contains(newsDataModelId) {
+                                    return true
+                                }else {
+                                    return false
+                                }
+                            })
                             if let nextPageCursor = json["next_page_cursor"] as? String {
-                                completion(newsArray, nextPageCursor,true)
+                                completion(finalNewsArray, nextPageCursor,true)
                                 return
                             }
                         }catch {
@@ -71,6 +92,26 @@ class NewsContentFetcher: NSObject {
             }) {
                 completion(nil, nil, false)
             }
+        }
+    }
+    
+    
+    private func fetchBlackList(processingQueue: DispatchQueue) {
+        let firestore = CIFirestore.sharedInstance
+        firestore.waitForConfigureWith(completionQueue: processingQueue) {
+            Firestore.firestore().document("/BlackList/uvqebpNeE5jeYQKIM3l3").getDocument(completion: { (snapshot, error) in
+                guard let snapshot = snapshot, error == nil else {
+                    self.semaphore?.signal()
+                    return
+                }
+                
+                if let data: [String: Any] = snapshot.data() {
+                    if let blackList = data["SourceId"] as? [Int] {
+                        self.blackList = blackList
+                        self.semaphore?.signal()
+                    }
+                }
+            })
         }
     }
 

@@ -25,7 +25,6 @@ protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     func fetchNextPage()
     func pullToRefresh()
     func refreshTopicsAndNewsItems()
-    func favoriteItem(at index: Int)
 }
 
 
@@ -56,7 +55,8 @@ struct NewsViewControllerContent: NewsViewControllerContentProtocol {
 }
 
 
-class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerContentProviderProtocol {
+class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerContentProviderProtocol, FavouriteManagerListenerProtocol {
+    
     var content: NewsViewControllerContent
     private var contentFetcher = NewsContentFetcher.defaultFetcher
     
@@ -70,6 +70,13 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         content = NewsViewControllerContent()
         
         super.init()
+        
+        FavouriteManager.sharedManager.addListener(self)
+    }
+    
+    
+    deinit {
+        FavouriteManager.sharedManager.removeListener(self)
     }
     
     
@@ -154,13 +161,8 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
             processingQueue.async {[weak self] in
                 guard let self = self else { return }
                 
-//                guard self.index < self.content.titlesArray.count else {
-//                    self.setContentOnMainThread(self.content)
-//                    return
-//                }
-                
                 let nextPageCursor = self.content.nextPageCursorDictionary[self.content.titlesArray[self.index]]
-                
+        
                 self.contentFetcher.fetchAylienNewsContent(with: self.content.titlesArray[self.index], pageCursor: nextPageCursor, processingQueue: processingQueue, completion: { (newsDataArray, nextPageCursor, success) in
                     guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
                         self.setContentOnMainThread(self.content)
@@ -194,11 +196,23 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         content.contentsDictionary[content.titlesArray[index]] = nil
         content.contentsViewModelDictionary[content.titlesArray[index]] = nil
         content.nextPageCursorDictionary[content.titlesArray[index]] = nil
-        fetchNextPage()
+        fetch(singleTopicAt: index)
     }
     
     
-    func favoriteItem(at index: Int) {
-        
+    // FavouriteManagerListenerProtocol
+    
+    
+    func didChange(favouriteNewsItemWith id: Int, isFavourited: Bool) {
+        for key in content.contentsViewModelDictionary.keys {
+            let viewModelArrays = content.contentsViewModelDictionary[key]
+            viewModelArrays?.forEach({ (viewModel) in
+                if viewModel.id == id {
+                    var viewModel = viewModel
+                    viewModel.shouldShowBookmarkImage = isFavourited
+                }
+            })
+        }
+        self.setContentOnMainThread(self.content)
     }
 }

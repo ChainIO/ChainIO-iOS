@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Mixpanel
+
 extension AppDelegate {
     func didFinishLaunchingForApp() {
         let window = UIWindow(frame: UIScreen.main.bounds)
@@ -56,12 +58,15 @@ extension AppDelegate {
         tabBarItem.selectedImage = UIImage(named: "tab_profile")
         
         let profileViewControllerContentProvider = ProfileViewControllerContentProvider()
+        self.profileViewControllerContentProvider = profileViewControllerContentProvider
         var profileViewControllerActionHandler = ProfileViewControllerActionHandler()
         profileViewControllerActionHandler.delegate = self
         let profileViewController = ProfileViewController(contentProvider: profileViewControllerContentProvider, actionHandler: profileViewControllerActionHandler)
+        self.profileViewController = profileViewController
         profileViewController.tabBarItem = tabBarItem
         
         let tabBarController = UITabBarController()
+        tabBarController.delegate = self
         tabBarController.viewControllers = [newsViewController, profileViewController]
         let tabBarNavigationController = UINavigationController(rootViewController: tabBarController)
         tabBarNavigationController.setNavigationBarHidden(true, animated: false)
@@ -75,6 +80,26 @@ extension AppDelegate: OnboardingViewControllerContentProviderDelegate {
     
     func onboardingViewControllerTappedActionButton() {
         showNewsViewController()
+    }
+    
+}
+
+
+extension AppDelegate: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        trackTabBarSelectedEvent(viewController: viewController)
+    }
+    
+    
+    private func trackTabBarSelectedEvent(viewController: UIViewController) {
+        var propertyList = Properties()
+        if viewController.isKind(of: ProfileViewController.classForCoder()) {
+            propertyList["Clicked Tab Bar"] = "Profile List"
+        }else {
+            propertyList["Clicked Tab Bar"] = "Home"
+        }
+        AnalyticManager.sharedManager.trackEvent(with: "Tab Bar", propertiesList: propertyList)
     }
     
 }

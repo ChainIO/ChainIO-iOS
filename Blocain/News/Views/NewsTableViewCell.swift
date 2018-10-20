@@ -16,12 +16,15 @@ class NewsTableViewCell: UITableViewCell {
     private let sourceLabel = UILabel()
     private let titleLabel = UILabel()
     private let infoLabel = UILabel()
+    private let bookmarkImageview = UIImageView()
     private let newsImageView = UIImageView()
     private let separatorLabel = UILabel()
+    
     
     class var defaultIdentifier: String {
         return "NewsTableViewCell"
     }
+    
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,10 +44,13 @@ class NewsTableViewCell: UITableViewCell {
         titleLabel.numberOfLines = 0
         newsInfoContainerView.addSubview(titleLabel)
         
-        infoLabel.font = UIFont.systemFont(ofSize: 15.0)
+        infoLabel.font = UIFont.systemFont(ofSize: 10.0)
         infoLabel.textColor = UIColor(red: 176/255.0, green: 176/255.0, blue: 176/255.0, alpha: 1.0)
         infoLabel.textAlignment = .left
         newsInfoContainerView.addSubview(infoLabel)
+        
+        bookmarkImageview.image = UIImage(named: "bookmarked-small")
+        newsInfoContainerView.addSubview(bookmarkImageview)
         
         newsImageView.backgroundColor = UIColor(red: 146 / 255.0, green: 146 / 255.0, blue: 146 / 255.0, alpha: 1.0)
         contentView.addSubview(newsImageView)
@@ -52,10 +58,7 @@ class NewsTableViewCell: UITableViewCell {
         separatorLabel.backgroundColor = UIColor(red: 242/255.0, green: 242/255.0, blue: 242/255.0, alpha: 1.0)
         contentView.addSubview(separatorLabel)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+
     
     override func layoutSubviews() {
         sourceLabel.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: 14)
@@ -66,8 +69,10 @@ class NewsTableViewCell: UITableViewCell {
         titleLabel.frame = CGRect(x: 0, y: sourceLabel.frame.maxY + 8, width: newsImageView.isHidden ? contentView.frame.width - 40 : contentView.frame.width - 20 - 9 - 110 - 16, height: 300)
         titleLabel.sizeToFit()
         
-        infoLabel.frame = CGRect(x: 0, y: titleLabel.frame.maxY + 9, width: contentView.frame.width, height: 18)
+        infoLabel.frame = CGRect(x: 0, y: titleLabel.frame.maxY + 8, width: contentView.frame.width, height: 12)
         infoLabel.sizeToFit()
+        
+        bookmarkImageview.frame = CGRect(x: infoLabel.bounds.maxX + 10, y: titleLabel.frame.maxY + 11, width: bookmarkImageview.image?.size.width ?? 0.0, height: bookmarkImageview.image?.size.height ?? 0.0)
         
         newsInfoContainerView.frame = CGRect(x: 20, y: 20, width: newsImageView.isHidden ? contentView.frame.width - 40 : contentView.frame.width - 20 - 9 - 110 - 16, height: infoLabel.frame.maxY)
         
@@ -85,8 +90,6 @@ class NewsTableViewCell: UITableViewCell {
             infoLabel.text = Date.convertUTCTimeToElapsedTime(utcTime: publishedTime)
         }
         
-        
-        
         if let imageURLString = viewModel.imageURL {
             if let imageURL = URL(string: imageURLString) {
                 let options = ImageLoadingOptions(placeholder: nil, transition: .fadeIn(duration: 0.33), failureImage: nil, failureImageTransition: nil, contentModes: nil)
@@ -97,6 +100,12 @@ class NewsTableViewCell: UITableViewCell {
                 
             }
         }
+        bookmarkImageview.isHidden = !viewModel.shouldShowBookmarkImage
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
 }

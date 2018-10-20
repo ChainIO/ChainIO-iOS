@@ -9,5 +9,9 @@
 import UIKit
 
 extension AppDelegate: ProfileViewControllerActionHandlerDelegate {
-    
+    func profileActionHandlerDidTapCell(at index: Int) {
+        let favouriteNewsDetailViewControllerManager = FavouriteNewsDetailViewControllerManager(newsFavouriteDataModelsArray: profileViewController.contentProvider?.content.newsFavouriteDataModelsArray ?? [NewsFavouriteDataModel](), indexInStream: index)
+        let newsDetailViewController = FavouriteNewsDetailViewController(favouriteNewsDetailViewControllerManager: favouriteNewsDetailViewControllerManager)
+        self.tabBarNavigationController.pushViewController(newsDetailViewController, animated: true)
+    }
 }

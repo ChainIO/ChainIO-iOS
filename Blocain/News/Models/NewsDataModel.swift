@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct NewsDataModel: Codable {
-    let id: Int
+struct NewsDataModel: Codable, Equatable {
+    let id: Int?
     let title: String?
     let body: String?
     let summary: Summary?
@@ -30,40 +30,93 @@ struct NewsDataModel: Codable {
         case publishedAt = "published_at"
         case media = "media"
     }
+    
+    
+    static func == (lhs: NewsDataModel, rhs: NewsDataModel) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
 
 
-struct Summary: Codable {
+extension NewsDataModel: Hashable {
+    var hashValue: Int {
+        return id.hashValue
+    }
+}
+
+
+class Summary: NSObject, Codable, NSCoding {
+    
     let sentences: [String]?
     
     enum CodingKeys: String, CodingKey {
         case sentences
     }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.sentences = aDecoder.decodeObject(forKey: "sentences") as? [String]
+    }
+    
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(sentences, forKey: "sentences")
+    }
+    
 }
 
 
 //TODO: rename later
 
 
-struct NewsSource: Codable {
+class NewsSource: NSObject, Codable, NSCoding {
+    
+    let name: String?
+    let id: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.name = aDecoder.decodeObject(forKey: "name") as? String
+        self.id = aDecoder.decodeObject(forKey: "id") as! Int
+    }
+    
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(name, forKey: "name")
+        aCoder.encode(id, forKey: "id")
+    }
+    
+}
+
+
+class Author: NSObject, Codable, NSCoding {
+    
     let name: String?
     
     enum CodingKeys: String, CodingKey {
         case name
     }
-}
-
-
-struct Author: Codable {
-    let name: String?
     
-    enum CodingKeys: String, CodingKey {
-        case name
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.name = aDecoder.decodeObject(forKey: "name") as? String
     }
+    
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(name, forKey: "name")
+    }
+    
 }
 
 
-struct MediaObject: Codable {
+class MediaObject: NSObject, Codable, NSCoding {
+   
     let type: String?
     let url: String?
     let width: Int?
@@ -75,4 +128,21 @@ struct MediaObject: Codable {
         case width
         case height
     }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        type = aDecoder.decodeObject(forKey: "type") as? String
+        url = aDecoder.decodeObject(forKey: "url") as? String
+        width = aDecoder.decodeObject(forKey: "width") as? Int
+        height = aDecoder.decodeObject(forKey: "height") as? Int
+    }
+    
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(type, forKey: "type")
+        aCoder.encode(url, forKey: "url")
+        aCoder.encode(width, forKey: "width")
+        aCoder.encode(height, forKey: "height")
+    }
+    
 }

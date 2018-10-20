@@ -8,6 +8,13 @@
 
 import UIKit
 
+import Mixpanel
+
+enum ActionButtonType {
+    case skip
+    case start
+}
+
 protocol OnboardingViewControllerContentProtocol {
     var topicDataModelArray: [TopicDataModel] {set get}
 }
@@ -15,7 +22,7 @@ protocol OnboardingViewControllerContentProtocol {
 protocol OnboardingViewControllerContentProviderProtocol: CIContentProviderProtocol {
     var content: OnboardingViewControllerContentProtocol {get}
     
-    func tappedActionButton()
+    func tappedActionButton(actionButtonType: ActionButtonType)
 }
 
 
@@ -63,7 +70,32 @@ class OnboardingViewControllerContentProvider: CIContentProvider, OnboardingView
     }
     
     
-    func tappedActionButton() {
+    func tappedActionButton(actionButtonType: ActionButtonType) {
         delegate?.onboardingViewControllerTappedActionButton()
+        
+        trackActionEvent(actionButtonType: actionButtonType)
+    }
+    
+    
+    private func trackActionEvent(actionButtonType: ActionButtonType) {
+        var propertiesList = Properties()
+        
+        switch actionButtonType {
+        case .skip:
+            propertiesList["Clicked Skip"] = true
+            propertiesList["Clicked Start"] = false
+            break
+        case .start:
+            propertiesList["Clicked Skip"] = false
+            propertiesList["Clicked Start"] = true
+            break
+        }
+        
+        let selectedTopicDataModelArray = TopicManager.sharedManager.topicDataModelArray.filter { $0.isSelected == true }
+        let topicList = selectedTopicDataModelArray.map { $0.name }
+        propertiesList["Selected Topic List"] = topicList
+        AnalyticManager.sharedManager.trackEvent(with: "News Topic Onboarding", propertiesList: propertiesList)
+        AnalyticManager.sharedManager.setPeopleProperties(property: "Number of Topics Selected", value: selectedTopicDataModelArray.count)
+        AnalyticManager.sharedManager.setPeopleProperties(property: "Topic Selection List", value: topicList)
     }
 }

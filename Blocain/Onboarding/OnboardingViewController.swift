@@ -98,13 +98,13 @@ class OnboardingViewController: UIViewController, CIContentProviderListener, Top
     @objc func tappedSkipButton() {
         TopicManager.sharedManager.saveOriginalTopics()
         markAsShown()
-        contentProvider.tappedActionButton()
+        contentProvider.tappedActionButton(actionButtonType: .skip)
     }
     
     
     func tappedDoneButton() {
         markAsShown()
-        contentProvider.tappedActionButton()
+        contentProvider.tappedActionButton(actionButtonType: .start)
     }
     
     

@@ -9,15 +9,19 @@
 import UIKit
 
 protocol ProfileViewControllerActionHandlerProtocol {
-    
+     func actionHandlerDidTapCell(at index: Int)
 }
 
 
 protocol ProfileViewControllerActionHandlerDelegate {
-    
+    func profileActionHandlerDidTapCell(at index: Int)
 }
 
 
 struct ProfileViewControllerActionHandler: ProfileViewControllerActionHandlerProtocol {
     var delegate: ProfileViewControllerActionHandlerDelegate?
+    
+    func actionHandlerDidTapCell(at index: Int) {
+        delegate?.profileActionHandlerDidTapCell(at: index)
+    }
 }

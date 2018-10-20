@@ -10,7 +10,6 @@ import UIKit
 
 protocol NewsContainerCollectionViewCellDelegate {
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int)
-    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int)
     func newsContainerCollectionViewCellDidWantToRefresh(_ newsContainerCollectionViewCell: UICollectionViewCell)
     
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didTapCell index: Int)
@@ -77,8 +76,6 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        
-        
         let errorMessageLabelSize = errorMessageLabel.sizeThatFits(CGSize(width: contentView.frame.width, height: contentView.frame.height))
         errorMessageLabel.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: errorMessageLabelSize.height)
         
@@ -98,13 +95,6 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
         if !didRequestMore && index == rowsLoaded - rowsToLoadFromBottom {
             didRequestMore = true
             delegate?.newsContainerCollectionViewCell(self, didWantToLoadNextPage: Int(ceil(Double(viewModels.count) / 20.0)) + 1)
-        }
-    }
-    
-
-    func newsDetailViewTappedBookmarkButton() {
-        if let index = newsDetailIndex {
-            delegate?.newsContainerCollectionViewCell(self, didWantToFavorite: index)
         }
     }
     
@@ -135,7 +125,7 @@ extension NewsContainerCollectionViewCell: UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.defaultIdentifier, for: indexPath) as! NewsTableViewCell
         cell.loadViewModel(viewModels[indexPath.row])
-        let rowsToLoadFromBottom = 10;
+        let rowsToLoadFromBottom = 30;
         let rowsLoaded = viewModels.count
         if !didRequestMore && indexPath.row == rowsLoaded - rowsToLoadFromBottom {
             didRequestMore = true

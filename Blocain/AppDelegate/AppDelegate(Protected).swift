@@ -13,6 +13,8 @@ extension AppDelegate {
         static var tabBarNavigationController = UINavigationController()
         static var newsViewControllerContentProvider = NewsViewControllerContentProvider()
         static var newsViewController = NewsViewController()
+        static var profileViewControllerContentProvider = ProfileViewControllerContentProvider()
+        static var profileViewController = ProfileViewController()
     }
     
     var tabBarNavigationController: UINavigationController {
@@ -39,6 +41,24 @@ extension AppDelegate {
         }
         set(newValue) {
             AppDelegateProtected.newsViewControllerContentProvider = newValue
+        }
+    }
+    
+    var profileViewController: ProfileViewController {
+        get {
+            return AppDelegateProtected.profileViewController
+        }
+        set(newValue) {
+            AppDelegateProtected.profileViewController = newValue
+        }
+    }
+    
+    var profileViewControllerContentProvider: ProfileViewControllerContentProvider {
+        get {
+            return AppDelegateProtected.profileViewControllerContentProvider
+        }
+        set(newValue) {
+            AppDelegateProtected.profileViewControllerContentProvider = newValue
         }
     }
 }

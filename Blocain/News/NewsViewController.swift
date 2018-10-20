@@ -111,9 +111,15 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     private func updateIndex() {
         if let containerCollectionView = containerCollectionView {
-            containerCollectionViewCurrentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.width)
-            topTabBarView.setSelectedIndex(containerCollectionViewCurrentPage)
-            contentProvider?.index = containerCollectionViewCurrentPage
+            let currentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.width)
+            if containerCollectionViewCurrentPage != currentPage {
+                
+                topTabBarView.setSelectedIndex(currentPage)
+                contentProvider?.index = currentPage
+                
+                actionHandler?.actionHandlerDidScrollToTopic(direction: containerCollectionViewCurrentPage < currentPage ? .SwipeLeft : .SwipeRight, topic: contentProvider?.content.titlesArray[currentPage])
+                containerCollectionViewCurrentPage = currentPage
+            }
         }
     }
     
@@ -149,11 +155,13 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     func tappedEmptyArea() {
         topicsPickerView(shouldShow: false)
+        actionHandler?.actionHandlerTappedEmptyArea()
     }
     
     
     func tappedSaveButton() {
         topicsPickerView(shouldShow: false)
+        actionHandler?.actionHandlerUpdatedTopics()
     }
     
     
@@ -187,6 +195,9 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     func didSelectIndex(_ index: Int) {
         containerCollectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: false)
         contentProvider?.index = index
+        
+        assert(index < contentProvider?.content.titlesArray.count ?? 0, "index should within the range of title array")
+        actionHandler?.actionHandlerDidTapTopic(topic: contentProvider?.content.titlesArray[index])
     }
     
     
@@ -219,7 +230,6 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     
     func contentProviderDidError(_ contentProvider: CIContentProviderProtocol!) {
-        
     }
     
 }
@@ -279,26 +289,10 @@ extension NewsViewController: UIScrollViewDelegate {
 }
 
 
-extension NewsViewController: NewsDetailViewControllerScrollHelperListenerProtocol {
-    
-    func newsDetailViewControllerScrollHelper(inStream centerIndex: Int) {
-        if let cell = containerCollectionView?.cellForItem(at: IndexPath(item: containerCollectionViewCurrentPage, section: 0)) as? NewsContainerCollectionViewCell {
-            cell.tableViewScroll(to: centerIndex)
-        }
-    }
-    
-}
-
-
 extension NewsViewController: NewsContainerCollectionViewCellDelegate {
     
     func newsContainerCollectionViewCellDidWantToRefresh(_ newsContainerCollectionViewCell: UICollectionViewCell) {
         contentProvider?.pullToRefresh()
-    }
-    
-    
-    func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToFavorite index: Int) {
-        contentProvider?.favoriteItem(at: index)
     }
     
     

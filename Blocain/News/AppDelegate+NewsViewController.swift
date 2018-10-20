@@ -10,9 +10,11 @@ import UIKit
 
 extension AppDelegate: NewsViewControllerActionHandlerDelegate {
     func actionHandlerDidTapCell(at index: Int) {
-        let scrollHelper = NewsDetailViewControllerScrollHelper(contentProvider: self.newsViewControllerContentProvider, indexInStream: index)
-        let newsDetailViewController = NewsDetailViewController(scrollHelper: scrollHelper)
-        scrollHelper.addListener(self.newsViewController) 
-        self.tabBarNavigationController.pushViewController(newsDetailViewController, animated: true)
+        let currentTopicIndex = newsViewControllerContentProvider.index
+        if let newsDataModelArray = self.newsViewControllerContentProvider.content.contentsDictionary[self.newsViewControllerContentProvider.content.titlesArray[currentTopicIndex]] {
+            let newsDetailViewControllerManager = NewsDetailViewControllerManager(newsDataModelsArray: newsDataModelArray, indexInStream: index, topic: newsViewControllerContentProvider.content.titlesArray[currentTopicIndex])
+            let newsDetailViewController = NewsDetailViewController(newsDetailViewControllerManager: newsDetailViewControllerManager)
+            self.tabBarNavigationController.pushViewController(newsDetailViewController, animated: true)
+        }
     }
 }
