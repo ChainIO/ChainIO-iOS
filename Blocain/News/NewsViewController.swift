@@ -128,9 +128,10 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         if let containerCollectionView = containerCollectionView {
             let currentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.width)
             if containerCollectionViewCurrentPage != currentPage {
-                
-                spinnerAnimationView.isHidden = false
-                spinnerAnimationView.play()
+                if contentProvider?.fetch(singleTopicAt: currentPage) ?? false {
+                    spinnerAnimationView.isHidden = false
+                    spinnerAnimationView.play()
+                }
                 
                 topTabBarView.setSelectedIndex(currentPage)
                 contentProvider?.index = currentPage
@@ -266,7 +267,7 @@ extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        contentProvider?.fetch(singleTopicAt: indexPath.item)
+        
     }
     
     

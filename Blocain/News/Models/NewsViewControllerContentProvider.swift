@@ -21,7 +21,7 @@ protocol NewsViewControllerContentProtocol {
 protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     var index: Int {get set}
     var content: NewsViewControllerContent { get }
-    func fetch(singleTopicAt index: Int)
+    func fetch(singleTopicAt index: Int) -> Bool
     func fetchNextPage()
     func pullToRefresh()
     func refreshTopicsAndNewsItems()
@@ -127,14 +127,14 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
     }
     
     
-    func fetch(singleTopicAt index: Int) {
+    @discardableResult func fetch(singleTopicAt index: Int) -> Bool {
         guard index < content.titlesArray.count else {
             setContentOnMainThread(content)
-            return
+            return false
         }
         
         let title = content.titlesArray[index]
-        if content.contentsDictionary[title] != nil { return }
+        if content.contentsDictionary[title] != nil { return false }
         
         contentFetcher.fetchAylienNewsContent(with: title, pageCursor: nil, processingQueue: processingQueue) { (newsDataArray, nextPageCursor, success) in
             guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
@@ -151,6 +151,8 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
             self.content.contentsViewModelDictionary[title] = newsTableViewCellViewModelArray
             self.setContentOnMainThread(self.content)
         }
+        
+        return true
     }
     
     

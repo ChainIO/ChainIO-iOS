@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol NewsContainerCollectionViewCellDelegate {
+protocol NewsContainerCollectionViewCellDelegate: class {
     func newsContainerCollectionViewCell(_ newsContainerCollectionViewCell: UICollectionViewCell, didWantToLoadNextPage page: Int)
     func newsContainerCollectionViewCellDidWantToRefresh(_ newsContainerCollectionViewCell: UICollectionViewCell)
     
@@ -17,7 +17,7 @@ protocol NewsContainerCollectionViewCellDelegate {
 
 class NewsContainerCollectionViewCell: UICollectionViewCell {
     
-    var delegate: NewsContainerCollectionViewCellDelegate?
+    weak var delegate: NewsContainerCollectionViewCellDelegate?
     
     private let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
     
@@ -70,6 +70,13 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
         errorMessageLabel.textColor = .white
         errorMessageLabel.font = UIFont.systemFont(ofSize: 14.0)
         addSubview(errorMessageLabel)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        viewModels = [NewsTableViewCellViewModelProtocol]()
+        newsTableView.reloadData()
     }
     
     
