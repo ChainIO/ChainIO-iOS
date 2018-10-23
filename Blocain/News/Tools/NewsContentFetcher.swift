@@ -38,11 +38,7 @@ class NewsContentFetcher: NSObject {
     }
     
     
-    func fetchAylienNewsContent(with title: String?, pageCursor: String?, processingQueue: DispatchQueue, completion: @escaping([NewsDataModel]?, String?, Bool) -> Void) {
-        guard let title = title else {
-            completion(nil, nil, false)
-            return
-        }
+    func fetchAylienNewsContent(with topicDataModel: TopicDataModel, pageCursor: String?, processingQueue: DispatchQueue, completion: @escaping([NewsDataModel]?, String?, Bool) -> Void) {
         
         var cursor: String?
         if let pageCursor = pageCursor {
@@ -54,9 +50,11 @@ class NewsContentFetcher: NSObject {
             semaphore = DispatchSemaphore(value: 0)
         }
         
+        let queryTopicArray = topicDataModel.query.components(separatedBy: "=")
+        assert(queryTopicArray.count == 2, "query topic array should has two parts")
         
         if let request = contentFetcher.request(with: .get, host: AylienNewsContentFetcherConstant.host, path: AylienNewsContentFetcherConstant.path, arguments: [
-            "title": title,
+            queryTopicArray[0]: queryTopicArray[1],
             "published_at.start": AylienNewsContentFetcherConstant.publishedAtStart,
             "published_at.end": AylienNewsContentFetcherConstant.publishedAtEnd,
             "language": AylienNewsContentFetcherConstant.language,

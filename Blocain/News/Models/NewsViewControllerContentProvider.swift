@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseFirestore
+import Mixpanel
 
 protocol NewsViewControllerContentProtocol {
     var titlesArray: [String] {get set}
@@ -122,6 +123,7 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         self.content.titlesArray.removeAll()
         self.content.titlesArray.append(contentsOf: topicNameArray)
         
+        self.content.contentsViewModelDictionary.removeAll()
         self.content.contentsDictionary.removeAll()
         fetch(singleTopicAt: index)
     }
@@ -136,7 +138,7 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         let title = content.titlesArray[index]
         if content.contentsDictionary[title] != nil { return false }
         
-        contentFetcher.fetchAylienNewsContent(with: title, pageCursor: nil, processingQueue: processingQueue) { (newsDataArray, nextPageCursor, success) in
+        contentFetcher.fetchAylienNewsContent(with: self.content.topTabBarTopicsDataArray[index], pageCursor: nil, processingQueue: processingQueue) { (newsDataArray, nextPageCursor, success) in
             guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
                 self.setContentOnMainThread(self.content)
                 return
@@ -165,7 +167,7 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                 
                 let nextPageCursor = self.content.nextPageCursorDictionary[self.content.titlesArray[self.index]]
         
-                self.contentFetcher.fetchAylienNewsContent(with: self.content.titlesArray[self.index], pageCursor: nextPageCursor, processingQueue: processingQueue, completion: { (newsDataArray, nextPageCursor, success) in
+                self.contentFetcher.fetchAylienNewsContent(with: self.content.topicsDataArray[self.index], pageCursor: nextPageCursor, processingQueue: processingQueue, completion: { (newsDataArray, nextPageCursor, success) in
                     guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
                         self.setContentOnMainThread(self.content)
                         return
@@ -198,8 +200,17 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         content.contentsDictionary[content.titlesArray[index]] = nil
         content.contentsViewModelDictionary[content.titlesArray[index]] = nil
         content.nextPageCursorDictionary[content.titlesArray[index]] = nil
+        trackPullToRefreshEvent()
         fetch(singleTopicAt: index)
     }
+    
+    
+    private func trackPullToRefreshEvent() {
+        var propertyList = Properties()
+        propertyList["Pulled to Refresh Topic"] = content.titlesArray[index]
+        AnalyticManager.sharedManager.trackEvent(with: "Refresh Page", propertiesList: propertyList)
+    }
+    
     
     
     // FavouriteManagerListenerProtocol

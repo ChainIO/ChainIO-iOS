@@ -67,9 +67,9 @@ class TopicsPickerView: UIView {
         
         let collectionViewFlowLayout = UICollectionViewFlowLayout()
         collectionViewFlowLayout.scrollDirection = .horizontal
-        collectionViewFlowLayout.minimumInteritemSpacing = 16.0
-        collectionViewFlowLayout.minimumLineSpacing = 24.0
-        collectionViewFlowLayout.sectionInset = UIEdgeInsetsMake(12, 24, 12, 40)
+        collectionViewFlowLayout.minimumInteritemSpacing = 12.0
+        collectionViewFlowLayout.minimumLineSpacing = 20.0
+        collectionViewFlowLayout.sectionInset = UIEdgeInsetsMake(5, 30, 5, 30)
         
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: collectionViewFlowLayout)
         collectionView.showsHorizontalScrollIndicator = false
@@ -95,7 +95,7 @@ class TopicsPickerView: UIView {
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         
         subTitleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24.0).isActive = true
-        subTitleLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        subTitleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10.0).isActive = true
         subTitleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24.0).isActive = true
         subTitleLabel.sizeToFit()
         
