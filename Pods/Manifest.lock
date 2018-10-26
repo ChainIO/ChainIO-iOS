@@ -115,6 +115,7 @@ PODS:
   - nanopb/encode (0.3.8)
   - Nuke (7.3.2)
   - Protobuf (3.6.1)
+  - ReachabilitySwift (4.1.0)
 
 DEPENDENCIES:
   - Crashlytics (~> 3.10.7)
@@ -127,6 +128,7 @@ DEPENDENCIES:
   - lottie-ios
   - Mixpanel-swift
   - Nuke
+  - ReachabilitySwift
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -155,6 +157,7 @@ SPEC REPOS:
     - nanopb
     - Nuke
     - Protobuf
+    - ReachabilitySwift
 
 SPEC CHECKSUMS:
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
@@ -182,7 +185,8 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Nuke: a9a31bbd6c6723753ab024ef22057dcaaf046c1b
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
+  ReachabilitySwift: 6849231cd4e06559f3b9ef4a97a0a0f96d41e09f
 
-PODFILE CHECKSUM: d63f1750f78dcd575d12faa79544100a026820b9
+PODFILE CHECKSUM: cd68da4e466d3b062df1710775c4c6666fdb3f1b
 
 COCOAPODS: 1.5.3

@@ -29,11 +29,20 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     private var isShowingTopicsPickerView = false
     private var isShowingAlertView = false
     
+    private let noNetworkLabel = UILabel()
+    private var hasNetwork = true
+    private var hasConnectitonToBackend = true
+    
     var containerCollectionViewCurrentPage = 0
     
     
     init() {
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    deinit {
+        ReachabilityManager.sharedManager.stopMonitoring()
+        ReachabilityManager.sharedManager.removeListener(self)
     }
     
     
@@ -79,13 +88,22 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         
         spinnerAnimationView.contentMode = .scaleAspectFill
         spinnerAnimationView.loopAnimation = true
-        spinnerAnimationView.isHidden = false
+        spinnerAnimationView.isHidden = true
         view.addSubview(spinnerAnimationView)
         spinnerAnimationView.play()
         
+        noNetworkLabel.backgroundColor = UIColor(red: 77 / 255.0, green: 77 / 255.0, blue: 77 / 255.0, alpha: 0.95)
+        noNetworkLabel.text = "No Internet Connection"
+        noNetworkLabel.textColor = .white
+        noNetworkLabel.textAlignment = .center
+        noNetworkLabel.font = UIFont.systemFont(ofSize: 14.0)
+        noNetworkLabel.isHidden = true
+        view.addSubview(noNetworkLabel)
+        
         newsTopicPickerView.delegate = self
         
- //       loadContent()
+        ReachabilityManager.sharedManager.addListener(self)
+        ReachabilityManager.sharedManager.startMonitoring()
     }
     
     
@@ -98,6 +116,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         super.viewDidLayoutSubviews()
         
         topTabBarView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: NewsViewControllerConstant.topTabBarViewHeight)
+        
+        noNetworkLabel.frame = CGRect(x: 0, y: topTabBarView.bounds.maxY, width: view.bounds.width, height: 48)
         
         spinnerAnimationView.center = view.center
         spinnerAnimationView.frame.size = CGSize(width: 200.0, height: 200.0)
@@ -140,6 +160,11 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
                 containerCollectionViewCurrentPage = currentPage
             }
         }
+    }
+    
+    
+    private func updateNoNetworkLabel() {
+        noNetworkLabel.isHidden = hasNetwork && hasConnectitonToBackend
     }
     
     
@@ -231,12 +256,21 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     func contentProviderDidChangeContent(_ contentProvider: CIContentProviderProtocol!) {
         if isViewLoaded {
+            if !hasConnectitonToBackend {
+                hasConnectitonToBackend = true
+                updateNoNetworkLabel()
+            }
             loadContent()
         }
     }
     
     
     func contentProviderDidAddContent(_ contentProvider: CIContentProviderProtocol!) {
+        if !hasConnectitonToBackend {
+            hasConnectitonToBackend = true
+            updateNoNetworkLabel()
+        }
+        
         if let cell = containerCollectionView?.cellForItem(at: IndexPath(item: containerCollectionViewCurrentPage, section: 0)) as? NewsContainerCollectionViewCell {
             if let viewModels = self.contentProvider?.content.contentsViewModelDictionary[(self.contentProvider?.content.titlesArray[containerCollectionViewCurrentPage])!] {
                 cell.viewModels = viewModels
@@ -249,6 +283,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     
     func contentProviderDidError(_ contentProvider: CIContentProviderProtocol!) {
+        hasConnectitonToBackend = false
+        updateNoNetworkLabel()
     }
     
 }
@@ -324,4 +360,12 @@ extension NewsViewController: NewsContainerCollectionViewCellDelegate {
         actionHandler?.actionHandlerDidTapCell(at: index)
     }
     
+}
+
+
+extension NewsViewController: ReachabilityManagerListenerProtocol {
+    func reachabilityDidChange(hasNetwork: Bool) {
+        self.hasNetwork = hasNetwork
+        updateNoNetworkLabel()
+    }
 }

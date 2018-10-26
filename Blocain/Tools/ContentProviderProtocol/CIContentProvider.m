@@ -111,6 +111,14 @@
     return errorOnMainThread;
 }
 
+- (void)setErrorOnMainThread {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (id<CIContentProviderListener> listener in self.contentProviderListeners) {
+            [listener contentProviderDidError:self];
+        }
+    });
+}
+
 
 - (void)setContentOnMainThread:(id)content {
     __typeof(self) __weak weakSelf = self;

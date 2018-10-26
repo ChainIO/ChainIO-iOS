@@ -139,19 +139,23 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         if content.contentsDictionary[title] != nil { return false }
         
         contentFetcher.fetchAylienNewsContent(with: self.content.topTabBarTopicsDataArray[index], pageCursor: nil, processingQueue: processingQueue) { (newsDataArray, nextPageCursor, success) in
-            guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
+            if success {
+                guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
+                    self.setContentOnMainThread(self.content)
+                    return
+                }
+                
+                let newsTableViewCellViewModelArray: [NewsTableViewCellViewModelProtocol] = newsDataArray.map {
+                    return NewsTableViewCellViewModel(with: $0)
+                }
+                
+                self.content.nextPageCursorDictionary[title] = nextPageCursor
+                self.content.contentsDictionary[title] = newsDataArray
+                self.content.contentsViewModelDictionary[title] = newsTableViewCellViewModelArray
                 self.setContentOnMainThread(self.content)
-                return
+            }else {
+                self.setErrorOnMainThread()
             }
-            
-            let newsTableViewCellViewModelArray: [NewsTableViewCellViewModelProtocol] = newsDataArray.map {
-                return NewsTableViewCellViewModel(with: $0)
-            }
-            
-            self.content.nextPageCursorDictionary[title] = nextPageCursor
-            self.content.contentsDictionary[title] = newsDataArray
-            self.content.contentsViewModelDictionary[title] = newsTableViewCellViewModelArray
-            self.setContentOnMainThread(self.content)
         }
         
         return true
@@ -168,27 +172,32 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                 let nextPageCursor = self.content.nextPageCursorDictionary[self.content.titlesArray[self.index]]
         
                 self.contentFetcher.fetchAylienNewsContent(with: self.content.topicsDataArray[self.index], pageCursor: nextPageCursor, processingQueue: processingQueue, completion: { (newsDataArray, nextPageCursor, success) in
-                    guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
-                        self.setContentOnMainThread(self.content)
-                        return
-                    }
-                    
-                    if var currentContent = self.content.contentsDictionary[self.content.titlesArray[self.index]] {
-                        currentContent.append(contentsOf: newsDataArray)
-                        self.content.contentsDictionary[self.content.titlesArray[self.index]] = currentContent
-                    }
-                    
-                    if var currentContentViewModels = self.content.contentsViewModelDictionary[self.content.titlesArray[self.index]] {
-                        let newsTableViewCellViewModelArray: [NewsTableViewCellViewModelProtocol] = newsDataArray.map {
-                            return NewsTableViewCellViewModel(with: $0)
+                    if success {
+                        guard let newsDataArray = newsDataArray, let nextPageCursor = nextPageCursor, success == true else {
+                            self.setContentOnMainThread(self.content)
+                            return
                         }
-                        currentContentViewModels.append(contentsOf: newsTableViewCellViewModelArray)
-                        self.content.contentsViewModelDictionary[self.content.titlesArray[self.index]] = currentContentViewModels
+                        
+                        if var currentContent = self.content.contentsDictionary[self.content.titlesArray[self.index]] {
+                            currentContent.append(contentsOf: newsDataArray)
+                            self.content.contentsDictionary[self.content.titlesArray[self.index]] = currentContent
+                        }
+                        
+                        if var currentContentViewModels = self.content.contentsViewModelDictionary[self.content.titlesArray[self.index]] {
+                            let newsTableViewCellViewModelArray: [NewsTableViewCellViewModelProtocol] = newsDataArray.map {
+                                return NewsTableViewCellViewModel(with: $0)
+                            }
+                            currentContentViewModels.append(contentsOf: newsTableViewCellViewModelArray)
+                            self.content.contentsViewModelDictionary[self.content.titlesArray[self.index]] = currentContentViewModels
+                        }
+                        
+                        
+                        self.content.nextPageCursorDictionary[self.content.titlesArray[self.index]] = nextPageCursor
+                        self.addNewContent(onMainThread: self.content)
+                    }else {
+                        self.setErrorOnMainThread()
                     }
                     
-                    
-                    self.content.nextPageCursorDictionary[self.content.titlesArray[self.index]] = nextPageCursor
-                    self.addNewContent(onMainThread: self.content)
                     self.isLoadingNextPage = false
                 })
             }

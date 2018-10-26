@@ -16,7 +16,7 @@ class NewsContentFetcher: NSObject {
         static let path = "stories"
         static let appId = "92def0d0"
         static let appKey = "c3304064c90c78dc651c6dfb464021bc"
-        static let publishedAtStart = "NOW-60DAYS"
+        static let publishedAtStart = "NOW-360DAYS"
         static let publishedAtEnd = "NOW"
         static let pageSize = "100"
         static let language = "en"

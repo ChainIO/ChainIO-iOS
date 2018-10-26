@@ -14,6 +14,7 @@
 @property (nonatomic, readonly) void(^defaultErrorBlock)(void);
 
 - (void)setContentOnMainThread:(id)content;
+- (void)setErrorOnMainThread;
 - (void)addNewContentOnMainThread:(id)content;
 
 @end

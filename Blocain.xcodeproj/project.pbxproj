@@ -60,6 +60,7 @@
 		D17F4271211667C900B56362 /* OrderableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17F4270211667C900B56362 /* OrderableSection.swift */; };
 		D184D643217BC73F00CC37AD /* loader.json in Resources */ = {isa = PBXBuildFile; fileRef = D184D642217BC73F00CC37AD /* loader.json */; };
 		D184EECA2123DFA4003047D1 /* NewsContainerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D184EEC92123DFA4003047D1 /* NewsContainerCollectionViewCell.swift */; };
+		D19152F9217ED639005B5558 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19152F8217ED639005B5558 /* ReachabilityManager.swift */; };
 		D19C3A462115832C002C8D86 /* ProfileViewControllerContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A452115832C002C8D86 /* ProfileViewControllerContentProvider.swift */; };
 		D19C3A48211583D1002C8D86 /* ProfileViewControllerActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A47211583D1002C8D86 /* ProfileViewControllerActionHandler.swift */; };
 		D19C3A4A2115870D002C8D86 /* AppDelegate+ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D19C3A492115870D002C8D86 /* AppDelegate+ProfileViewController.swift */; };
@@ -163,6 +164,7 @@
 		D17F4270211667C900B56362 /* OrderableSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderableSection.swift; sourceTree = "<group>"; };
 		D184D642217BC73F00CC37AD /* loader.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loader.json; sourceTree = "<group>"; };
 		D184EEC92123DFA4003047D1 /* NewsContainerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsContainerCollectionViewCell.swift; sourceTree = "<group>"; };
+		D19152F8217ED639005B5558 /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		D19C3A452115832C002C8D86 /* ProfileViewControllerContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerContentProvider.swift; sourceTree = "<group>"; };
 		D19C3A47211583D1002C8D86 /* ProfileViewControllerActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerActionHandler.swift; sourceTree = "<group>"; };
 		D19C3A492115870D002C8D86 /* AppDelegate+ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+ProfileViewController.swift"; sourceTree = "<group>"; };
@@ -447,7 +449,7 @@
 		D171D5A4210C3052005F1FAA /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				D184D642217BC73F00CC37AD /* loader.json */,
+				D19152F7217ED614005B5558 /* Reachability */,
 				D15031C9216F12B400592C2B /* Analytic */,
 				D1529A272169533D00B15D9B /* Favourite */,
 				D15E29922167298E00122E63 /* String */,
@@ -461,6 +463,7 @@
 				D1491C3E211AA3F900D50CCA /* ContentProviderProtocol */,
 				D17F42692116408800B56362 /* Section Manager */,
 				D171D5A5210C3067005F1FAA /* Networking */,
+				D184D642217BC73F00CC37AD /* loader.json */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -540,6 +543,14 @@
 				D17F4270211667C900B56362 /* OrderableSection.swift */,
 			);
 			path = Closure;
+			sourceTree = "<group>";
+		};
+		D19152F7217ED614005B5558 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				D19152F8217ED639005B5558 /* ReachabilityManager.swift */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		D19C3A4B21158D9B002C8D86 /* Views */ = {
@@ -739,6 +750,7 @@
 				"${BUILT_PRODUCTS_DIR}/Mixpanel-swift/Mixpanel.framework",
 				"${BUILT_PRODUCTS_DIR}/Nuke/Nuke.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
@@ -756,6 +768,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mixpanel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nuke.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
@@ -849,6 +862,7 @@
 				D17EA188212696FC007C5714 /* NewsContentEntity.swift in Sources */,
 				D17EA1862126794D007C5714 /* ContentFetcher.swift in Sources */,
 				D15031CB216F12C900592C2B /* AnalyticManager.swift in Sources */,
+				D19152F9217ED639005B5558 /* ReachabilityManager.swift in Sources */,
 				D17BE80921603A370046A314 /* BLLabel.swift in Sources */,
 				D1541F7D21083F6300A9B2AB /* AppDelegate.swift in Sources */,
 				D151EEEE215DEE14006DE80E /* NewsDetailContainerCollectionViewCell.swift in Sources */,
