@@ -20,8 +20,6 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     private let topTabBarView = NewsTopTabBarView()
     
-    private let spinnerAnimationView = LOTAnimationView(name: "loader")
-    
     private var containerCollectionView:UICollectionView?
     
     private let newsTopicPickerView = NewsTopicsPickerView()
@@ -35,6 +33,9 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     var containerCollectionViewCurrentPage = 0
     
+    private let spinnerAnimationView = LOTAnimationView(name: "loader")
+    private var viewIsAppeared = false
+    private var isLoadingData = true
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -90,7 +91,7 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         spinnerAnimationView.loopAnimation = true
         spinnerAnimationView.isHidden = true
         view.addSubview(spinnerAnimationView)
-        spinnerAnimationView.play()
+        updateSpinnerAnimationView()
         
         noNetworkLabel.backgroundColor = UIColor(red: 77 / 255.0, green: 77 / 255.0, blue: 77 / 255.0, alpha: 0.95)
         noNetworkLabel.text = "No Internet Connection"
@@ -109,6 +110,22 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        viewIsAppeared = true
+        updateSpinnerAnimationView()
+    }
+    
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        viewIsAppeared = false
+        updateSpinnerAnimationView()
     }
     
     
@@ -132,6 +149,17 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     }
     
     
+    private func updateSpinnerAnimationView() {
+        if viewIsAppeared && isLoadingData {
+            spinnerAnimationView.play()
+            spinnerAnimationView.isHidden = false
+        }else {
+            spinnerAnimationView.stop()
+            spinnerAnimationView.isHidden = true
+        }
+    }
+    
+    
     func loadContent() {
         guard let content = self.contentProvider?.content else { return }
         
@@ -139,8 +167,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         newsTopicPickerView.topicsDataModelArray = content.topicsDataArray
         containerCollectionView?.reloadData()
         
-        spinnerAnimationView.stop()
-        spinnerAnimationView.isHidden = true
+        isLoadingData = false
+        updateSpinnerAnimationView()
     }
     
     
@@ -149,8 +177,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
             let currentPage = Int(containerCollectionView.contentOffset.x / containerCollectionView.frame.width)
             if containerCollectionViewCurrentPage != currentPage {
                 if contentProvider?.fetch(singleTopicAt: currentPage) ?? false {
-                    spinnerAnimationView.isHidden = false
-                    spinnerAnimationView.play()
+                    isLoadingData = true
+                    updateSpinnerAnimationView()
                 }
                 
                 topTabBarView.setSelectedIndex(currentPage)
