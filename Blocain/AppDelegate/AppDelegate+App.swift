@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import FirebaseFirestore
 import Mixpanel
 
 extension AppDelegate {
@@ -16,6 +16,7 @@ extension AppDelegate {
         window.makeKeyAndVisible()
         self.window = window
         
+        checkAppVersion()
         let userDefaults = UserDefaults.standard
         let hasShownOnboarding = userDefaults.bool(forKey: "hasShownOnboarding")
         if hasShownOnboarding {
@@ -26,7 +27,49 @@ extension AppDelegate {
     }
     
     
-    func showOnboardingViewController() {
+    private func checkAppVersion() {
+        if let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+            let versionNumberArray = versionNumber.components(separatedBy: ".")
+            var versionValue = 0
+            for num in versionNumberArray {
+                if let value = Int(num) {
+                    versionValue = versionValue * 10 + value
+                }
+            }
+            getMinimum(versionNumber: versionValue)
+        }
+    }
+    
+    
+    private func getMinimum(versionNumber: Int) {
+        let processingQueue = DispatchQueue(label: "com.blocain.processingQueue", qos: .userInteractive, attributes: [.concurrent], autoreleaseFrequency: .inherit, target: nil)
+        
+        let firestore = CIFirestore.sharedInstance
+        firestore.waitForConfigureWith(completionQueue: processingQueue, completion: {
+            Firestore.firestore().document("/MinimumVersion/kErK3Qgzx6AJbhaXLZb0").getDocument(completion: { (snapshot, error) in
+                guard let snapshot = snapshot, error == nil else {
+                    return
+                }
+                
+                if let data: [String: Any] = snapshot.data() {
+                    if let minimumVersion = data["version"] as? Int {
+                        if versionNumber < minimumVersion {
+                            let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+                            alertWindow.rootViewController = UIViewController()
+                            alertWindow.windowLevel = UIWindowLevelAlert + 1
+                            
+                            let alertViewController = UIAlertController(title: "Error", message: "Please go to the app store download the latest version of our app", preferredStyle: .alert)
+                            alertWindow.makeKeyAndVisible()
+                            alertWindow.rootViewController?.present(alertViewController, animated: true, completion: nil)
+                        }
+                    }
+                }
+            })
+        })
+    }
+    
+    
+    private func showOnboardingViewController() {
         let onboardingViewControllerContentProvider = OnboardingViewControllerContentProvider()
         onboardingViewControllerContentProvider.delegate = self
         let onboardingViewController = OnboardingViewController(contentProvider: onboardingViewControllerContentProvider)
@@ -34,7 +77,7 @@ extension AppDelegate {
     }
     
     
-    func showNewsViewController() {
+    private func showNewsViewController() {
         var tabBarItem = UITabBarItem()
         //        tabBarItem.image = UIImage(named: "tab_home")
         //        tabBarItem.selectedImage = UIImage(named: "tab_home")
