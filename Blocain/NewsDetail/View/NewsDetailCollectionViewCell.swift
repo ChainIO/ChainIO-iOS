@@ -273,39 +273,38 @@ class NewsDetailBodyCell: UICollectionViewCell {
     
     var body: String? {
         didSet {
-            bodyLabel.text = body
-            bodyLabel.setLineSpacing(lineSpacing: 14.0, lineHeightMultiple: 1.0, headIndent: 0.0)
+            bodyTextView.text = body
+            bodyTextView.setLineSpacing(lineSpacing: 14.0, lineHeightMultiple: 1.0, headIndent: 0.0)
         }
     }
     
-    private let bodyLabel = UILabel()
+    private let bodyTextView = UITextView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        bodyLabel.font = UIFont(name: "Georgia", size: 16.0)
-        bodyLabel.textAlignment = .left
-        bodyLabel.numberOfLines = 0
-        bodyLabel.textColor = UIColor(red: 48 / 255.0, green: 48 / 255.0, blue: 48 / 255.0, alpha: 1.0)
-        contentView.addSubview(bodyLabel)
+        bodyTextView.font = UIFont(name: "Georgia", size: 16.0)
+        bodyTextView.textAlignment = .left
+        bodyTextView.textColor = UIColor(red: 48 / 255.0, green: 48 / 255.0, blue: 48 / 255.0, alpha: 1.0)
+        contentView.addSubview(bodyTextView)
     }
     
     
     override func prepareForReuse() {
-        bodyLabel.text = ""
+        bodyTextView.text = ""
     }
     
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let bodyLabelSize = bodyLabel.sizeThatFits(CGSize(width: contentView.bounds.width - 30 * 2, height: CGFloat.greatestFiniteMagnitude))
-        bodyLabel.frame = CGRect(x: 30, y: 32, width: bodyLabelSize.width, height: bodyLabelSize.height)
+        let bodyLabelSize = bodyTextView.sizeThatFits(CGSize(width: contentView.bounds.width - 30 * 2, height: CGFloat.greatestFiniteMagnitude))
+        bodyTextView.frame = CGRect(x: 30, y: 32, width: bodyLabelSize.width, height: bodyLabelSize.height)
     }
     
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let bodyLabelSize = bodyLabel.sizeThatFits(CGSize(width: size.width - 30 * 2, height: CGFloat.greatestFiniteMagnitude))
+        let bodyLabelSize = bodyTextView.sizeThatFits(CGSize(width: size.width - 30 * 2, height: CGFloat.greatestFiniteMagnitude))
         return CGSize(width: size.width, height: bodyLabelSize.height + 32 * 2)
     }
     

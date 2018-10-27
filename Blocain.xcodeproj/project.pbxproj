@@ -67,6 +67,7 @@
 		D1B4B92D212BD78900A633BF /* NewsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B4B92C212BD78900A633BF /* NewsTableViewCell.swift */; };
 		D1B4B92F212BE09A00A633BF /* NewsTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B4B92E212BE09A00A633BF /* NewsTableViewCellModel.swift */; };
 		D1E24A082133CDED0067EC49 /* BLButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E24A072133CDED0067EC49 /* BLButton.swift */; };
+		D1F00B50218519BE006E631B /* BLTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F00B4F218519BE006E631B /* BLTextView.swift */; };
 		DE6055EF9510C00219E79EC1 /* Pods_BlocainTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7FF167BF2D5D33B6FD06E1 /* Pods_BlocainTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -171,6 +172,7 @@
 		D1B4B92C212BD78900A633BF /* NewsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTableViewCell.swift; sourceTree = "<group>"; };
 		D1B4B92E212BE09A00A633BF /* NewsTableViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTableViewCellModel.swift; sourceTree = "<group>"; };
 		D1E24A072133CDED0067EC49 /* BLButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLButton.swift; sourceTree = "<group>"; };
+		D1F00B4F218519BE006E631B /* BLTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLTextView.swift; sourceTree = "<group>"; };
 		D8B7101FBCBEB0CC7FBF7AD5 /* Pods-Blocain.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blocain.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blocain/Pods-Blocain.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -449,6 +451,7 @@
 		D171D5A4210C3052005F1FAA /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				D1F00B4E218519A8006E631B /* TextView */,
 				D19152F7217ED614005B5558 /* Reachability */,
 				D15031C9216F12B400592C2B /* Analytic */,
 				D1529A272169533D00B15D9B /* Favourite */,
@@ -567,6 +570,14 @@
 				D1E24A072133CDED0067EC49 /* BLButton.swift */,
 			);
 			path = Button;
+			sourceTree = "<group>";
+		};
+		D1F00B4E218519A8006E631B /* TextView */ = {
+			isa = PBXGroup;
+			children = (
+				D1F00B4F218519BE006E631B /* BLTextView.swift */,
+			);
+			path = TextView;
 			sourceTree = "<group>";
 		};
 		D25280AED81EB960E6A8946E /* Frameworks */ = {
@@ -842,6 +853,7 @@
 				D17F426C2116497F00B56362 /* OrderableSectionProtocol.swift in Sources */,
 				D1588795217057830098ED93 /* EmptyFavouriteTableViewCell.swift in Sources */,
 				D1734F832147804E008C695D /* TopicManager.swift in Sources */,
+				D1F00B50218519BE006E631B /* BLTextView.swift in Sources */,
 				D1541FBB210857AD00A9B2AB /* NewsViewControllerActionHandler.swift in Sources */,
 				D1541FB9210853C400A9B2AB /* NewsViewControllerContentProvider.swift in Sources */,
 				D121AE332143992F004EBF9A /* OnboardingViewController.swift in Sources */,

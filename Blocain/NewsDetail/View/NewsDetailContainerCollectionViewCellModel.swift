@@ -214,10 +214,9 @@ class NewsDetailContainerCollectionViewCellModel: NewsDetailContainerCollectionV
             cell.image = image
             return cell.sizeThatFits(CGSize(width: collectionView.bounds.width, height: CGFloat.leastNonzeroMagnitude))
         case .body:
-            let bodyLabel = UILabel()
+            let bodyLabel = UITextView()
             bodyLabel.font = UIFont(name: "Georgia", size: 16.0)
             bodyLabel.textAlignment = .left
-            bodyLabel.numberOfLines = 0
             bodyLabel.text = newsDataModel.body
             bodyLabel.setLineSpacing(lineSpacing: 14.0, lineHeightMultiple: 1.0, headIndent: 0.0)
             let size = bodyLabel.sizeThatFits(CGSize(width: collectionView.bounds.width - 60, height: CGFloat.greatestFiniteMagnitude))
