@@ -82,28 +82,25 @@ class TopicManager: NSObject {
     
     
     func fetchTopicsDataModels(processingQueue: DispatchQueue, completion: @escaping ([TopicDataModel]?, Error?) -> Void) {
-        let firestore = CIFirestore.sharedInstance
-        firestore.waitForConfigureWith(completionQueue: processingQueue) {
-            Firestore.firestore().document("/TopicsList/7oXjtIUidN5lSMj6m21E").getDocument(completion: { (snapshot, error) in
-                guard let snapshot = snapshot, error == nil else {
-                    completion(nil, error)
-                    return
-                }
-                
-                if let data: [String: Any] = snapshot.data() {
-                    if let dataArray = data["Topics"] as? [AnyObject] {
-                        var topicDataModelArray = [TopicDataModel]()
-                        for data in dataArray {
-                            let topicDataModel = TopicDataModel(name: data.object(forKey: "name") as! String, index: data.object(forKey: "index") as! Int, isDefaultSelected: data.object(forKey: "isDefaultSelected") as! Bool, query: data.object(forKey: "query") as! String, customIndex: Int.max, isSelected: data.object(forKey: "isDefaultSelected") as! Bool, isAvailable: data.object(forKey: "isAvailable") as! Bool, errorMessage: data.object(forKey: "errorMessage") as! String)
-                            topicDataModelArray.append(topicDataModel)
-                        }
-                        topicDataModelArray.sort(){$0.index < $1.index}
-                        self.originalTopicDataModelArray = topicDataModelArray
-                        completion(topicDataModelArray, nil)
+        Firestore.firestore().document("/TopicsList/7oXjtIUidN5lSMj6m21E").getDocument(completion: { (snapshot, error) in
+            guard let snapshot = snapshot, error == nil else {
+                completion(nil, error)
+                return
+            }
+            
+            if let data: [String: Any] = snapshot.data() {
+                if let dataArray = data["Topics"] as? [AnyObject] {
+                    var topicDataModelArray = [TopicDataModel]()
+                    for data in dataArray {
+                        let topicDataModel = TopicDataModel(name: data.object(forKey: "name") as! String, index: data.object(forKey: "index") as! Int, isDefaultSelected: data.object(forKey: "isDefaultSelected") as! Bool, query: data.object(forKey: "query") as! String, customIndex: Int.max, isSelected: data.object(forKey: "isDefaultSelected") as! Bool, isAvailable: data.object(forKey: "isAvailable") as! Bool, errorMessage: data.object(forKey: "errorMessage") as! String)
+                        topicDataModelArray.append(topicDataModel)
                     }
+                    topicDataModelArray.sort(){$0.index < $1.index}
+                    self.originalTopicDataModelArray = topicDataModelArray
+                    completion(topicDataModelArray, nil)
                 }
-            })
-        }
+            }
+        })
     }
     
     

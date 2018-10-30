@@ -13,7 +13,7 @@ extension NSAttributedString {
         let attributedString = NSMutableAttributedString()
         
         if let wordCount = newsDataModel.wordCount {
-            let originalString = "\(max(1, wordCount / 200)) mins"
+            let originalString = "\(max(1, wordCount / 200)) mins read"
             let string: NSString = NSString(string: originalString)
             let tmp = NSMutableAttributedString(string: originalString)
             tmp.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red: 68 / 255.0, green: 68 / 255.0, blue: 68 / 255.0, alpha: 1.0)], range: string.range(of: originalString))

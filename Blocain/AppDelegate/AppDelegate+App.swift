@@ -16,7 +16,7 @@ extension AppDelegate {
         window.makeKeyAndVisible()
         self.window = window
         
-        checkAppVersion()
+        
         let userDefaults = UserDefaults.standard
         let hasShownOnboarding = userDefaults.bool(forKey: "hasShownOnboarding")
         if hasShownOnboarding {
@@ -24,6 +24,7 @@ extension AppDelegate {
         }else {
             showOnboardingViewController()
         }
+        checkAppVersion()
     }
     
     
@@ -42,7 +43,7 @@ extension AppDelegate {
     
     
     private func getMinimum(versionNumber: Int) {
-        let processingQueue = DispatchQueue(label: "com.blocain.processingQueue", qos: .userInteractive, attributes: [.concurrent], autoreleaseFrequency: .inherit, target: nil)
+        let processingQueue = DispatchQueue(label: "com.blocain.processingQueue2", qos: .userInteractive, attributes: [.concurrent], autoreleaseFrequency: .inherit, target: nil)
         
         let firestore = CIFirestore.sharedInstance
         firestore.waitForConfigureWith(completionQueue: processingQueue, completion: {

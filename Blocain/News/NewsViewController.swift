@@ -165,7 +165,12 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         
         topTabBarView.items = content.titlesArray
         newsTopicPickerView.topicsDataModelArray = content.topicsDataArray
-        containerCollectionView?.reloadData()
+        
+        if let contentOffSet = containerCollectionView?.contentOffset {
+            containerCollectionView?.reloadData()
+            containerCollectionView?.setContentOffset(CGPoint(x: 0, y: contentOffSet.y + 64.0), animated: false)
+        }
+        
         
         isLoadingData = false
         updateSpinnerAnimationView()
