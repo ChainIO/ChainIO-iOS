@@ -44,6 +44,9 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     deinit {
         ReachabilityManager.sharedManager.stopMonitoring()
         ReachabilityManager.sharedManager.removeListener(self)
+        
+        contentProvider?.remove(self)
+        FavouriteManager.sharedManager.removeListener(self)
     }
     
     
@@ -55,6 +58,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         
         contentProvider.add(self)
         contentProvider.refresh()
+        
+        FavouriteManager.sharedManager.addListener(self)
     }
     
     
@@ -166,12 +171,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         topTabBarView.items = content.titlesArray
         newsTopicPickerView.topicsDataModelArray = content.topicsDataArray
         
-        if let contentOffSet = containerCollectionView?.contentOffset {
-            containerCollectionView?.reloadData()
-            containerCollectionView?.setContentOffset(CGPoint(x: 0, y: contentOffSet.y + 64.0), animated: false)
-        }
-        
-        
+        containerCollectionView?.reloadData()
+    
         isLoadingData = false
         updateSpinnerAnimationView()
     }
@@ -400,5 +401,15 @@ extension NewsViewController: ReachabilityManagerListenerProtocol {
     func reachabilityDidChange(hasNetwork: Bool) {
         self.hasNetwork = hasNetwork
         updateNoNetworkLabel()
+    }
+}
+
+
+extension NewsViewController: FavouriteManagerListenerProtocol {
+    func didChange(favouriteNewsItemWith id: Int, isFavourited: Bool) {
+        contentProvider?.didChange(favouriteNewsItemWith: id, isFavourited: isFavourited)
+        if let cell = containerCollectionView?.cellForItem(at: IndexPath(item: containerCollectionViewCurrentPage, section: 0)) as? NewsContainerCollectionViewCell {
+            cell.newsTableView.reloadData()
+        }
     }
 }

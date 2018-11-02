@@ -19,7 +19,7 @@ class NewsContainerCollectionViewCell: UICollectionViewCell {
     
     weak var delegate: NewsContainerCollectionViewCellDelegate?
     
-    private let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
+    let newsTableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
     
     private let refreshControl = UIRefreshControl()
     

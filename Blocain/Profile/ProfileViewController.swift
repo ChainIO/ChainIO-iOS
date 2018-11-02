@@ -165,6 +165,8 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard contentProvider?.content.newsFavouriteDataModelsArray.count ?? 0 > 0 else { return }
+        
         actionHandler?.actionHandlerDidTapCell(at: indexPath.row)
     }
     

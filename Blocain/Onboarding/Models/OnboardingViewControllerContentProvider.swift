@@ -20,7 +20,7 @@ protocol OnboardingViewControllerContentProtocol {
 }
 
 protocol OnboardingViewControllerContentProviderProtocol: CIContentProviderProtocol {
-    var content: OnboardingViewControllerContentProtocol {get}
+    var content: OnboardingViewControllerContentProtocol { get set }
     
     func tappedActionButton(actionButtonType: ActionButtonType)
 }

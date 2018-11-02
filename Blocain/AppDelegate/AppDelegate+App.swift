@@ -43,29 +43,24 @@ extension AppDelegate {
     
     
     private func getMinimum(versionNumber: Int) {
-        let processingQueue = DispatchQueue(label: "com.blocain.processingQueue2", qos: .userInteractive, attributes: [.concurrent], autoreleaseFrequency: .inherit, target: nil)
-        
-        let firestore = CIFirestore.sharedInstance
-        firestore.waitForConfigureWith(completionQueue: processingQueue, completion: {
-            Firestore.firestore().document("/MinimumVersion/kErK3Qgzx6AJbhaXLZb0").getDocument(completion: { (snapshot, error) in
-                guard let snapshot = snapshot, error == nil else {
-                    return
-                }
-                
-                if let data: [String: Any] = snapshot.data() {
-                    if let minimumVersion = data["version"] as? Int {
-                        if versionNumber < minimumVersion {
-                            let alertWindow = UIWindow(frame: UIScreen.main.bounds)
-                            alertWindow.rootViewController = UIViewController()
-                            alertWindow.windowLevel = UIWindowLevelAlert + 1
-                            
-                            let alertViewController = UIAlertController(title: "Error", message: "Please go to the app store download the latest version of our app", preferredStyle: .alert)
-                            alertWindow.makeKeyAndVisible()
-                            alertWindow.rootViewController?.present(alertViewController, animated: true, completion: nil)
-                        }
+        Firestore.firestore().document("/MinimumVersion/kErK3Qgzx6AJbhaXLZb0").getDocument(completion: { (snapshot, error) in
+            guard let snapshot = snapshot, error == nil else {
+                return
+            }
+            
+            if let data: [String: Any] = snapshot.data() {
+                if let minimumVersion = data["version"] as? Int {
+                    if versionNumber < minimumVersion {
+                        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+                        alertWindow.rootViewController = UIViewController()
+                        alertWindow.windowLevel = UIWindowLevelAlert + 1
+                        
+                        let alertViewController = UIAlertController(title: "Error", message: "Please go to the app store download the latest version of our app", preferredStyle: .alert)
+                        alertWindow.makeKeyAndVisible()
+                        alertWindow.rootViewController?.present(alertViewController, animated: true, completion: nil)
                     }
                 }
-            })
+            }
         })
     }
     

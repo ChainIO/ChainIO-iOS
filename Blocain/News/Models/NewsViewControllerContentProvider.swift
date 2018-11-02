@@ -26,6 +26,7 @@ protocol NewsViewControllerContentProviderProtocol: CIContentProviderProtocol {
     func fetchNextPage()
     func pullToRefresh()
     func refreshTopicsAndNewsItems()
+    func didChange(favouriteNewsItemWith id: Int, isFavourited: Bool)
 }
 
 
@@ -56,7 +57,7 @@ struct NewsViewControllerContent: NewsViewControllerContentProtocol {
 }
 
 
-class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerContentProviderProtocol, FavouriteManagerListenerProtocol {
+class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerContentProviderProtocol {
     
     var content: NewsViewControllerContent
     private var contentFetcher = NewsContentFetcher.defaultFetcher
@@ -71,13 +72,6 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
         content = NewsViewControllerContent()
         
         super.init()
-        
-        FavouriteManager.sharedManager.addListener(self)
-    }
-    
-    
-    deinit {
-        FavouriteManager.sharedManager.removeListener(self)
     }
     
     
@@ -221,10 +215,6 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
     }
     
     
-    
-    // FavouriteManagerListenerProtocol
-    
-    
     func didChange(favouriteNewsItemWith id: Int, isFavourited: Bool) {
         for key in content.contentsViewModelDictionary.keys {
             let viewModelArrays = content.contentsViewModelDictionary[key]
@@ -235,6 +225,5 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                 }
             })
         }
-        self.setContentOnMainThread(self.content)
     }
 }

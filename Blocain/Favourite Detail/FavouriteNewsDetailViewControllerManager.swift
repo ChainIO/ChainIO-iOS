@@ -66,6 +66,8 @@ class FavouriteNewsDetailViewControllerManager: FavouriteNewsDetailViewControlle
     func hasFavouritedCurrentNewsItem() -> Bool {
         if !newsFavouriteDataModelsArray.isEmpty {
             assert(indexInStream < newsFavouriteDataModelsArray.count, "index should less than the total counts of totalNewsDataModelsArray")
+        }else {
+            return false
         }
         
         let newsDataModel = newsFavouriteDataModelsArray[indexInStream]
