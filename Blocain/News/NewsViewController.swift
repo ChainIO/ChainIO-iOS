@@ -118,6 +118,28 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     }
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let contentProvider = contentProvider else { return }
+        
+        guard !contentProvider.content.titlesArray.isEmpty else {
+            contentProvider.refresh()
+            
+            return
+        }
+        
+        let title = contentProvider.content.titlesArray[containerCollectionViewCurrentPage]
+        let viewModels = contentProvider.content.contentsViewModelDictionary[title]
+        if viewModels?.isEmpty ?? true {
+            contentProvider.refresh()
+            
+            return
+        }
+        
+    }
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -198,7 +220,7 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     
     
     private func updateNoNetworkLabel() {
-        noNetworkLabel.isHidden = hasNetwork && hasConnectitonToBackend
+        noNetworkLabel.isHidden = hasNetwork
     }
     
     
