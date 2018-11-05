@@ -60,6 +60,8 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         contentProvider.refresh()
         
         FavouriteManager.sharedManager.addListener(self)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refreshContent), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
     }
     
     
@@ -118,28 +120,6 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
     }
     
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        guard let contentProvider = contentProvider else { return }
-        
-        guard !contentProvider.content.titlesArray.isEmpty else {
-            contentProvider.refresh()
-            
-            return
-        }
-        
-        let title = contentProvider.content.titlesArray[containerCollectionViewCurrentPage]
-        let viewModels = contentProvider.content.contentsViewModelDictionary[title]
-        if viewModels?.isEmpty ?? true {
-            contentProvider.refresh()
-            
-            return
-        }
-        
-    }
-    
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -173,6 +153,30 @@ class NewsViewController: UIViewController, NewsTopTabBarViewDelegate, CIContent
         }
         
         newsTopicPickerView.frame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: (UIApplication.shared.keyWindow?.bounds.height)! + 49)
+    }
+    
+    
+    @objc private func refreshContent() {
+        guard let contentProvider = contentProvider else { return }
+        
+        guard !contentProvider.content.titlesArray.isEmpty else {
+            contentProvider.refresh()
+            isLoadingData = true
+            updateSpinnerAnimationView()
+            return
+        }
+        
+        let title = contentProvider.content.titlesArray[containerCollectionViewCurrentPage]
+        let viewModels = contentProvider.content.contentsViewModelDictionary[title]
+        if viewModels?.isEmpty ?? true {
+            contentProvider.refresh()
+            isLoadingData = true
+            updateSpinnerAnimationView()
+            return
+        }else {
+            isLoadingData = false
+            updateSpinnerAnimationView()
+        }
     }
     
     
@@ -367,12 +371,17 @@ extension NewsViewController: UICollectionViewDelegate, UICollectionViewDataSour
         updateIndex()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsContainerCollectionViewCell.defaultReuseIdentifier(), for: indexPath) as! NewsContainerCollectionViewCell
         cell.delegate = self
-        if let viewModels = contentProvider?.content.contentsViewModelDictionary[(contentProvider?.content.titlesArray[indexPath.item])!] {
+        
+        guard let contentProvider = contentProvider, indexPath.item < contentProvider.content.titlesArray.count else { return cell }
+        let title = contentProvider.content.titlesArray[indexPath.item]
+        if let viewModels = contentProvider.content.contentsViewModelDictionary[title] {
             cell.viewModels = viewModels
-            if let errorMessage = contentProvider?.content.topTabBarTopicsDataArray[indexPath.item].errorMessage {
+            let errorMessage = contentProvider.content.topTabBarTopicsDataArray[indexPath.item].errorMessage
+            if !errorMessage.isEmpty {
                 cell.errorMessage = errorMessage
             }
         }
+        
         return cell
     }
     

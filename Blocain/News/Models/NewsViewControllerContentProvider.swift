@@ -95,6 +95,7 @@ class NewsViewControllerContentProvider: CIContentProvider, NewsViewControllerCo
                         topicNameArray.append(topicDataModel.name)
                     })
                     
+                    self.content.titlesArray.removeAll()
                     self.content.titlesArray.append(contentsOf: topicNameArray)
                     self.fetch(singleTopicAt: self.index)
                 }

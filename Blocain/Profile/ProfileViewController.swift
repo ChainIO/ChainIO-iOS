@@ -44,10 +44,10 @@ class ProfileViewController: UIViewController {
         topBar.layer.shadowOpacity = 1.0
         view.addSubview(topBar)
 
-        titleLabel.text = "My favourite"
+        titleLabel.text = "Bookmarks"
         titleLabel.textColor = .black
         titleLabel.textAlignment = .center
-        titleLabel.font = UIFont.systemFont(ofSize: 20.0, weight: .semibold)
+        titleLabel.font = UIFont.systemFont(ofSize: 15.0, weight: .semibold)
         topBar.addSubview(titleLabel)
         
         tableView.separatorStyle = .none
