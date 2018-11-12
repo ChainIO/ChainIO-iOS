@@ -132,7 +132,7 @@ extension NewsContainerCollectionViewCell: UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.defaultIdentifier, for: indexPath) as! NewsTableViewCell
         cell.loadViewModel(viewModels[indexPath.row])
-        let rowsToLoadFromBottom = 30;
+        let rowsToLoadFromBottom = 10;
         let rowsLoaded = viewModels.count
         if !didRequestMore && indexPath.row == rowsLoaded - rowsToLoadFromBottom {
             didRequestMore = true
